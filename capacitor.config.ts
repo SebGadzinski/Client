@@ -1,7 +1,7 @@
 import { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-	appId: "com.blackbox.quasarvue",
+	appId: "com.work_website.app",
 	appName: "vuequasarapp",
 	webDir: "www",
 	bundledWebRuntime: false,

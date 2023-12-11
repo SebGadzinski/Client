@@ -1,6 +1,6 @@
 {
-	"appId": "com.blackbox.quasarvue",
-	"appName": "BlackBoxQuasarVue",
+	"appId": "com.work_website.app",
+	"appName": "Work Website",
 	"bundledWebRuntime": false,
 	"npmClient": "npm",
 	"webDir": "www",
