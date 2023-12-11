@@ -1,0 +1,15 @@
+{
+	"appId": "com.work_website.app",
+	"appName": "Work Website",
+	"bundledWebRuntime": false,
+	"npmClient": "npm",
+	"webDir": "www",
+	"plugins": {
+		"CapacitorUpdater": {
+			"autoUpdateUrl": "http://localhost:5000/api/app/getLatestVersion"
+		}
+	},
+	"server": {
+		"url": "http://192.168.200.38:8080"
+	}
+}

@@ -1,0 +1,1 @@
+icongenie generate -i src/assets/logo-wg.png --splashscreen-color HEX_COLOR --splashscreen-icon-ratio 30 --theme-color HEX_COLOR

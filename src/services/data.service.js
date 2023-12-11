@@ -1,0 +1,63 @@
+import {api} from '../boot/axios';
+import {Preferences} from '@capacitor/preferences';
+import {Capacitor} from '@capacitor/core';
+import {i18n} from '../boot/i18n';
+
+class DataService {
+    /**
+     * Checks to see if there is a update available for the application
+     * @returns {Object} //TODO
+     */
+    async checkForUpdate() {
+        return new Promise((resolve, reject) => {
+            let currentVersion = require('../../package.json').version;
+            if (! currentVersion)
+                reject(null);
+
+            api.post('/app/checkForUpdate', {currentVersion}).then((response) => {
+                if (!response.data)
+                    return reject('No Data In Response');
+
+                console.log(response);
+                resolve(response.data);
+            }).catch((err) => {
+                let {message} = err;
+                if (message.includes('304')) { // no update available
+                    return resolve({message: 'No Update Available'});
+                }
+                reject(message);
+            });
+        });
+    }
+
+    /**
+     * Updates Subscriptio for firebase notification
+     * @param {String} token
+     * @param {String} enable
+     * @returns //TODO
+     */
+    updateNotificationSubscription({token, enable}) {
+        return new Promise((resolve, reject) => {
+            if (!token)
+                return reject('No Token for updateNotification');
+
+            let obj = {
+                token,
+                enable,
+            };
+            api.post('/app/updateNotificationSubscription', obj).then((resp) => {
+                if(resp.data.success){
+                    resolve(true);
+                }else{
+                    console.log("Message: ");
+                    console.log(resp.data.message);
+                    throw new Error("Could not turn on notififications");
+                }
+            }).catch(({message}) => {
+                reject(message);
+            });
+        });
+    }
+}
+
+export default new DataService();
