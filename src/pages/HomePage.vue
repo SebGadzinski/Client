@@ -187,7 +187,11 @@ export default {
 				setTimeout(() => {
 					// Play the video for the specified index
 					console.log(this.players[index]);
-					if (this.players[index] && this.players[index].playVideo) {
+					if (
+						!video.classList.contains("hidden") &&
+						this.players[index] &&
+						this.players[index].playVideo
+					) {
 						this.players[index].playVideo();
 					}
 				}, 500);
