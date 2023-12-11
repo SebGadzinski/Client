@@ -1,6 +1,15 @@
 <template>
 	<q-layout>
-		<q-header :class="{ 'header-transparent': hasScrolled }">
+		<q-header
+			:class="
+				`my-header q-mt-sm q-mx-lg` +
+				{
+					'header-transparent': hasScrolled,
+				}
+			"
+			@mouseenter="hoverState = true"
+			@mouseleave="hoverState = false"
+		>
 			<q-toolbar>
 				<q-toolbar-title>
 					<router-link to="/">
@@ -11,27 +20,51 @@
 						/>
 					</router-link>
 				</q-toolbar-title>
-				<div class="q-toolbar__links">
-					<!-- If user exists -->
+
+				<!-- Menu button shown only on small screens -->
+				<q-btn icon="menu" @click="toggleMenu" v-if="$q.screen.lt.md">
+					<!-- Menu content -->
+					<q-menu fit>
+						<q-list>
+							<q-item v-if="user"> {{ $t("Profile") }}</q-item>
+							<q-item v-if="user"
+								><q-item-section>{{
+									$t("Work")
+								}}</q-item-section></q-item
+							>
+							<q-item v-else to="/auth/login">
+								<q-item-section>{{
+									$t("Login")
+								}}</q-item-section></q-item
+							>
+							<q-item to="/settings"
+								><q-item-section>{{
+									$t("Settings")
+								}}</q-item-section></q-item
+							>
+						</q-list>
+					</q-menu>
+				</q-btn>
+
+				<!-- Buttons shown on larger screens -->
+				<div v-if="$q.screen.gt.sm">
 					<template v-if="user">
-						<q-btn flat label="Profile"></q-btn>
-						<q-btn flat label="Purchases"></q-btn>
+						<q-btn flat :label="this.$t('Profile')"></q-btn>
+						<q-btn flat :label="this.$t('Work')"></q-btn>
 					</template>
-					<!-- If user does not exist -->
 					<template v-else>
-						<q-btn flat label="Login" to="/auth/login"></q-btn>
+						<q-btn
+							flat
+							:label="this.$t('Login')"
+							to="/auth/login"
+						></q-btn>
 					</template>
 					<q-btn flat icon="settings" to="/settings"></q-btn>
-					<q-btn
-						@click="toggleMenu"
-						icon="menu"
-						class="menu-button"
-					></q-btn>
 				</div>
 			</q-toolbar>
 		</q-header>
 
-		<q-page-container>
+		<q-page-container class="q-mx-sm">
 			<router-view />
 		</q-page-container>
 	</q-layout>
@@ -45,7 +78,9 @@ export default {
 	data() {
 		return {
 			authState: useAuthState(),
+			scrollOpacity: 1,
 			hasScrolled: false,
+			menuOpened: false,
 		};
 	},
 	mounted() {
@@ -60,30 +95,64 @@ export default {
 	},
 	methods: {
 		onScroll() {
-			this.hasScrolled = window.scrollY > 0;
+			const currentScrollPosition =
+				window.pageYOffset || document.documentElement.scrollTop;
+
+			let headers = document.getElementsByClassName("my-header");
+			if (headers.length > 0) {
+				if (currentScrollPosition < this.lastScrollPosition) {
+					// Scrolling up
+					headers[0].classList.remove(`fast`);
+					headers[0].classList.remove(`header-transparent`);
+					this.isScrollingUp = true;
+				} else {
+					// Scrolling down
+					if (window.scrollY > 400) {
+						if (window.scrollY > 800) {
+							headers[0].classList.add(`fast`);
+						}
+						headers[0].classList.add(`header-transparent`);
+					}
+
+					this.isScrollingUp = false;
+				}
+			}
+
+			// Update lastScrollPosition
+			this.lastScrollPosition = currentScrollPosition;
 		},
 		toggleMenu() {
-			// Logic to toggle your menu
+			this.menuOpened = !this.menuOpened;
 		},
 	},
 };
 </script>
 
 <style scoped>
-.header-transparent {
-	background: rgba(255, 255, 255, 0.4); /* 80% transparent white background */
-	position: fixed;
+.my-header {
 	top: 0;
 	left: 0;
-	width: 100%;
-	transition: background-color 0.3s;
+	right: 0;
+	position: fixed;
+	backdrop-filter: blur(10px);
+}
+.header-transparent {
+	background: var(
+		--q-color-accent
+	) !important; /* Uses Quasar primary color variable */
+	transition: background-color 2s;
 	box-shadow: none;
 }
 
-.header-transparent:hover {
-	background: rgba(255, 255, 255, 1); /* Fully opaque on hover */
+.fast.header-transparent {
+	transition: background-color 0.2s !important;
 }
 
+.header-transparent:hover {
+	background: var(
+		--q-color-primary
+	) !important; /* Uses Quasar primary color variable */
+}
 .q-toolbar__links {
 	display: flex;
 	align-items: center;
@@ -92,9 +161,6 @@ export default {
 	padding-top: 50px; /* Adjust based on your header's height */
 }
 @media (max-width: 767px) {
-	.q-toolbar__links {
-		display: none;
-	}
 	.logo-image {
 		width: 25px;
 		height: 25px;
@@ -106,6 +172,11 @@ export default {
 	.logo-image {
 		width: 50px;
 		height: 50px;
+	}
+	.my-header {
+		left: 20px;
+		right: 20px;
+		padding: 20px;
 	}
 	.menu-button {
 		display: none; /* Hide the menu button on desktop */

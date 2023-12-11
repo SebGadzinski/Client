@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { Dark, setCssVar } from 'quasar';
-import { lightTheme, darkTheme } from 'src/themes/crimson';
+import { lightTheme, darkTheme } from 'src/themes/gray';
 
 /**
  * Parsed settings from localStorage.
