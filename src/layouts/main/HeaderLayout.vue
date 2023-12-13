@@ -131,8 +131,9 @@ export default {
 <style scoped>
 .my-header {
 	top: 0;
-	left: 0;
-	right: 0;
+	left: 20px;
+	right: 20px;
+	padding: 20px;
 	position: fixed;
 	backdrop-filter: blur(10px);
 }
@@ -160,24 +161,13 @@ export default {
 .q-page-container {
 	padding-top: 50px; /* Adjust based on your header's height */
 }
-@media (max-width: 767px) {
-	.logo-image {
-		width: 25px;
-		height: 25px;
-	}
+.logo-image {
+	width: 2.5rem;
+	height: 2.5rem;
 }
 
 /* Style for desktop */
-@media (min-width: 768px) {
-	.logo-image {
-		width: 50px;
-		height: 50px;
-	}
-	.my-header {
-		left: 20px;
-		right: 20px;
-		padding: 20px;
-	}
+@media (min-width: 800px) {
 	.menu-button {
 		display: none; /* Hide the menu button on desktop */
 	}

@@ -16,6 +16,7 @@
 					bordered
 					@mouseenter="playVideo(index)"
 					@mouseleave="hideVideo(index)"
+					@click="navigateToCategory(category.category_link)"
 				>
 					<div class="media-container">
 						<img
@@ -69,18 +70,20 @@ export default {
 			$q: useQuasar(),
 		};
 	},
-	async mounted() {
-		// Wait for the API script to load
-		window.onYouTubeIframeAPIReady = this.onYouTubeIframeAPIReady;
-
-		// Load the YouTube Iframe API script
-		await this.loadMore();
-		const tag = document.createElement("script");
-		tag.src = "https://www.youtube.com/iframe_api";
-		const firstScriptTag = document.getElementsByTagName("script")[0];
-		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-	},
 	methods: {
+		navigateToCategory(category) {
+			this.$router.push(`/${category}`);
+		},
+		updateYoutubeVideos() {
+			// Wait for the API script to load
+			window.onYouTubeIframeAPIReady = this.onYouTubeIframeAPIReady;
+
+			// Load the YouTube Iframe API script
+			const tag = document.createElement("script");
+			tag.src = "https://www.youtube.com/iframe_api";
+			const firstScriptTag = document.getElementsByTagName("script")[0];
+			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+		},
 		onYouTubeIframeAPIReady() {
 			console.log(this.categorys);
 			// Initialize YouTube players for each category
@@ -127,17 +130,23 @@ export default {
 			// For example, you could make an API call to get more categories
 			// Simulate a delay for demonstration
 			// Add new categories to the list
-			for (let i = 1; i < 10; i++) {
-				this.categorys.push({
-					thumbnail: "https://cdn.quasar.dev/img/mountains.jpg",
-					videoId: "NYU3Np_6dq4", // Updated embed URL
-					category: "Software",
-					showVideo: false,
-					stars: 4,
-					services: 14,
-					player: null,
-				});
-			}
+			this.categorys.push({
+				thumbnail: "https://cdn.quasar.dev/img/mountains.jpg",
+				videoId: "NYU3Np_6dq4", // Updated embed URL
+				category: "Software",
+				category_link: "software",
+				stars: 4,
+				services: 14,
+			});
+			this.categorys.push({
+				thumbnail:
+					"http://getwallpapers.com/wallpaper/full/9/b/9/7401.jpg",
+				videoId: "DY4JiSQk2m0", // Updated embed URL
+				category: "Photography",
+				category_link: "photography",
+				stars: 4,
+				services: 14,
+			});
 
 			this.loading = false;
 			this.$nextTick(() => {
@@ -152,6 +161,7 @@ export default {
 						"max-glare": 1,
 					});
 				}
+				this.updateYoutubeVideos();
 			});
 		},
 		killTilt(index) {
@@ -170,8 +180,6 @@ export default {
 			});
 		},
 		playVideo(index) {
-			// category.player.playVideo();
-			// console.log(category.player);
 			let video = document.getElementsByClassName(
 				`category-video-${index}`
 			)[0];
@@ -180,8 +188,8 @@ export default {
 			)[0];
 
 			// Bring the video to the front
-			video.style.zIndex = "2";
-			picture.style.zIndex = "1";
+			// video.style.zIndex = "2";
+			// picture.style.zIndex = "1";
 			setTimeout(() => {
 				video.classList.remove("hidden");
 				setTimeout(() => {
@@ -234,8 +242,8 @@ export default {
 		-50%,
 		-50%
 	) !important; /* Translate the iframe back by half of its width and half of its height to center it */
-	width: 90% !important;
-	height: 90% !important;
+	width: 100% !important;
+	height: 100% !important;
 }
 </style>
 <style scoped>

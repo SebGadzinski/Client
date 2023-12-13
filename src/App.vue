@@ -39,6 +39,8 @@ export default defineComponent({
 		let that = this;
 		window.onerror = function (message, source, lineno, colno, error) {
 			alert("Exception: ", error);
+			console.log(message);
+			console.log(error);
 			if (process.env.NODE_ENV === "production") {
 				that.$gtag.exception({
 					description: message,
