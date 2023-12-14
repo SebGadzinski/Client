@@ -92,36 +92,42 @@ export default {
 	},
 	methods: {
 		onListItemClick(event, link) {
-			event.stopPropagation(); // Prevents event from bubbling up
-			this.$router.push(link); // Manually handling the navigation
+			if (this.$q.screen.gt.sm) {
+				event.stopPropagation(); // Prevents event from bubbling up
+				this.$router.push(link); // Manually handling the navigation
+			}
 		},
 		hideImage(index) {
-			let list = document.getElementsByClassName(
-				`category-list-${index}`
-			)[0];
-			let picture = document.getElementsByClassName(
-				`category-picture-${index}`
-			)[0];
+			if (this.$q.screen.gt.sm) {
+				let list = document.getElementsByClassName(
+					`category-list-${index}`
+				)[0];
+				let picture = document.getElementsByClassName(
+					`category-picture-${index}`
+				)[0];
 
-			list.classList.remove("hidden");
+				list.classList.remove("hidden");
 
-			// Start fading out the picture and fading in the video
-			picture.style.opacity = "0";
-			list.style.opacity = "1";
+				// Start fading out the picture and fading in the video
+				picture.style.opacity = "0";
+				list.style.opacity = "1";
+			}
 		},
 		showImage(index) {
-			let list = document.getElementsByClassName(
-				`category-list-${index}`
-			)[0];
-			let picture = document.getElementsByClassName(
-				`category-picture-${index}`
-			)[0];
+			if (this.$q.screen.gt.sm) {
+				let list = document.getElementsByClassName(
+					`category-list-${index}`
+				)[0];
+				let picture = document.getElementsByClassName(
+					`category-picture-${index}`
+				)[0];
 
-			list.classList.add("hidden");
+				list.classList.add("hidden");
 
-			// Start fading out the picture and fading in the video
-			picture.style.opacity = "1";
-			list.style.opacity = "0";
+				// Start fading out the picture and fading in the video
+				picture.style.opacity = "1";
+				list.style.opacity = "0";
+			}
 		},
 		navigateToCategory(category) {
 			this.$router.push(`/${category}`);
@@ -250,7 +256,7 @@ export default {
 
 @media (max-width: 991px) {
 	.custom-card {
-		width: 90%;
+		width: 90vw;
 	}
 }
 </style>

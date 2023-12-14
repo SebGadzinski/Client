@@ -135,7 +135,6 @@ export default {
 	},
 };
 </script>
-
 <style scoped>
 .my-header {
 	top: 0;

@@ -54,14 +54,14 @@
 				<p class="text-body1">{{ $t(detail.info) }}</p>
 			</div>
 		</div>
-		<div class="q-pa-lg flex justify-center text-center">
+		<div class="flex justify-center text-center">
 			<div class="full-width">
 				<h3>{{ $t("Book Meeting") }}</h3>
 			</div>
 			<q-btn
 				class="text-h6 consultation-meeting-btn"
 				color="primary"
-				:to="`${category}/${service}/meeting`"
+				:to="`/${category}/${service}/meeting`"
 				>{{ $t("Set Up Meeting") }}</q-btn
 			>
 		</div>

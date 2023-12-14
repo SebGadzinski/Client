@@ -39,8 +39,24 @@
 		<link rel="icon" type="image/ico" href="favicon.ico" />
 		<!-- <script src="https://www.youtube.com/iframe_api"></script> -->
 	</head>
-	<body>
+	<body class="hide-scroll">
 		<!-- DO NOT touch the following DIV -->
 		<div id="q-app"></div>
 	</body>
+	<style>
+		/* Hide scrollbar for Chrome, Safari and Opera */
+		.hide-scroll::-webkit-scrollbar {
+			display: none !important;
+		}
+
+		/* Hide scrollbar for Firefox */
+		.hide-scroll {
+			scrollbar-width: none !important;
+		}
+
+		/* Hide scrollbar for IE and Edge */
+		.hide-scroll {
+			-ms-overflow-style: none !important;
+		}
+	</style>
 </html>

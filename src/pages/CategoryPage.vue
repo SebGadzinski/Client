@@ -88,32 +88,36 @@ export default {
 
 	methods: {
 		hideImage(index) {
-			let list = document.getElementsByClassName(
-				`service-list-${index}`
-			)[0];
-			let picture = document.getElementsByClassName(
-				`service-picture-${index}`
-			)[0];
+			if (this.$q.screen.gt.sm) {
+				let list = document.getElementsByClassName(
+					`service-list-${index}`
+				)[0];
+				let picture = document.getElementsByClassName(
+					`service-picture-${index}`
+				)[0];
 
-			list.classList.remove("hidden");
+				list.classList.remove("hidden");
 
-			// Start fading out the picture and fading in the video
-			picture.style.opacity = "0";
-			list.style.opacity = "1";
+				// Start fading out the picture and fading in the video
+				picture.style.opacity = "0";
+				list.style.opacity = "1";
+			}
 		},
 		showImage(index) {
-			let list = document.getElementsByClassName(
-				`service-list-${index}`
-			)[0];
-			let picture = document.getElementsByClassName(
-				`service-picture-${index}`
-			)[0];
+			if (this.$q.screen.gt.sm) {
+				let list = document.getElementsByClassName(
+					`service-list-${index}`
+				)[0];
+				let picture = document.getElementsByClassName(
+					`service-picture-${index}`
+				)[0];
 
-			list.classList.add("hidden");
+				list.classList.add("hidden");
 
-			// Start fading out the picture and fading in the video
-			picture.style.opacity = "1";
-			list.style.opacity = "0";
+				// Start fading out the picture and fading in the video
+				picture.style.opacity = "1";
+				list.style.opacity = "0";
+			}
 		},
 		navigateToService(service) {
 			this.$router.push(`/${this.category}/${service}`);
@@ -271,14 +275,14 @@ export default {
 	overflow-y: auto;
 	transition: opacity 1s ease-in-out;
 }
-@media (min-width: 992px) {
+@media (min-width: 768px) {
 	.custom-card {
 		width: 30vw;
 		margin: 20px 20px;
 	}
 }
 
-@media (max-width: 991px) {
+@media (max-width: 767px) {
 	.custom-card {
 		width: 90vw;
 	}
