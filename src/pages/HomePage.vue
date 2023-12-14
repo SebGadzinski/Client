@@ -1,21 +1,21 @@
 <template>
 	<q-page class="flex column q-py-lg">
 		<q-infinite-scroll
-			class="flex column justify-center w-full"
+			class="flex row justify-center w-full"
 			@load="loadMore"
 		>
 			<div
 				v-for="(category, index) in categorys"
 				:key="index"
-				class="card-container"
+				class="full-width"
 			>
 				<q-card
 					:id="`custom-card-${index}`"
 					class="q-my-lg custom-card"
 					flat
 					bordered
-					@mouseenter="playVideo(index)"
-					@mouseleave="hideVideo(index)"
+					@mouseenter="hideImage(index)"
+					@mouseleave="showImage(index)"
 					@click="navigateToCategory(category.category_link)"
 				>
 					<div class="media-container">
@@ -24,11 +24,31 @@
 							:src="category.thumbnail"
 						/>
 						<div
-							:id="`category-video-${index}`"
-							@mouseenter="killTilt(index)"
-							@mouseleave="allowTilt(index)"
-							:class="`category-video-${index} hidden`"
-						></div>
+							class="q-pa-md"
+							:class="`category-list-${index} hidden`"
+						>
+							<q-list bordered separator>
+								<q-item
+									clickable
+									v-ripple
+									v-for="(
+										item, dlIndex
+									) in category.servicesList"
+									:to="item.link"
+									:key="dlIndex"
+									@click="onListItemClick($event, item.link)"
+								>
+									<q-item-section>
+										<q-item-label overline>{{
+											$t(item.header)
+										}}</q-item-label>
+										<q-item-label>{{
+											$t(item.details)
+										}}</q-item-label>
+									</q-item-section>
+								</q-item>
+							</q-list>
+						</div>
 					</div>
 					<q-card-section>
 						<div class="text-h6 q-mb-xs">
@@ -36,7 +56,7 @@
 						</div>
 						<div class="row no-wrap items-center">
 							<span class="text-caption text-grey q-ml-sm">{{
-								$t(`${category.services} Services`)
+								$t(`${category.servicesList.length} Services`)
 							}}</span>
 						</div>
 					</q-card-section>
@@ -71,59 +91,41 @@ export default {
 		};
 	},
 	methods: {
+		onListItemClick(event, link) {
+			event.stopPropagation(); // Prevents event from bubbling up
+			this.$router.push(link); // Manually handling the navigation
+		},
+		hideImage(index) {
+			let list = document.getElementsByClassName(
+				`category-list-${index}`
+			)[0];
+			let picture = document.getElementsByClassName(
+				`category-picture-${index}`
+			)[0];
+
+			list.classList.remove("hidden");
+
+			// Start fading out the picture and fading in the video
+			picture.style.opacity = "0";
+			list.style.opacity = "1";
+		},
+		showImage(index) {
+			let list = document.getElementsByClassName(
+				`category-list-${index}`
+			)[0];
+			let picture = document.getElementsByClassName(
+				`category-picture-${index}`
+			)[0];
+
+			list.classList.add("hidden");
+
+			// Start fading out the picture and fading in the video
+			picture.style.opacity = "1";
+			list.style.opacity = "0";
+		},
 		navigateToCategory(category) {
 			this.$router.push(`/${category}`);
 		},
-		updateYoutubeVideos() {
-			// Wait for the API script to load
-			window.onYouTubeIframeAPIReady = this.onYouTubeIframeAPIReady;
-
-			// Load the YouTube Iframe API script
-			const tag = document.createElement("script");
-			tag.src = "https://www.youtube.com/iframe_api";
-			const firstScriptTag = document.getElementsByTagName("script")[0];
-			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-		},
-		onYouTubeIframeAPIReady() {
-			console.log(this.categorys);
-			// Initialize YouTube players for each category
-			this.categorys.forEach((category, index) => {
-				this.players[index] = new YT.Player(`category-video-${index}`, {
-					videoId: category.videoId,
-					width: "",
-					height: "",
-					playerVars: {
-						// autoplay: 1,
-						enablejsapi: 1,
-						controls: 1,
-						// autohide: 1,
-						wmode: "opaque",
-						origin: "http://localhost:8081",
-					},
-					events: {
-						onReady: this.onPlayerReady,
-						onStateChange: this.onPlayerStateChange,
-					},
-				});
-			});
-		},
-		onPlayerReady(event) {
-			let index = event.target.g.id.split("category-video-")[1];
-			if (this.players[index]) {
-				let videoContainer = document.getElementById(
-					`category-video-${index}`
-				);
-
-				// Add mouseenter and mouseleave event listeners to the card
-				videoContainer.addEventListener("mouseenter", (event) =>
-					this.killTilt(event.target.id.split("category-video-")[1])
-				);
-				videoContainer.addEventListener("mouseleave", (event) =>
-					this.allowTilt(event.target.id.split("category-video-")[1])
-				);
-			}
-		},
-		onPlayerStateChange(event) {},
 		async loadMore() {
 			this.loading = true;
 			// Fetch or generate more categories here
@@ -132,20 +134,31 @@ export default {
 			// Add new categories to the list
 			this.categorys.push({
 				thumbnail: "https://cdn.quasar.dev/img/mountains.jpg",
-				videoId: "NYU3Np_6dq4", // Updated embed URL
 				category: "Software",
 				category_link: "software",
 				stars: 4,
-				services: 14,
+				servicesList: [],
 			});
+			for (let i = 1; i < 20; i++) {
+				this.categorys[0].servicesList.push({
+					header: "Email",
+					details: "Working with things to get things done",
+					link: `software/email`,
+				});
+			}
 			this.categorys.push({
 				thumbnail:
 					"http://getwallpapers.com/wallpaper/full/9/b/9/7401.jpg",
-				videoId: "DY4JiSQk2m0", // Updated embed URL
 				category: "Photography",
 				category_link: "photography",
 				stars: 4,
-				services: 14,
+				servicesList: [
+					{
+						header: "Email",
+						details: "Working with things to get things done",
+						link: `photography/email`,
+					},
+				],
 			});
 
 			this.loading = false;
@@ -156,12 +169,11 @@ export default {
 						`custom-card-${i}`
 					);
 					VanillaTilt.init(tiltElement, {
-						max: 5,
-						glare: true,
+						max: 2,
+						glare: false,
 						"max-glare": 1,
 					});
 				}
-				this.updateYoutubeVideos();
 			});
 		},
 		killTilt(index) {
@@ -175,65 +187,17 @@ export default {
 			const tiltElement = document.getElementById(`custom-card-${index}`);
 			VanillaTilt.init(tiltElement, {
 				max: 5,
-				glare: true,
+				glare: false,
 				"max-glare": 1,
 			});
-		},
-		playVideo(index) {
-			let video = document.getElementsByClassName(
-				`category-video-${index}`
-			)[0];
-			let picture = document.getElementsByClassName(
-				`category-picture-${index}`
-			)[0];
-
-			// Bring the video to the front
-			// video.style.zIndex = "2";
-			// picture.style.zIndex = "1";
-			setTimeout(() => {
-				video.classList.remove("hidden");
-				setTimeout(() => {
-					// Play the video for the specified index
-					console.log(this.players[index]);
-					if (
-						!video.classList.contains("hidden") &&
-						this.players[index] &&
-						this.players[index].playVideo
-					) {
-						this.players[index].playVideo();
-					}
-				}, 500);
-			}, 200);
-
-			// Start fading out the picture and fading in the video
-			picture.style.opacity = "0";
-			video.style.opacity = "1";
-		},
-
-		hideVideo(index) {
-			let video = document.getElementById(`category-video-${index}`);
-			let picture = document.getElementsByClassName(
-				`category-picture-${index}`
-			)[0];
-
-			// Bring the picture to the front
-			picture.style.zIndex = "2";
-			video.style.zIndex = "1";
-			// Pause or stop the video for the specified index
-			if (this.players[index] && this.players[index].pauseVideo) {
-				this.players[index].pauseVideo();
-			}
-			video.classList.add("hidden");
-
-			// Start fading out the video and fading in the picture
-			video.style.opacity = "0";
-			picture.style.opacity = "1";
-			this.allowTilt(index);
 		},
 	},
 };
 </script>
 <style>
+.card-container {
+	height: fit-content;
+}
 .media-container iframe {
 	position: absolute !important;
 	top: 50% !important;
@@ -247,21 +211,12 @@ export default {
 }
 </style>
 <style scoped>
-.hidden {
-	display: none;
-	opacity: 0;
-}
-.category-item {
-	margin-bottom: 20px;
-}
-
 .custom-card {
 	display: block;
 	margin: 20px auto;
 	cursor: pointer;
 	overflow: hidden; /* Hide overflow to maintain clean edges */
 }
-
 .media-container {
 	position: relative;
 	width: 100%; /* Full width of the card */
@@ -269,19 +224,22 @@ export default {
 	padding-top: 56.25%; /* 16:9 Aspect Ratio */
 }
 
-.media-container img {
+.media-container > img {
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-}
-.media-container img {
 	transition: opacity 1s ease-in-out;
 }
-
-.q-card-section {
-	position: relative; /* Added to position card content correctly */
+.media-container > div {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	overflow-y: auto;
+	transition: opacity 1s ease-in-out;
 }
 
 @media (min-width: 992px) {

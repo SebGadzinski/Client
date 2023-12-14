@@ -67,6 +67,7 @@
 		<q-page-container class="q-mx-sm">
 			<router-view />
 		</q-page-container>
+		<div class="extra-space"></div>
 	</q-layout>
 </template>
 
@@ -102,9 +103,15 @@ export default {
 			if (headers.length > 0) {
 				if (currentScrollPosition < this.lastScrollPosition) {
 					// Scrolling up
-					headers[0].classList.remove(`fast`);
-					headers[0].classList.remove(`header-transparent`);
-					this.isScrollingUp = true;
+					if (
+						currentScrollPosition < 30 ||
+						currentScrollPosition <
+							this.lastScrollDownPosition - 100
+					) {
+						headers[0].classList.remove(`fast`);
+						headers[0].classList.remove(`header-transparent`);
+						this.isScrollingUp = true;
+					}
 				} else {
 					// Scrolling down
 					if (window.scrollY > 400) {
@@ -115,6 +122,7 @@ export default {
 					}
 
 					this.isScrollingUp = false;
+					this.lastScrollDownPosition = currentScrollPosition;
 				}
 			}
 
@@ -164,6 +172,11 @@ export default {
 .logo-image {
 	width: 2.5rem;
 	height: 2.5rem;
+}
+
+.extra-space {
+	height: 200px;
+	width: 100%;
 }
 
 /* Style for desktop */

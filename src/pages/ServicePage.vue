@@ -44,6 +44,48 @@
 				</q-carousel-slide>
 			</q-carousel>
 		</div>
+		<div>
+			<div
+				v-for="(detail, index) in details"
+				:key="index"
+				class="text-center"
+			>
+				<h3>{{ $t(detail.header) }}</h3>
+				<p class="text-body1">{{ $t(detail.info) }}</p>
+			</div>
+		</div>
+		<div class="q-pa-lg flex justify-center text-center">
+			<div class="full-width">
+				<h3>{{ $t("Book Meeting") }}</h3>
+			</div>
+			<q-btn
+				class="text-h6 consultation-meeting-btn"
+				color="primary"
+				:to="`${category}/${service}/meeting`"
+				>{{ $t("Set Up Meeting") }}</q-btn
+			>
+		</div>
+		<div class="flex justify-center text-center" v-if="faqs.length > 0">
+			<div class="full-width">
+				<h3>{{ $t("FAQs") }}</h3>
+			</div>
+			<q-list bordered class="rounded-borders">
+				<q-expansion-item
+					v-for="(faq, index) in faqs"
+					:key="index"
+					class="bg-primary text-white faq-section text-left"
+					expand-icon-class="text-white"
+					:default-opened="false"
+					:label="$t(faq.question)"
+				>
+					<q-card>
+						<q-card-section class="text-black">
+							{{ $t(faq.answer) }}
+						</q-card-section>
+					</q-card>
+				</q-expansion-item>
+			</q-list>
+		</div>
 	</q-page>
 </template>
 
@@ -69,6 +111,28 @@ export default {
 					text: "Important Info",
 				},
 			],
+			details: [
+				{
+					header: "Description",
+					info: "This data is what will be used for information.",
+				},
+				{
+					header: "Examples",
+					info: "Email marketing campaign, Email subscriptions, Email Sender UI, Email reporting system. Custom Email Functionality",
+				},
+				{ header: "Price", info: "Based off project size." },
+				{ header: "Service Time", info: "Based off project size." },
+			],
+			faqs: [
+				{
+					question: "why am i so hot",
+					answer: "Cause your a hot pocket",
+				},
+				{
+					question: "why am i so hot",
+					answer: "Cause your a hot pocket",
+				},
+			],
 			route: useRoute(),
 			$q: useQuasar(),
 			slide: ref(0),
@@ -92,14 +156,27 @@ export default {
 }
 .carousel-image {
 	width: 100%;
-	height: 800px;
+	height: 80vh;
 }
 .reverse-row {
 	flex-direction: row-reverse;
 }
 
-@media (min-width: 800px) {
-	.carousel-outer-div {
+.consultation-meeting-btn {
+	width: 60vw;
+}
+
+.faq-section {
+	width: 60vw;
+}
+
+@media (max-width: 800px) {
+	.consultation-meeting-btn {
+		width: 80vw;
+	}
+
+	.faq-section {
+		width: 80vw;
 	}
 }
 </style>
