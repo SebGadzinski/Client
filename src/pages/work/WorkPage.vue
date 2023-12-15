@@ -1,7 +1,7 @@
 <template>
 	<q-page :class="'flex flex-center bg-primary'">
 		<div>
-			<h1>Work - Item</h1>
+			<h1>Work</h1>
 		</div>
 	</q-page>
 </template>

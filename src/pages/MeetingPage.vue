@@ -76,6 +76,7 @@ export default {
 			// Book meeting
 			// if user is unknown go to sign up form with work url as param so they know where to go after
 			// else state the user succesfully book, and go to work page which should show this with status Booked Meeting
+			//This should create a work object in the database
 		},
 	},
 };

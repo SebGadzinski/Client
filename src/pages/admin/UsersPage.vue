@@ -35,12 +35,12 @@
 			</template>
 			<template v-slot:body-cell-actions="props">
 				<q-td :key="props.name">
-					<q-btn-dropdown color="primary" label="actions">
+					<q-btn-dropdown color="primary">
 						<q-list>
 							<q-item
 								clickable
 								v-close-popup
-								:to="`/work/user/${props.row.userId}`"
+								:to="`/work/user/${props.row.email}`"
 							>
 								<q-item-section>
 									<q-item-label>{{
