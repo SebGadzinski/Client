@@ -28,6 +28,7 @@ export default route(function (/* { store, ssrContext } */) {
 
   Router.beforeEach((to, from, next) => {
     const nonPublicPages = ['/profile', '/confirmation', '/work'];
+    const isAdminPage =  to.path.includes('/admin');
     const authRequired = nonPublicPages.some(x => to.path.includes(x));
 
     let user = {};
@@ -39,10 +40,14 @@ export default route(function (/* { store, ssrContext } */) {
       // uSER DOES NOT EXIST
     }
 
-    if (authRequired && !user?.token) {
-      next('/auth/login');
-    } else {
-      next();
+    if(isAdminPage && !user?.roles?.includes('admin')){
+      next('/');
+    }else{
+      if (authRequired && !user?.token) {
+        next('/auth/login');
+      } else {
+        next();
+      }
     }
   });
 

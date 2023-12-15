@@ -26,10 +26,16 @@
 					<!-- Menu content -->
 					<q-menu fit>
 						<q-list>
-							<q-item v-if="user"> {{ $t("Profile") }}</q-item>
-							<q-item v-if="user"
+							<q-item v-if="user" to="/work"
 								><q-item-section>{{
 									$t("Work")
+								}}</q-item-section></q-item
+							>
+							<q-item
+								v-if="user?.roles?.includes('admin')"
+								to="/admin/users"
+								><q-item-section>{{
+									$t("Users")
 								}}</q-item-section></q-item
 							>
 							<q-item v-else to="/auth/login">
@@ -49,8 +55,14 @@
 				<!-- Buttons shown on larger screens -->
 				<div v-if="$q.screen.gt.sm">
 					<template v-if="user">
-						<q-btn flat :label="this.$t('Profile')"></q-btn>
-						<q-btn flat :label="this.$t('Work')"></q-btn>
+						<q-btn to="/work" flat :label="this.$t('Work')"></q-btn>
+						<template v-if="user.roles.includes('admin')">
+							<q-btn
+								to="/admin/users"
+								flat
+								:label="this.$t('Users')"
+							></q-btn>
+						</template>
 					</template>
 					<template v-else>
 						<q-btn

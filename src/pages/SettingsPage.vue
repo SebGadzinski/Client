@@ -1,6 +1,18 @@
 <template>
 	<div class="q-pa-md">
 		<q-list>
+			<!-- View Profile -->
+			<q-item v-if="user" clickable v-ripple>
+				<q-item-section>{{ $t("Edit Profile") }}</q-item-section>
+				<q-item-section>
+					<q-btn
+						color="primary"
+						to="/profile"
+						class="full-width"
+						:label="$t('Profile')"
+					></q-btn>
+				</q-item-section>
+			</q-item>
 			<!-- Refresh Session -->
 			<q-item v-if="user && !user.emailConfirmed" clickable v-ripple>
 				<q-item-section>{{ $t("Refresh Session") }}</q-item-section>
@@ -27,7 +39,7 @@
 			</q-item>
 			<!-- Confirmation -->
 			<q-item v-if="user && !user.emailConfirmed" clickable v-ripple>
-				<q-item-section>{{ $t("Confirmation") }}</q-item-section>
+				<q-item-section>{{ $t("Email Confirmation") }}</q-item-section>
 				<q-item-section>
 					<q-btn
 						color="primary"

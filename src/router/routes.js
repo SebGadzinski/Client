@@ -18,6 +18,7 @@ const layout = {
     { path: 'work/create', component: () => import('pages/work/WorkEditorPage.vue'), },
     { path: 'work/edit/:workId', component: () => import('pages/work/WorkEditorPage.vue'), },
     { path: 'settings', component: () => import('pages/SettingsPage.vue') },
+    { path: 'admin/users', component: () => import('pages/admin/UsersPage.vue'), },
     {
       path: ':catchAll(.*)*',
       component: () => import('pages/Error404.vue')

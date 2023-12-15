@@ -73,13 +73,13 @@
 				<q-expansion-item
 					v-for="(faq, index) in faqs"
 					:key="index"
-					class="bg-primary text-white faq-section text-left"
+					class="bg-primary text-subtitle1 faq-section text-left"
 					expand-icon-class="text-white"
 					:default-opened="false"
 					:label="$t(faq.question)"
 				>
 					<q-card>
-						<q-card-section class="text-black">
+						<q-card-section class="text-body1">
 							{{ $t(faq.answer) }}
 						</q-card-section>
 					</q-card>
