@@ -8,7 +8,6 @@ const layout = {
     { path: 'home', component: () => import('pages/HomePage.vue') },
     { name: 'category', path: ':category', component: () => import('pages/CategoryPage.vue') },
     { name: 'service', path: ':category/:service', component: () => import('pages/ServicePage.vue') },
-    { path: 'confirmation/:workId', component: () => import('pages/ConfirmationPage.vue'), },
     { path: ':category/:service/meeting', component: () => import('pages/MeetingPage.vue') },
     { path: 'profile', component: () => import('pages/ProfilePage.vue'), },
     { path: 'profile/user/:userId', component: () => import('pages/ProfilePage.vue'), },
@@ -17,6 +16,7 @@ const layout = {
     { path: 'work/item/:workId', component: () => import('pages/work/WorkPage.vue'), },
     { path: 'work/create', component: () => import('pages/work/WorkEditorPage.vue'), },
     { path: 'work/edit/:workId', component: () => import('pages/work/WorkEditorPage.vue'), },
+    { path: 'work/confirmation/:workId', component: () => import('pages/work/ConfirmationPage.vue'), },
     { path: 'settings', component: () => import('pages/SettingsPage.vue') },
     { path: 'admin/users', component: () => import('pages/admin/UsersPage.vue'), },
     {

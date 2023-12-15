@@ -30,9 +30,6 @@
 					style="min-width: 150px"
 				/>
 			</template>
-			<template v-slot:top-right>
-				<!-- Add any additional controls here -->
-			</template>
 			<template v-slot:body-cell-actions="props">
 				<q-td :key="props.name">
 					<q-btn-dropdown color="primary">
@@ -68,24 +65,7 @@ export default {
 			$q: useQuasar(),
 			authState: useAuthState(),
 			search: "",
-			works: [
-				{
-					workId: "1283bh",
-					email: "john.doe@example.com",
-					category: "Software",
-					service: "Email",
-					status: "Working",
-					createdDate: new Date().toDateString(),
-				},
-				{
-					workId: "weoi33",
-					email: "john.mitcjh@example.com",
-					category: "Photography",
-					service: "Single Picture",
-					status: "Pending",
-					createdDate: new Date().toDateString(),
-				},
-			],
+			works: [],
 			columns: [
 				{
 					name: "workId",
@@ -123,6 +103,20 @@ export default {
 					sortable: true,
 				},
 				{
+					name: "paymentInterval",
+					align: "left",
+					label: "Payment Interval",
+					field: (row) => row?.subscription?.interval ?? "N/A",
+					sortable: true,
+				},
+				{
+					name: "cost",
+					align: "left",
+					label: "cost",
+					field: (row) => row?.subscription?.cost ?? "N/A",
+					sortable: true,
+				},
+				{
 					name: "createdDate",
 					align: "left",
 					label: "Created Date",
@@ -149,6 +143,37 @@ export default {
 		};
 	},
 	async mounted() {
+		let grabbedWorks = [
+			{
+				workId: "1283bh",
+				email: "john.doe@example.com",
+				category: "Software",
+				service: "Email",
+				status: "Working",
+				createdDate: new Date().toDateString(),
+			},
+			{
+				workId: "weoi33",
+				email: "john.mitcjh@example.com",
+				category: "Photography",
+				service: "Single Picture",
+				status: "Pending",
+				createdDate: new Date().toDateString(),
+				subscription: {
+					interval: "7 Days",
+					cost: 75.0,
+				},
+			},
+		];
+		//Get Filtering Info
+		let anySubscriptions = false;
+		grabbedWorks.forEach((element) => {
+			console.log(anySubscriptions);
+			if (!anySubscriptions && element.subscription) {
+				anySubscriptions = true;
+			}
+		});
+		//Editing Col Visibilit
 		if (this.$q.screen.lt.lg) {
 			if (!this.user?.roles?.includes("admin")) {
 				this.visibleColumns = ref(["service", "status", "actions"]);
@@ -159,6 +184,10 @@ export default {
 					"status",
 					"actions",
 				]);
+				if (anySubscriptions) {
+					this.visibleColumns.push("paymentInterval");
+					this.visibleColumns.push("cost");
+				}
 			}
 		} else {
 			if (!this.user?.roles?.includes("admin")) {
@@ -180,7 +209,12 @@ export default {
 					"actions",
 				]);
 			}
+			if (anySubscriptions) {
+				this.visibleColumns.push("paymentInterval");
+				this.visibleColumns.push("cost");
+			}
 		}
+		this.works = grabbedWorks;
 		this.$nextTick(() => {
 			let userEmail = this.route?.params?.email;
 			if (userEmail) {

@@ -30,9 +30,6 @@
 					style="min-width: 150px"
 				/>
 			</template>
-			<template v-slot:top-right>
-				<!-- Add any additional controls here -->
-			</template>
 			<template v-slot:body-cell-actions="props">
 				<q-td :key="props.name">
 					<q-btn-dropdown color="primary">
@@ -67,48 +64,7 @@ export default {
 			loading: true,
 			$q: useQuasar(),
 			search: "",
-			users: [
-				{
-					userId: "user01",
-					fullName: "John Doe",
-					email: "john.doe@example.com",
-					emailConfirmed: true,
-					phoneNumber: "123-456-7890",
-					mfa: false,
-				},
-				{
-					userId: "user02",
-					fullName: "Jane Smith",
-					email: "jane.smith@example.com",
-					emailConfirmed: false,
-					phoneNumber: "234-567-8901",
-					mfa: true,
-				},
-				{
-					userId: "user03",
-					fullName: "Alice Johnson",
-					email: "alice.johnson@example.com",
-					emailConfirmed: true,
-					phoneNumber: "345-678-9012",
-					mfa: false,
-				},
-				{
-					userId: "user04",
-					fullName: "Bob Brown",
-					email: "bob.brown@example.com",
-					emailConfirmed: false,
-					phoneNumber: "456-789-0123",
-					mfa: true,
-				},
-				{
-					userId: "user05",
-					fullName: "Carol White",
-					email: "carol.white@example.com",
-					emailConfirmed: true,
-					phoneNumber: "567-890-1234",
-					mfa: false,
-				},
-			],
+			users: [],
 			columns: [
 				{
 					name: "userId",
@@ -147,6 +103,22 @@ export default {
 					visible: false,
 				},
 				{
+					name: "monthlyCost",
+					align: "left",
+					label: "Monthly $",
+					field: (row) => row.monthlyCost,
+					sortable: true,
+					visible: false,
+				},
+				{
+					name: "totalCost",
+					align: "left",
+					label: "Total $",
+					field: (row) => row.totalCost,
+					sortable: true,
+					visible: false,
+				},
+				{
 					name: "mfa",
 					align: "left",
 					label: "MFA",
@@ -170,14 +142,70 @@ export default {
 				"actions",
 				"phoneNumber",
 				"mfa",
+				"monthlyCost",
+				"totalCost",
 			]),
 		};
 	},
 	async mounted() {
+		//Gather Data
+		let grabbedRows = [
+			{
+				userId: "user01",
+				fullName: "John Doe",
+				email: "john.doe@example.com",
+				emailConfirmed: true,
+				phoneNumber: "123-456-7890",
+				mfa: false,
+				monthlyCost: 75.0,
+				totalCost: 55.9,
+			},
+			{
+				userId: "user02",
+				fullName: "Jane Smith",
+				email: "jane.smith@example.com",
+				emailConfirmed: false,
+				phoneNumber: "234-567-8901",
+				mfa: true,
+				monthlyCost: 75.0,
+				totalCost: 55.9,
+			},
+			{
+				userId: "user03",
+				fullName: "Alice Johnson",
+				email: "alice.johnson@example.com",
+				emailConfirmed: true,
+				phoneNumber: "345-678-9012",
+				mfa: false,
+				monthlyCost: 0,
+				totalCost: 9,
+			},
+			{
+				userId: "user04",
+				fullName: "Bob Brown",
+				email: "bob.brown@example.com",
+				emailConfirmed: false,
+				phoneNumber: "456-789-0123",
+				mfa: true,
+				monthlyCost: 76.0,
+				totalCost: 52.9,
+			},
+			{
+				userId: "user05",
+				fullName: "Carol White",
+				email: "carol.white@example.com",
+				emailConfirmed: true,
+				phoneNumber: "567-890-1234",
+				mfa: false,
+				monthlyCost: 76.0,
+				totalCost: 52.9,
+			},
+		];
 		//if this is not a admin
 		if (this.$q.screen.lt.lg) {
 			this.visibleColumns = ref(["email", "actions"]);
 		}
+		this.users = grabbedRows;
 		//Validate that jwt token can not let admin who edited app settings on browser through to admin endpoint
 	},
 	unmounted() {},
