@@ -4,15 +4,15 @@
 			<q-input v-model="search" placeholder="Search" />
 		</div>
 		<q-table
-			title="User Management"
+			:grid="$q.screen.lt.md"
 			:rows="users"
 			class="q-mt-lg"
 			:columns="columns"
-			row-key="userId"
+			row-key="is"
 			:filter="search"
 			:visible-columns="visibleColumns"
 		>
-			<template v-slot:top>
+			<template v-if="$q.screen.gt.sm" v-slot:top>
 				<q-space />
 
 				<q-select
@@ -30,7 +30,7 @@
 					style="min-width: 150px"
 				/>
 			</template>
-			<template v-slot:body-cell-actions="props">
+			<template v-if="$q.screen.gt.sm" v-slot:body-cell-actions="props">
 				<q-td :key="props.name">
 					<q-btn-dropdown color="primary">
 						<q-list>
@@ -45,9 +45,112 @@
 									}}</q-item-label>
 								</q-item-section>
 							</q-item>
+							<q-item
+								v-for="(action, index) in props.row.actions"
+								:key="index"
+								:to="action.link"
+								clickable
+								v-close-popup
+							>
+								<q-item-section>
+									<q-item-label>{{
+										$t(action.name)
+									}}</q-item-label>
+								</q-item-section>
+							</q-item>
 						</q-list>
 					</q-btn-dropdown>
 				</q-td>
+			</template>
+			<template v-if="$q.screen.lt.md" v-slot:item="props">
+				<div class="q-pa-xs col-12">
+					<q-card flat bordered>
+						<q-card-section
+							class="flex justify-between bg-secondary"
+						>
+							<span v-if="props.row.emailConfirmed">{{
+								props.row.email
+							}}</span>
+							<q-badge v-else color="red">{{
+								props.row.email
+							}}</q-badge>
+						</q-card-section>
+						<q-card-section>
+							<q-list bordered separator>
+								<q-item>
+									<q-item-section>
+										<q-item-label caption>{{
+											$t("ID")
+										}}</q-item-label>
+										<q-item-label>{{
+											props.row.userId
+										}}</q-item-label>
+									</q-item-section>
+								</q-item>
+								<q-item>
+									<q-item-section>
+										<q-item-label caption>{{
+											$t("Name")
+										}}</q-item-label>
+										<q-item-label>{{
+											props.row.fullName
+										}}</q-item-label>
+									</q-item-section>
+								</q-item>
+								<q-item>
+									<q-item-section>
+										<q-item-label caption>{{
+											$t("$ Monthly")
+										}}</q-item-label>
+										<q-item-label>{{
+											props.row.monthlyCost
+										}}</q-item-label>
+									</q-item-section>
+								</q-item>
+								<q-item>
+									<q-item-section>
+										<q-item-label caption>{{
+											$t("$ Total")
+										}}</q-item-label>
+										<q-item-label>{{
+											props.row.totalCost
+										}}</q-item-label>
+									</q-item-section>
+								</q-item>
+								<q-item>
+									<q-item-section
+										v-if="props.row?.phoneNumber"
+									>
+										<q-item-label caption>{{
+											$t("Phone")
+										}}</q-item-label>
+										<q-item-label>{{
+											props.row.phoneNumber
+										}}</q-item-label>
+									</q-item-section>
+								</q-item>
+								<q-item>
+									<q-item-section>
+										<q-item-label caption>{{
+											$t("MFA")
+										}}</q-item-label>
+										<q-item-label>{{
+											props.row.mfa
+										}}</q-item-label>
+									</q-item-section>
+								</q-item>
+							</q-list>
+							<q-btn
+								v-for="(action, index) in props.row.actions"
+								:key="index"
+								color="secondary"
+								:label="$t(action.name)"
+								:to="action.link"
+								class="full-width"
+							/>
+						</q-card-section>
+					</q-card>
+				</div>
 			</template>
 		</q-table>
 	</q-page>
@@ -67,9 +170,9 @@ export default {
 			users: [],
 			columns: [
 				{
-					name: "userId",
+					name: "id",
 					align: "left",
-					label: "User ID",
+					label: "Id",
 					field: (row) => row.userId,
 					sortable: true,
 				},
@@ -100,7 +203,6 @@ export default {
 					label: "Phone Number",
 					field: (row) => row.phoneNumber,
 					sortable: true,
-					visible: false,
 				},
 				{
 					name: "monthlyCost",
@@ -108,7 +210,6 @@ export default {
 					label: "Monthly $",
 					field: (row) => row.monthlyCost,
 					sortable: true,
-					visible: false,
 				},
 				{
 					name: "totalCost",
@@ -116,7 +217,6 @@ export default {
 					label: "Total $",
 					field: (row) => row.totalCost,
 					sortable: true,
-					visible: false,
 				},
 				{
 					name: "mfa",
@@ -124,7 +224,6 @@ export default {
 					label: "MFA",
 					field: (row) => row.mfa,
 					sortable: true,
-					visible: false,
 				},
 				{
 					name: "actions",
@@ -135,7 +234,7 @@ export default {
 				},
 			],
 			visibleColumns: ref([
-				"userId",
+				"id",
 				"fullName",
 				"email",
 				"emailConfirmed",
@@ -169,6 +268,7 @@ export default {
 				mfa: true,
 				monthlyCost: 75.0,
 				totalCost: 55.9,
+				actions: [{ name: "Delete", link: "somelink" }],
 			},
 			{
 				userId: "user03",
@@ -201,10 +301,6 @@ export default {
 				totalCost: 52.9,
 			},
 		];
-		//if this is not a admin
-		if (this.$q.screen.lt.lg) {
-			this.visibleColumns = ref(["email", "actions"]);
-		}
 		this.users = grabbedRows;
 		//Validate that jwt token can not let admin who edited app settings on browser through to admin endpoint
 	},
