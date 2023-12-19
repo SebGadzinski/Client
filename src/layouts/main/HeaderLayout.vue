@@ -26,6 +26,11 @@
 					<!-- Menu content -->
 					<q-menu fit>
 						<q-list>
+							<q-item v-if="!user" to="/auth/login">
+								<q-item-section>{{
+									$t("Login")
+								}}</q-item-section></q-item
+							>
 							<q-item v-if="user" to="/work"
 								><q-item-section>{{
 									$t("Work")
@@ -36,11 +41,6 @@
 								to="/admin/users"
 								><q-item-section>{{
 									$t("Users")
-								}}</q-item-section></q-item
-							>
-							<q-item v-else to="/auth/login">
-								<q-item-section>{{
-									$t("Login")
 								}}</q-item-section></q-item
 							>
 							<q-item to="/settings"

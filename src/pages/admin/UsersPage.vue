@@ -143,7 +143,7 @@
 							<q-btn
 								v-for="(action, index) in props.row.actions"
 								:key="index"
-								color="secondary"
+								color="secondary text-black"
 								:label="$t(action.name)"
 								:to="action.link"
 								class="full-width"
@@ -268,7 +268,6 @@ export default {
 				mfa: true,
 				monthlyCost: 75.0,
 				totalCost: 55.9,
-				actions: [{ name: "Delete", link: "somelink" }],
 			},
 			{
 				userId: "user03",

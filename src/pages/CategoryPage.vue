@@ -143,7 +143,7 @@ export default {
 			});
 			this.services.push({
 				thumbnail:
-					"https://www.wallpapers13.com/wp-content/uploads/2016/01/Cool-and-Beautiful-Nature-desktop-wallpaper-image-2560X1600-1600x1200.jpg",
+					"http://getwallpapers.com/wallpaper/full/9/b/9/7401.jpg",
 				service: "Project Maintence",
 				service_link: "project_maintence",
 				stars: 4,
@@ -170,7 +170,7 @@ export default {
 			});
 			this.services.push({
 				thumbnail:
-					"https://www.wallpapers13.com/wp-content/uploads/2016/01/Cool-and-Beautiful-Nature-desktop-wallpaper-image-2560X1600-1600x1200.jpg",
+					"http://getwallpapers.com/wallpaper/full/9/b/9/7401.jpg",
 				service: "Project Maintence",
 				service_link: "project_maintence",
 				stars: 4,
@@ -197,7 +197,7 @@ export default {
 			});
 			this.services.push({
 				thumbnail:
-					"https://www.wallpapers13.com/wp-content/uploads/2016/01/Cool-and-Beautiful-Nature-desktop-wallpaper-image-2560X1600-1600x1200.jpg",
+					"http://getwallpapers.com/wallpaper/full/9/b/9/7401.jpg",
 				service: "Project Maintence",
 				service_link: "project_maintence",
 				stars: 4,

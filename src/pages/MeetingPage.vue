@@ -1,7 +1,8 @@
 <template>
 	<q-page class="flex column q-py-lg">
 		<div class="text-center">
-			<h4>{{ $t("Book " + cap(service)) }}</h4>
+			<h4 class="q-mb-none">{{ $t("Book Meeting") }}</h4>
+			<h6 class="q-my-none">{{ $t(cap(service)) }}</h6>
 		</div>
 		<div class="flex justify-center q-pa-md">
 			<q-date
