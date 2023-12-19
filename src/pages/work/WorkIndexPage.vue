@@ -32,10 +32,7 @@
 			</template>
 			<template v-if="$q.screen.gt.sm" v-slot:body-cell-actions="props">
 				<q-td :key="props.name">
-					<q-btn-dropdown
-						color="primary"
-						v-if="props.row?.actions?.length > 0"
-					>
+					<q-btn-dropdown color="primary">
 						<q-list>
 							<q-item
 								v-if="user?.roles?.includes('admin')"
@@ -46,6 +43,17 @@
 								<q-item-section>
 									<q-item-label>{{
 										$t("Edit")
+									}}</q-item-label>
+								</q-item-section>
+							</q-item>
+							<q-item
+								clickable
+								v-close-popup
+								:to="`/work/${props.row.workId}`"
+							>
+								<q-item-section>
+									<q-item-label>{{
+										$t("View")
 									}}</q-item-label>
 								</q-item-section>
 							</q-item>
@@ -123,6 +131,13 @@
 								</q-item>
 							</q-list>
 							<q-btn
+								color="secondary"
+								:label="$t('View')"
+								:to="`/work/${props.row.workId}`"
+								class="full-width"
+							/>
+							<q-btn
+								v-if="user?.roles?.includes('admin')"
 								color="secondary"
 								:label="$t('Edit')"
 								:to="`/work/edit/${props.row.workId}`"
@@ -245,10 +260,12 @@ export default {
 				workId: "1283bh",
 				email: "john.doe@example.com",
 				category: "Software",
-				service: "Email",
+				service: "Custom Personal Assistant UI",
 				status: "Working",
 				createdDate: new Date().toDateString(),
-				actions: [{ name: "ToLink", link: "somelink" }],
+				actions: [
+					{ name: "Accept", link: "/work/confirmation/1283bh" },
+				],
 			},
 			{
 				workId: "weoi33",

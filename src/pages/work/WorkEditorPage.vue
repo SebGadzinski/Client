@@ -1,12 +1,7 @@
 <template>
 	<q-page padding>
 		<!-- Meta Data -->
-		<q-form
-			class="form-class"
-			name="Work"
-			ref="myForm"
-			@submit.prevent="handleSave"
-		>
+		<q-form class="form-class" name="Work" @submit.prevent="handleSave">
 			<h3 class="text-center">{{ $t("Meta Data") }}</h3>
 			<div class="flex row flex-center">
 				<q-list>
