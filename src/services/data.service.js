@@ -58,6 +58,25 @@ class DataService {
             });
         });
     }
+
+    async fetchCategories(page) {
+        try{
+            let response = await api.post('/data/col/', {
+                name: 'category',
+                page: page,
+                limit: 10
+              });
+            if(response.data.success){
+                return response.data.data;
+            }else{
+                console.log("Message: ");
+                console.log(response.data.message);
+                throw new Error(`Could not get categories`);
+            }
+        }catch(err){
+            throw err;
+        }
+    }
 }
 
 export default new DataService();

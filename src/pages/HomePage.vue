@@ -16,7 +16,7 @@
 					bordered
 					@mouseenter="hideImage(index)"
 					@mouseleave="showImage(index)"
-					@click="navigateToCategory(category.category_link)"
+					@click="navigateToCategory(category.name)"
 				>
 					<div class="media-container">
 						<img
@@ -31,12 +31,9 @@
 								<q-item
 									clickable
 									v-ripple
-									v-for="(
-										item, dlIndex
-									) in category.servicesList"
+									v-for="(item, dlIndex) in category.services"
 									:to="item.link"
 									:key="dlIndex"
-									@click="onListItemClick($event, item.link)"
 								>
 									<q-item-section>
 										<q-item-label overline>{{
@@ -52,11 +49,11 @@
 					</div>
 					<q-card-section>
 						<div class="text-h6 q-mb-xs">
-							{{ $t(category.category) }}
+							{{ $t(category.name) }}
 						</div>
 						<div class="row no-wrap items-center">
 							<span class="text-caption text-grey q-ml-sm">{{
-								$t(`${category.servicesList.length} Services`)
+								$t(`${category.services.length} Services`)
 							}}</span>
 						</div>
 					</q-card-section>
@@ -71,6 +68,7 @@
 	</q-page>
 </template>
 <script>
+import dataService from "../services/data.service";
 import { useQuasar, QSpinnerGears, QInfiniteScroll } from "quasar";
 import VanillaTilt from "vanilla-tilt";
 
@@ -88,6 +86,7 @@ export default {
 			],
 			players: [],
 			$q: useQuasar(),
+			currentPage: 1,
 		};
 	},
 	methods: {
@@ -133,54 +132,34 @@ export default {
 			this.$router.push(`/${category}`);
 		},
 		async loadMore() {
-			this.loading = true;
-			// Fetch or generate more categories here
-			// For example, you could make an API call to get more categories
-			// Simulate a delay for demonstration
-			// Add new categories to the list
-			this.categorys.push({
-				thumbnail: "https://cdn.quasar.dev/img/mountains.jpg",
-				category: "Software",
-				category_link: "software",
-				stars: 4,
-				servicesList: [],
-			});
-			for (let i = 1; i < 20; i++) {
-				this.categorys[0].servicesList.push({
-					header: "Email",
-					details: "Working with things to get things done",
-					link: `software/email`,
-				});
-			}
-			this.categorys.push({
-				thumbnail:
-					"http://getwallpapers.com/wallpaper/full/9/b/9/7401.jpg",
-				category: "Photography",
-				category_link: "photography",
-				stars: 4,
-				servicesList: [
-					{
-						header: "Email",
-						details: "Working with things to get things done",
-						link: `photography/email`,
-					},
-				],
-			});
+			const newCategories = await dataService.fetchCategories(
+				this.currentPage
+			);
+			console.log(newCategories);
 
-			this.loading = false;
-			this.$nextTick(() => {
-				// Access DOM elements here
-				for (let i = 0; i < this.categorys.length; i++) {
-					const tiltElement = document.getElementById(
-						`custom-card-${i}`
-					);
-					VanillaTilt.init(tiltElement, {
-						max: 2,
-						glare: false,
-						"max-glare": 1,
-					});
+			if (newCategories && newCategories.length > 0) {
+				for (let i = 0; newCategories.length < i; i++) {
+					console.log("pushing:");
+					console.log(newCategories[i]);
+					this.categorys.push(newCategories[i]);
+					this.currentPage++;
 				}
-			});
+			}
+			console.log(this.categorys);
+			this.loading = false;
+			// this.$nextTick(() => {
+			// 	// Access DOM elements here
+			// 	for (let i = 0; i < this.categorys.length; i++) {
+			// 		const tiltElement = document.getElementById(
+			// 			`custom-card-${i}`
+			// 		);
+			// 		VanillaTilt.init(tiltElement, {
+			// 			max: 2,
+			// 			glare: false,
+			// 			"max-glare": 1,
+			// 		});
+			// 	}
+			// });
 		},
 		killTilt(index) {
 			// Destroy the tilt effect
