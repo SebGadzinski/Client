@@ -522,10 +522,12 @@
 				</q-item>
 				<q-item>
 					<q-item-section>
-						<q-item-label caption>{{ $t("Status") }}</q-item-label>
+						<q-item-label caption>{{
+							$t("Payment Status")
+						}}</q-item-label>
 						<q-select
-							v-model="status"
-							:options="statusOptions"
+							v-model="paymentStatus"
+							:options="paymentStatusOptions"
 							class="full-width"
 						/>
 					</q-item-section>
@@ -672,6 +674,7 @@ export default {
 				},
 			},
 			status: "",
+			paymentStatus: "",
 		};
 	},
 	async mounted() {
@@ -701,6 +704,7 @@ export default {
 		this.category = "Software";
 		this.service = "Custom Personal Assistant UI";
 		this.status = "Pending";
+		this.paymentStatus = "Pending";
 		let grabbedUserOptions = [
 			"sebastian.gadzinski@kalder.com",
 			"user@gmail.com",
@@ -723,7 +727,6 @@ export default {
 			"Working",
 			"Completed",
 		];
-		let grabbedStatusOptions = ["New", "Pending", "Working", "Completed"];
 
 		let grabbedWorkRows = [
 			{
@@ -761,7 +764,6 @@ export default {
 		this.serviceOptions = grabbedServiceOptions;
 		this.workStatusOptions = grabbedWorkStatusOptions;
 		this.paymentStatusOptions = grabbedPaymentStatusOptions;
-		this.statusOptions = grabbedStatusOptions;
 		this.workItems = grabbedWorkRows;
 		this.paymentItems = grabbedPaymentRows;
 	},

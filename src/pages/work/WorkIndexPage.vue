@@ -32,9 +32,13 @@
 			</template>
 			<template v-if="$q.screen.gt.sm" v-slot:body-cell-actions="props">
 				<q-td :key="props.name">
-					<q-btn-dropdown color="primary">
+					<q-btn-dropdown
+						color="primary"
+						v-if="props.row?.actions?.length > 0"
+					>
 						<q-list>
 							<q-item
+								v-if="user?.roles?.includes('admin')"
 								clickable
 								v-close-popup
 								:to="`/work/edit/${props.row.workId}`"
