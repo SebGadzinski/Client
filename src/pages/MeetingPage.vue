@@ -74,10 +74,26 @@ export default {
 			return number < 10 ? "0" + number : number;
 		},
 		async bookMeeting() {
-			// Book meeting
-			// if user is unknown go to sign up form with work url as param so they know where to go after
-			// else state the user succesfully book, and go to work page which should show this with status Booked Meeting
-			//This should create a work object in the database
+			try {
+				console.log("Printing Receipt");
+				this.loading = true;
+				this.$q.loading.show({
+					spinner: QSpinnerGears,
+					backgroundColor: "#1e5499",
+					message: this.$t("Saving..."),
+				});
+				setTimeout(() => {
+					this.$q.loading.hide();
+				}, 2000);
+				// Book meeting
+				// if user is unknown go to sign up form with work url as param so they know where to go after
+				// else state the user succesfully book, and go to work page which should show this with status Booked Meeting
+				//This should create a work object in the database
+			} catch (err) {
+				this.$q.loading.hide();
+				this.loading = false;
+				console.error(err);
+			}
 		},
 	},
 };

@@ -116,12 +116,11 @@ export default {
 		async handleSubmit() {
 			try {
 				if (this.acceptTNC) {
-					console.log("Timing out");
 					this.loading = true;
 					this.$q.loading.show({
 						spinner: QSpinnerGears,
 						backgroundColor: "#1e5499",
-						message: this.$t("Saving"),
+						message: this.$t("Accepting..."),
 					});
 					setTimeout(() => {
 						this.$q.loading.hide();
