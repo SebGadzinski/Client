@@ -84,6 +84,7 @@ export default {
 				});
 				setTimeout(() => {
 					this.$q.loading.hide();
+					this.loading = false;
 				}, 2000);
 				// Book meeting
 				// if user is unknown go to sign up form with work url as param so they know where to go after

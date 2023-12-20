@@ -90,6 +90,23 @@ class DataService {
             throw err;
         }
     }
+
+    async getServicePageData(categorySlug, serviceSlug) {
+        try{
+            let response = await api.post('/data/getServicePageData', {
+                categorySlug, serviceSlug
+              });
+            if(response.data.success){
+                return response.data.data;
+            }else{
+                console.log("Message: ");
+                console.log(response.data.message);
+                throw new Error(`Could not get service data`);
+            }
+        }catch(err){
+            throw err;
+        }
+    }
 }
 
 export default new DataService();

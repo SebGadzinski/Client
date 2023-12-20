@@ -1,5 +1,5 @@
 <template>
-	<q-page :class="'flex column'">
+	<q-page v-if="Object.keys(service).length > 0" :class="'flex column'">
 		<div class="q-pa-md carousel-outer-div">
 			<q-carousel
 				animated
@@ -16,7 +16,7 @@
 				:height="$q.screen.lt.md ? '400px' : ''"
 			>
 				<q-carousel-slide
-					v-for="(slide, index) in slides"
+					v-for="(slide, index) in service.slides"
 					:key="index"
 					:name="index"
 					:img-src="$q.screen.lt.md ? slide.image : ''"
@@ -46,7 +46,7 @@
 		</div>
 		<div>
 			<div
-				v-for="(detail, index) in details"
+				v-for="(detail, index) in service.details"
 				:key="index"
 				class="text-center"
 			>
@@ -61,17 +61,20 @@
 			<q-btn
 				class="text-h6 consultation-meeting-btn"
 				color="primary"
-				:to="`/${category}/${service}/meeting`"
+				:to="`/${categorySlug}/${serviceSlug}/meeting`"
 				>{{ $t("Set Up Meeting") }}</q-btn
 			>
 		</div>
-		<div class="flex justify-center text-center" v-if="faqs.length > 0">
+		<div
+			class="flex justify-center text-center"
+			v-if="service.faqs.length > 0"
+		>
 			<div class="full-width">
 				<h3>{{ $t("FAQs") }}</h3>
 			</div>
 			<q-list bordered class="rounded-borders">
 				<q-expansion-item
-					v-for="(faq, index) in faqs"
+					v-for="(faq, index) in service.faqs"
 					:key="index"
 					class="bg-primary text-subtitle1 faq-section text-left"
 					expand-icon-class="text-white"
@@ -90,6 +93,7 @@
 </template>
 
 <script>
+import dataService from "../services/data.service";
 import { useQuasar, QSpinnerGears } from "quasar";
 import { useRoute } from "vue-router";
 import { ref } from "vue";
@@ -99,49 +103,37 @@ export default {
 	data() {
 		return {
 			loading: true,
-			category: "",
-			service: "",
-			slides: [
-				{
-					image: "https://www.pixelstalk.net/wp-content/uploads/2016/10/Cool-high-resolution-pictures.jpg",
-					text: "Important Info",
-				},
-				{
-					image: "https://www.pixelstalk.net/wp-content/uploads/2016/10/Cool-high-resolution-pictures.jpg",
-					text: "Important Info",
-				},
-			],
-			details: [
-				{
-					header: "Description",
-					info: "This data is what will be used for information.",
-				},
-				{
-					header: "Examples",
-					info: "Email marketing campaign, Email subscriptions, Email Sender UI, Email reporting system. Custom Email Functionality",
-				},
-				{ header: "Price", info: "Based off project size." },
-				{ header: "Service Time", info: "Based off project size." },
-			],
-			faqs: [
-				{
-					question: "why am i so hot",
-					answer: "Cause your a hot pocket",
-				},
-				{
-					question: "why am i so hot",
-					answer: "Cause your a hot pocket",
-				},
-			],
+			categorySlug: "",
+			serviceSlug: "",
 			route: useRoute(),
 			$q: useQuasar(),
 			slide: ref(0),
 			autoplay: ref(true),
+			service: {},
 		};
 	},
 	async mounted() {
-		this.category = this.route?.params?.category;
-		this.service = this.route?.params?.service;
+		try {
+			this.categorySlug = this.route?.params?.category;
+			this.serviceSlug = this.route?.params?.service;
+			this.loading = true;
+			this.$q.loading.show({
+				spinner: QSpinnerGears,
+				backgroundColor: "#1e5499",
+				message: this.$t("Loading..."),
+			});
+			this.service = await dataService.getServicePageData(
+				this.categorySlug,
+				this.serviceSlug
+			);
+			console.log(this.service);
+			this.$q.loading.hide();
+			this.loading = false;
+		} catch (err) {
+			this.$q.loading.hide();
+			this.loading = false;
+			console.error(err);
+		}
 	},
 	unmounted() {},
 	async updated() {},
