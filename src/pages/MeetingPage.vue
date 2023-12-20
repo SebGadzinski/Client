@@ -2,7 +2,7 @@
 	<q-page class="flex column q-py-lg">
 		<div class="text-center">
 			<h4 class="q-mb-none">{{ $t("Book Meeting") }}</h4>
-			<h6 class="q-my-none">{{ $t(cap(service)) }}</h6>
+			<h6 class="q-my-none">{{ $t(cap(serviceSlug)) }}</h6>
 		</div>
 		<div class="flex justify-center q-pa-md">
 			<q-date
@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import dataService from "../services/data.service";
 import { useQuasar, QSpinnerGears } from "quasar";
 import { useRoute } from "vue-router";
 import { ref } from "vue";
@@ -42,17 +43,39 @@ export default {
 	data() {
 		return {
 			loading: true,
-			category: "",
-			service: "",
+			categorySlug: "",
+			serviceSlug: "",
 			$q: useQuasar(),
 			route: useRoute(),
 			date: ref(""),
 		};
 	},
 	async mounted() {
-		this.category = this.route?.params?.category;
-		this.service = this.route?.params?.service;
-		//update date based on first available date
+		this.categorySlug = this.route?.params?.categorySlug;
+		this.serviceSlug = this.route?.params?.serviceSlug;
+
+		try {
+			this.categorySlug = this.route?.params?.category;
+			this.serviceSlug = this.route?.params?.service;
+			this.loading = true;
+			this.$q.loading.show({
+				spinner: QSpinnerGears,
+				backgroundColor: "#1e5499",
+				message: this.$t("Loading..."),
+			});
+			this.meeting = await dataService.getMeetingPageData(
+				this.categorySlug,
+				this.serviceSlug
+			);
+			console.log(this.meeting);
+			this.$q.loading.hide();
+			this.loading = false;
+		} catch (err) {
+			this.$q.loading.hide();
+			this.loading = false;
+			console.error(err);
+		}
+
 		this.date = this.formatDateTime(new Date().toISOString());
 	},
 	unmounted() {},

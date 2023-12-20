@@ -107,6 +107,23 @@ class DataService {
             throw err;
         }
     }
+
+    async getMeetingPageData(categorySlug, serviceSlug) {
+        try{
+            let response = await api.post('/data/getMeetingPageData', {
+                categorySlug, serviceSlug, date: new Date()
+              });
+            if(response.data.success){
+                return response.data.data;
+            }else{
+                console.log("Message: ");
+                console.log(response.data.message);
+                throw new Error(`Could not get meeting data`);
+            }
+        }catch(err){
+            throw err;
+        }
+    }
 }
 
 export default new DataService();
