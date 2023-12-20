@@ -16,41 +16,25 @@
 					bordered
 					@mouseenter="hideImage(index)"
 					@mouseleave="showImage(index)"
-					@click="navigateToService(service.service_link)"
+					@click="navigateToService(service.slug)"
 				>
 					<div class="media-container">
 						<img
 							:class="`service-picture-${index}`"
-							:src="service.thumbnail"
+							:src="service.thumbnailImg"
 						/>
 						<div
 							class="q-pa-md"
 							:class="`service-list-${index} hidden`"
 						>
-							<q-list bordered separator>
-								<q-item
-									clickable
-									v-ripple
-									v-for="(
-										item, dlIndex
-									) in service.descriptionList"
-									:key="dlIndex"
-								>
-									<q-item-section>
-										<q-item-label overline>{{
-											$t(item.header)
-										}}</q-item-label>
-										<q-item-label>{{
-											$t(item.details)
-										}}</q-item-label>
-									</q-item-section>
-								</q-item>
-							</q-list>
+							<span class="text-body1">{{
+								$t(service.description)
+							}}</span>
 						</div>
 					</div>
 					<q-card-section>
 						<div class="text-h6 q-mb-xs">
-							{{ $t(service.service) }}
+							{{ $t(service.name) }}
 						</div>
 					</q-card-section>
 				</q-card>
@@ -65,27 +49,30 @@
 </template>
 
 <script>
+import dataService from "../services/data.service";
 import { useQuasar, QSpinnerGears } from "quasar";
 import { useRoute } from "vue-router";
 import VanillaTilt from "vanilla-tilt";
+import { refund } from "vue-gtag";
+import { ref } from "vue";
 
 export default {
 	name: "CategoryPage",
 	data() {
 		return {
 			loading: true,
-			category: "",
+			categorySlug: ref(""),
 			services: [],
 			route: useRoute(),
 			$q: useQuasar(),
 		};
 	},
 	async mounted() {
-		this.category = this.route?.params?.category;
+		this.categorySlug = ref(this.route?.params?.category);
+		await this.loadMore();
 	},
 	unmounted() {},
 	async updated() {},
-
 	methods: {
 		hideImage(index) {
 			if (this.$q.screen.gt.sm) {
@@ -119,97 +106,21 @@ export default {
 				list.style.opacity = "0";
 			}
 		},
-		navigateToService(service) {
-			this.$router.push(`/${this.category}/${service}`);
+		navigateToService(serviceSlug) {
+			this.$router.push(`/${this.categorySlug}/${serviceSlug}`);
 		},
 		async loadMore() {
+			if (this.categorySlug === "") return;
 			this.loading = true;
-			// Fetch or generate more categories here
-			// For example, you could make an API call to get more categories
-			// Simulate a delay for demonstration
-			// Add new categories to the list
-			this.services.push({
-				thumbnail: "https://cdn.quasar.dev/img/mountains.jpg",
-				service: "Email",
-				service_link: "email",
-				stars: 4,
-				descriptionList: [
-					{
-						header: "Header Info",
-						details:
-							"This is why you should hire me for work. i am cheap",
-					},
-				],
-			});
-			this.services.push({
-				thumbnail:
-					"http://getwallpapers.com/wallpaper/full/9/b/9/7401.jpg",
-				service: "Project Maintence",
-				service_link: "project_maintence",
-				stars: 4,
-				descriptionList: [
-					{
-						header: "Header Info",
-						details:
-							"This is why you should hire me for work. i am cheap",
-					},
-				],
-			});
-			this.services.push({
-				thumbnail: "https://cdn.quasar.dev/img/mountains.jpg",
-				service: "Email",
-				service_link: "email",
-				stars: 4,
-				descriptionList: [
-					{
-						header: "Header Info",
-						details:
-							"This is why you should hire me for work. i am cheap",
-					},
-				],
-			});
-			this.services.push({
-				thumbnail:
-					"http://getwallpapers.com/wallpaper/full/9/b/9/7401.jpg",
-				service: "Project Maintence",
-				service_link: "project_maintence",
-				stars: 4,
-				descriptionList: [
-					{
-						header: "Header Info",
-						details:
-							"This is why you should hire me for work. i am cheap",
-					},
-				],
-			});
-			this.services.push({
-				thumbnail: "https://cdn.quasar.dev/img/mountains.jpg",
-				service: "Email",
-				service_link: "email",
-				stars: 4,
-				descriptionList: [
-					{
-						header: "Header Info",
-						details:
-							"This is why you should hire me for work. i am cheap",
-					},
-				],
-			});
-			this.services.push({
-				thumbnail:
-					"http://getwallpapers.com/wallpaper/full/9/b/9/7401.jpg",
-				service: "Project Maintence",
-				service_link: "project_maintence",
-				stars: 4,
-				descriptionList: [
-					{
-						header: "Header Info",
-						details:
-							"This is why you should hire me for work. i am cheap",
-					},
-				],
-			});
-
+			const newServices = await dataService.getCategoryPageData(
+				this.categorySlug
+			);
+			console.log(newServices);
+			if (newServices && newServices.length > 0) {
+				for (let i = 0; i < newServices.length; i++) {
+					this.services.push(newServices[i]);
+				}
+			}
 			this.loading = false;
 			this.$nextTick(() => {
 				// Access DOM elements here

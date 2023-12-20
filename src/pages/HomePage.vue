@@ -16,12 +16,12 @@
 					bordered
 					@mouseenter="hideImage(index)"
 					@mouseleave="showImage(index)"
-					@click="navigateToCategory(category.name)"
+					@click="navigateToCategory(category.slug)"
 				>
 					<div class="media-container">
 						<img
 							:class="`category-picture-${index}`"
-							:src="category.thumbnail"
+							:src="category.thumbnailImg"
 						/>
 						<div
 							class="q-pa-md"
@@ -31,16 +31,26 @@
 								<q-item
 									clickable
 									v-ripple
-									v-for="(item, dlIndex) in category.services"
-									:to="item.link"
+									v-for="(
+										service, dlIndex
+									) in category.services"
+									:to="`/${category.slug}/${service.slug}`"
+									@click="
+										(event) =>
+											onListItemClick(
+												event,
+												category.slug,
+												service.slug
+											)
+									"
 									:key="dlIndex"
 								>
 									<q-item-section>
 										<q-item-label overline>{{
-											$t(item.header)
+											$t(service.name)
 										}}</q-item-label>
 										<q-item-label>{{
-											$t(item.details)
+											$t(service.description)
 										}}</q-item-label>
 									</q-item-section>
 								</q-item>
@@ -81,20 +91,15 @@ export default {
 	data() {
 		return {
 			loading: false,
-			categorys: [
-				// ... initial categories ...
-			],
+			categorys: [],
 			players: [],
 			$q: useQuasar(),
-			currentPage: 1,
 		};
 	},
 	methods: {
-		onListItemClick(event, link) {
-			if (this.$q.screen.gt.sm) {
-				event.stopPropagation(); // Prevents event from bubbling up
-				this.$router.push(link); // Manually handling the navigation
-			}
+		onListItemClick(event, categorySlug, serviceSlug) {
+			event.stopPropagation(); // Prevents event from bubbling up
+			this.$router.push(`/${categorySlug}/${serviceSlug}`); // Manually handling the navigation
 		},
 		hideImage(index) {
 			if (this.$q.screen.gt.sm) {
@@ -107,6 +112,8 @@ export default {
 
 				list.classList.remove("hidden");
 
+				picture.style["z-index"] = 1;
+				list.style["z-index"] = 2;
 				// Start fading out the picture and fading in the video
 				picture.style.opacity = "0";
 				list.style.opacity = "1";
@@ -123,6 +130,8 @@ export default {
 
 				list.classList.add("hidden");
 
+				picture.style["z-index"] = 2;
+				list.style["z-index"] = 1;
 				// Start fading out the picture and fading in the video
 				picture.style.opacity = "1";
 				list.style.opacity = "0";
@@ -132,34 +141,26 @@ export default {
 			this.$router.push(`/${category}`);
 		},
 		async loadMore() {
-			const newCategories = await dataService.fetchCategories(
-				this.currentPage
-			);
-			console.log(newCategories);
-
+			const newCategories = await dataService.getHomePageData();
 			if (newCategories && newCategories.length > 0) {
-				for (let i = 0; newCategories.length < i; i++) {
-					console.log("pushing:");
-					console.log(newCategories[i]);
+				for (let i = 0; i < newCategories.length; i++) {
 					this.categorys.push(newCategories[i]);
-					this.currentPage++;
 				}
 			}
-			console.log(this.categorys);
 			this.loading = false;
-			// this.$nextTick(() => {
-			// 	// Access DOM elements here
-			// 	for (let i = 0; i < this.categorys.length; i++) {
-			// 		const tiltElement = document.getElementById(
-			// 			`custom-card-${i}`
-			// 		);
-			// 		VanillaTilt.init(tiltElement, {
-			// 			max: 2,
-			// 			glare: false,
-			// 			"max-glare": 1,
-			// 		});
-			// 	}
-			// });
+			this.$nextTick(() => {
+				// Access DOM elements here
+				for (let i = 0; i < this.categorys.length; i++) {
+					const tiltElement = document.getElementById(
+						`custom-card-${i}`
+					);
+					VanillaTilt.init(tiltElement, {
+						max: 2,
+						glare: false,
+						"max-glare": 1,
+					});
+				}
+			});
 		},
 		killTilt(index) {
 			// Destroy the tilt effect
