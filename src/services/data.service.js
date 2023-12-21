@@ -124,6 +124,23 @@ class DataService {
             throw err;
         }
     }
+
+    async findUnavailableDurations(date) {
+        try{
+            let response = await api.post('/data/meeting/findUnavailableDurations', {
+                 date
+              });
+            if(response.data.success){
+                return response.data.data;
+            }else{
+                console.log("Message: ");
+                console.log(response.data.message);
+                throw new Error(`Could not get meeting data`);
+            }
+        }catch(err){
+            throw err;
+        }
+    }
 }
 
 export default new DataService();
