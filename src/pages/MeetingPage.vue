@@ -2,7 +2,8 @@
 	<q-page class="flex column q-py-lg">
 		<div class="text-center">
 			<h4 class="q-mb-none">{{ $t("Book Meeting") }}</h4>
-			<h6 class="q-my-none">{{ $t(cap(serviceSlug)) }}</h6>
+			<h6 class="q-my-none">{{ $t(category) }}</h6>
+			<div class="q-my-none textbody1">{{ $t(service) }}</div>
 		</div>
 		<div class="flex justify-center q-pa-md">
 			<q-date
@@ -52,6 +53,8 @@ export default {
 			loading: true,
 			categorySlug: "",
 			serviceSlug: "",
+			category: "",
+			service: "",
 			unavailablePeriods: [],
 			$q: useQuasar(),
 			route: useRoute(),
@@ -80,6 +83,8 @@ export default {
 
 			// Add todays period into unavailable periods
 			const currentDateTime = new Date();
+			this.category = this.meeting.category;
+			this.service = this.meeting.service;
 			this.meeting.unavailablePeriods.push({
 				start: currentDateTime.setHours(0, 0, 0, 0),
 				end: currentDateTime.setHours(
@@ -122,9 +127,6 @@ export default {
 		},
 	},
 	methods: {
-		onHourSelect() {
-			console.log("CHANGED");
-		},
 		cap(string) {
 			return string.charAt(0).toUpperCase() + string.slice(1);
 		},
@@ -233,49 +235,35 @@ export default {
 			return hour < 10 ? `0${hour}:00` : `${hour}:00`;
 		},
 		getNextAvailableDate() {
-			const now = new Date();
+			let nextAvailable = new Date();
+			nextAvailable.setMinutes(0, 0, 0); // Set minutes, seconds, and milliseconds to zero
 
-			// Sort the unavailable periods by start date
-			const sortedPeriods = this.unavailablePeriods
-				.slice()
-				.sort((a, b) => new Date(a.start) - new Date(b.start));
-
-			let lastEndDate = null;
-
-			// Check for available slot between unavailable periods
-			for (const period of sortedPeriods) {
-				const periodStart = new Date(period.start);
-				const periodEnd = new Date(period.end);
-
-				// If there is a gap between last end date and current start date, and it's after 'now'
-				if (
-					lastEndDate &&
-					periodStart > lastEndDate &&
-					lastEndDate > now
-				) {
-					return lastEndDate;
-				}
-
-				lastEndDate = new Date(
-					Math.max(lastEndDate?.getTime() || 0, periodEnd.getTime())
-				);
+			// Move to the next hour if the current time is not at the start of an hour
+			if (nextAvailable.getTime() !== new Date().setMinutes(0, 0, 0)) {
+				nextAvailable.setHours(nextAvailable.getHours() + 1);
 			}
 
-			// If no available slot found between periods, check after the last period
-			if (lastEndDate && lastEndDate > now) {
-				return lastEndDate;
+			// Check if the time is within any unavailable period
+			while (
+				this.unavailablePeriods.some((period) => {
+					const start = new Date(period.start);
+					const end = new Date(period.end);
+					return nextAvailable >= start && nextAvailable < end;
+				})
+			) {
+				// Move to the next hour and check again
+				nextAvailable.setHours(nextAvailable.getHours() + 1);
 			}
 
-			// If no unavailable periods or all are in the past
-			return now > lastEndDate ? now : lastEndDate;
+			return nextAvailable;
 		},
-
 		dateFunction(date) {
 			const inputDate = new Date(date).setHours(0, 0, 0, 0);
 			const currentDate = new Date().setHours(0, 0, 0, 0);
 
 			if (inputDate < currentDate) return false;
 
+			console.log(this.unavailablePeriods);
 			// Check against each unavailable period
 			for (const period of this.unavailablePeriods) {
 				const startDate = new Date(period.start).setHours(0, 0, 0, 0);

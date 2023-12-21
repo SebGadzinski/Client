@@ -40,7 +40,7 @@ export default route(function (/* { store, ssrContext } */) {
       // uSER DOES NOT EXIST
     }
 
-    if(isAdminPage && !user?.roles?.includes('admin')){
+    if(isAdminPage && user && !user?.roles?.includes('admin')){
       next('/');
     }else{
       if (authRequired && !user?.token) {
@@ -49,6 +49,7 @@ export default route(function (/* { store, ssrContext } */) {
         next();
       }
     }
+
   });
 
   return Router
