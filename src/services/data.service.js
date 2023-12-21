@@ -141,6 +141,16 @@ class DataService {
             throw err;
         }
     }
+
+    async bookMeeting({categorySlug, serviceSlug, startDate}) {
+        try{
+            return await api.post('/data/meeting/book', {
+                categorySlug, serviceSlug, startDate
+              });
+        }catch(err){
+            throw err;
+        }
+    }
 }
 
 export default new DataService();

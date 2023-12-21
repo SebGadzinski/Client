@@ -154,10 +154,19 @@ export default {
 					this.$q.loading.hide();
 					this.loading = false;
 				}, 2000);
-				// Book meeting
-				// if user is unknown go to sign up form with work url as param so they know where to go after
-				// else state the user succesfully book, and go to work page which should show this with status Booked Meeting
-				//This should create a work object in the database
+
+				let response = await dataService.bookMeeting({
+					categorySlug: this.categorySlug,
+					serviceSlug: this.serviceSlug,
+					startDate: new Date(this.date),
+				});
+				if (!response.data.success) {
+					if (response.data.message === "Sign Up Required") {
+						this.$router.push("/auth/login");
+					}
+				} else {
+					this.$router.push("/work");
+				}
 			} catch (err) {
 				this.$q.loading.hide();
 				this.loading = false;
@@ -263,7 +272,6 @@ export default {
 
 			if (inputDate < currentDate) return false;
 
-			console.log(this.unavailablePeriods);
 			// Check against each unavailable period
 			for (const period of this.unavailablePeriods) {
 				const startDate = new Date(period.start).setHours(0, 0, 0, 0);
