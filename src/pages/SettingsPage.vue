@@ -371,6 +371,7 @@ export default {
 		async handleRefreshSession() {
 			try {
 				await this.refreshSession();
+				window.location.reload();
 			} catch (err) {
 				this.$q.dialog({
 					title: this.$t("Cannot Refresh Session"),

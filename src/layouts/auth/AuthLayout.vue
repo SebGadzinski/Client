@@ -7,7 +7,7 @@
 				<!-- Conditional rendering of Sign Up/Login link based on title -->
 				<q-btn
 					v-if="title === 'Login'"
-					@click="this.$router.push('/auth/signUp')"
+					@click="routeTo('/auth/signUp')"
 					color="white"
 					text-color="primary"
 					>{{ $t("Sign Up") }}</q-btn
@@ -18,7 +18,7 @@
 					"
 					color="white"
 					text-color="primary"
-					@click="this.$router.push('/auth/login')"
+					@click="routeTo('/auth/login')"
 					>{{ $t("Login") }}</q-btn
 				>
 			</q-toolbar>
@@ -33,7 +33,7 @@
 					v-if="title === 'Login'"
 					flat
 					class="q-mt-md"
-					@click="this.$router.push('/auth/forgotPassword')"
+					@click="routeTo('/auth/forgotPassword')"
 					>{{ $t("Forgot Password?") }}</q-btn
 				>
 
@@ -83,12 +83,15 @@
 <script>
 import { mapState } from "pinia";
 import { useSettingsState } from "src/stores/settings.state";
+import { query } from "vue-gtag";
+import { useRoute } from "vue-router";
 
 export default {
 	data() {
 		return {
 			title: this.$t("Auth"),
 			settingsState: useSettingsState(),
+			route: useRoute(),
 		};
 	},
 	created() {
@@ -143,6 +146,15 @@ export default {
 				this.$q.lang.set(lang.default);
 			});
 			this.$i18n.locale = langName; // Assuming $i18n is defined and imported somewhere
+		},
+		routeTo(route) {
+			const currentQuery = this.route.query;
+			console.log(currentQuery);
+			// Carry any params over to the new route
+			this.$router.push({
+				path: route,
+				query: currentQuery,
+			});
 		},
 	},
 };

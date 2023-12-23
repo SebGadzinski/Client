@@ -112,17 +112,14 @@ export default {
 	async updated() {},
 	watch: {
 		// Watch for changes in the 'date' property
-		async date(newVal, oldVal) {
+		date(newVal, oldVal) {
 			if (newVal) {
-				const newDate = new Date(newVal);
-				const oldDate = new Date(oldVal);
-
-				const newDay = newDate.getDay();
-				const oldDay = oldVal ? oldDate.getDay() : -1;
-
-				if (newDay !== oldDay) {
-					await this.updateDay(newDate);
-				}
+				let newDate = new Date(newVal);
+				let oldDate = new Date(oldVal);
+				this.updateDay(
+					new Date(newVal),
+					newDate.toDateString() !== oldDate.toDateString()
+				);
 			}
 		},
 	},
@@ -150,19 +147,29 @@ export default {
 					backgroundColor: "#1e5499",
 					message: this.$t("Booking..."),
 				});
-				setTimeout(() => {
-					this.$q.loading.hide();
-					this.loading = false;
-				}, 2000);
 
-				let response = await dataService.bookMeeting({
+				let meetingInfo = {
 					categorySlug: this.categorySlug,
 					serviceSlug: this.serviceSlug,
 					startDate: new Date(this.date),
-				});
+				};
+				let response = await dataService.bookMeeting(meetingInfo);
+				this.$q.loading.hide();
+				this.loading = false;
 				if (!response.data.success) {
 					if (response.data.message === "Sign Up Required") {
-						this.$router.push("/auth/login");
+						window.localStorage.setItem(
+							"book-meeting",
+							JSON.stringify(meetingInfo)
+						);
+						this.$router.push("/auth/login/?book-meeting=true");
+					} else {
+						this.$q.loading.hide();
+						this.loading = false;
+						console.error(response.data.message);
+						this.$q.dialog({
+							title: this.$t("Error Making Meeting..."),
+						});
 					}
 				} else {
 					this.$router.push("/work");
@@ -173,10 +180,10 @@ export default {
 				console.error(err);
 			}
 		},
-		updateDay(date) {
+		updateDay(date, newDay = false) {
 			this.updateTime(date);
 			//Figoure out what is selectable for this day
-			if (this.hourOptionsTime.length > 0) {
+			if (newDay && this.hourOptionsTime.length > 0) {
 				let date = new Date(this.date);
 				date.setHours(this.hourOptionsTime[0]);
 				this.date = this.formatDateTime(date.toISOString());
@@ -184,7 +191,7 @@ export default {
 				//get next closest time?
 			}
 		},
-		updateTime(date) {
+		getHoursForDate(date) {
 			const selectedDate = new Date(date);
 			let hourOptions = new Set();
 
@@ -235,9 +242,12 @@ export default {
 			if (daysDate === currentDate) {
 				hourArray = hourArray.filter((x) => x > currentHour);
 			}
-
+			return hourArray;
+		},
+		updateTime(date) {
+			const hourArray = this.getHoursForDate(date);
 			// Convert the Set to an array, sort it, and update hourOptionsTime
-			this.hourOptionsTime = Array.from(hourArray).sort((a, b) => a - b);
+			this.hourOptionsTime = hourArray;
 		},
 
 		formatHour(hour) {
@@ -272,25 +282,8 @@ export default {
 
 			if (inputDate < currentDate) return false;
 
-			// Check against each unavailable period
-			for (const period of this.unavailablePeriods) {
-				const startDate = new Date(period.start).setHours(0, 0, 0, 0);
-				const endDate = new Date(period.end).setHours(0, 0, 0, 0);
-
-				// Check if the input date is within any unavailable period
-				if (inputDate >= startDate && inputDate <= endDate) {
-					// Check if the entire day is unavailable
-					if (inputDate === startDate && inputDate === endDate) {
-						return false; // The entire day is unavailable
-					}
-					// Check if the period starts and ends on the same day as the input date
-					if (startDate < inputDate && endDate > inputDate) {
-						return false; // Part of the day is unavailable, making the entire day unavailable
-					}
-				}
-			}
-
-			return true; // Date is available (not found in unavailable periods)
+			const hours = this.getHoursForDate(date);
+			return hours.length > 0;
 		},
 	},
 };
