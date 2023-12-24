@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import dataService from "../../services/data.service";
 import { useQuasar, QSpinnerGears } from "quasar";
 import { mapActions, mapState } from "pinia";
 import { useAuthState } from "src/stores/auth.state";
@@ -92,11 +93,37 @@ export default {
 										"Check email for confirmation"
 									),
 								})
-								.onOk(() => {
-									this.$router.push("/");
-								})
 								.onDismiss(() => {
-									this.$router.push("/");
+									const urlParams = new URLSearchParams(
+										window.location.search
+									);
+									const bookMeeting =
+										urlParams.get("book-meeting");
+									if (bookMeeting) {
+										let possibleMeeting =
+											window.localStorage.getItem(
+												"book-meeting"
+											);
+										if (possibleMeeting) {
+											let meeting =
+												JSON.parse(possibleMeeting);
+											dataService.bookMeeting(meeting);
+										}
+										this.$q
+											.dialog({
+												title: this.$t(
+													"Meeting Confirmed"
+												),
+												message: this.$t(
+													"Meeting details sent to email."
+												),
+											})
+											.onDismiss(() => {
+												this.$router.push("/work");
+											});
+									} else {
+										this.$router.push("/");
+									}
 								});
 						},
 						(error) => {

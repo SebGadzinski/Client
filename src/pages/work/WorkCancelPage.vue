@@ -17,12 +17,12 @@
 				<br />
 				<q-checkbox
 					v-model="acceptTNC"
-					:label="$t('Accept Terms & Conditions')"
+					:label="$t('Accept Cancel Terms & Conditions')"
 				/>
 				<br />
 				<br />
 				<q-btn
-					v-if="work.payment.initialPayment > 0"
+					v-if="cancelationFee > 0"
 					class="text-h4 full-width"
 					type="submit"
 					:label="$t(`Pay And Accept`)"
@@ -45,69 +45,42 @@
 </template>
 
 <script>
+import dataService from "../../services/data.service";
 import { useQuasar, QSpinnerGears } from "quasar";
+import { useRoute } from "vue-router";
 import WorkComponent from "src/components/WorkComponent.vue";
 
 export default {
-	name: "ConfirmationPage",
+	name: "WorkConfirmationPage",
 	components: { WorkComponent },
 	data() {
 		return {
 			loading: true,
 			$q: useQuasar(),
 			acceptTNC: false,
+			route: useRoute(),
 			work: {},
 		};
 	},
 	async mounted() {
-		//Get Work Item
-		this.work = {
-			user: {
-				email: "seb.gadzy@gmail.com",
-			},
-			category: "Software",
-			service: "Custom Personal Assistant UI",
-			status: "Pending",
-			workItems: [
-				{
-					id: "oidfn3",
-					name: "Add Databases",
-					description: "This is a description",
-					links: [{ link: "https://tits", name: "Tits" }],
-					status: "New",
-				},
-				{
-					id: "aoifna3",
-					name: "Write Code",
-					description: "This is a description",
-					status: "Working",
-				},
-			],
-			paymentItems: [
-				{
-					id: "oidfn3",
-					name: "Add Databases",
-					description: "This is a description",
-					payment: 5000,
-					status: "New",
-				},
-				{
-					id: "aoifna3",
-					name: "Write All Code",
-					description: "This is a description",
-					payment: 200,
-					status: "Working",
-				},
-			],
-			payment: {
-				initialPayment: 600,
-				subscription: {
-					payment: 100.0,
-					interval: "7 Days",
-				},
-			},
-			paymentStatus: "Pending",
-		};
+		try {
+			this.loading = true;
+			this.$q.loading.show({
+				spinner: QSpinnerGears,
+				backgroundColor: "#1e5499",
+				message: this.$t("Accepting..."),
+			});
+			const data = await dataService.getWorkCancelPageData(
+				this.route?.params?.workId
+			);
+			this.work = data.work;
+			this.cancelationFee = data.cancelationFee;
+		} catch (err) {
+			console.error(err);
+		} finally {
+			this.$q.loading.hide();
+			this.loading = false;
+		}
 	},
 	unmounted() {},
 	async updated() {},
@@ -122,14 +95,23 @@ export default {
 						backgroundColor: "#1e5499",
 						message: this.$t("Accepting..."),
 					});
-					setTimeout(() => {
-						this.$q.loading.hide();
-					}, 2000);
+					// TODO: Payment
+					await dataService.cancelWork(this.route?.params?.workId);
+
+					this.$q
+						.dialog({
+							title: this.$t("Work Cancelled"),
+							message: this.$t("The work has been cancelled."),
+						})
+						.onDismiss(() => {
+							this.$router.push("/work");
+						});
 				}
 			} catch (err) {
+				console.error(err);
+			} finally {
 				this.$q.loading.hide();
 				this.loading = false;
-				console.error(err);
 			}
 		},
 	},

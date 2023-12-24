@@ -151,6 +151,75 @@ class DataService {
             throw err;
         }
     }
+
+    async getWorkPageData() {
+        try{
+            let response = await api.get('/data/getWorkPageData');
+            if(response.data.success){
+                return response.data.data;
+            }else{
+                console.log("Message: ");
+                console.log(response.data.message);
+                throw new Error(`Could not get work data`);
+            }
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async getWorkConfirmationPageData(workId) {
+        try{
+            const response = await api.post(`/data/getWorkConfirmationPageData`, {
+                workId
+              });
+            if(response.data.success){
+                return response.data.data;
+            }else{
+                console.log("Message: ");
+                console.log(response.data.message);
+                throw new Error(`Could not get work confirmation data`);
+            }
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async getWorkCancelPageData(workId) {
+        try{
+            const response = await api.post(`/data/getWorkCancelPageData`, {
+                workId
+              });
+            if(response.data.success){
+                return response.data.data;
+            }else{
+                console.log("Message: ");
+                console.log(response.data.message);
+                throw new Error(`Could not get work cancel data`);
+            }
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async confirmWork(workId) {
+        try{
+            return await api.post('/data/work/confirm', {
+                workId
+              });
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async cancelWork(workId) {
+        try{
+            return await api.post('/data/work/cancel', {
+                workId
+              });
+        }catch(err){
+            throw err;
+        }
+    }
 }
 
 export default new DataService();

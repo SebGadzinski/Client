@@ -77,7 +77,16 @@ export default {
 									let meeting = JSON.parse(possibleMeeting);
 									dataService.bookMeeting(meeting);
 								}
-								this.$router.push("/work");
+								this.$q
+									.dialog({
+										title: this.$t("Meeting Confirmed"),
+										message: this.$t(
+											"Meeting details sent to email."
+										),
+									})
+									.onDismiss(() => {
+										this.$router.push("/work");
+									});
 							} else {
 								this.$router.push("/");
 							}

@@ -16,7 +16,8 @@ const layout = {
     { path: 'work/:workId', component: () => import('pages/work/WorkPage.vue'), },
     { path: 'work/create', component: () => import('pages/work/WorkEditorPage.vue'), },
     { path: 'work/edit/:workId', component: () => import('pages/work/WorkEditorPage.vue'), },
-    { path: 'work/confirmation/:workId', component: () => import('pages/work/ConfirmationPage.vue'), },
+    { path: 'work/cancel/:workId', component: () => import('pages/work/WorkCancelPage.vue'), },
+    { path: 'work/confirmation/:workId', component: () => import('pages/work/WorkConfirmationPage.vue'), },
     { path: 'settings', component: () => import('pages/SettingsPage.vue') },
     { path: 'admin/users', component: () => import('pages/admin/UsersPage.vue'), },
     {

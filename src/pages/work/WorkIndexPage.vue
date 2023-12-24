@@ -57,19 +57,21 @@
 									}}</q-item-label>
 								</q-item-section>
 							</q-item>
-							<q-item
+							<a
 								v-for="(action, index) in props.row.actions"
 								:key="index"
-								:to="action.link"
-								clickable
-								v-close-popup
+								:href="action.link"
+								target="_blank"
+								@click.stop
 							>
-								<q-item-section>
-									<q-item-label>{{
-										$t(action.name)
-									}}</q-item-label>
-								</q-item-section>
-							</q-item>
+								<q-item clickable v-close-popup>
+									<q-item-section>
+										<q-item-label>{{
+											$t(action.name)
+										}}</q-item-label>
+									</q-item-section>
+								</q-item>
+							</a>
 						</q-list>
 					</q-btn-dropdown>
 				</q-td>
@@ -117,14 +119,11 @@
 
 									<q-item-section
 										>${{ props.row.subscription.cost }}
-										{{ $t("Every ") }}
 										{{
-											props.row.subscription.interval
-												.amount +
-											" " +
-											$t(
-												props.row.subscription.interval
-													.unit
+											this.$t(
+												"Every " +
+													props.row.subscription
+														.interval
 											)
 										}}
 									</q-item-section>
@@ -160,6 +159,7 @@
 </template>
 
 <script>
+import dataService from "../../services/data.service";
 import { useQuasar, QSpinnerGears } from "quasar";
 import { mapActions, mapState } from "pinia";
 import { useAuthState } from "src/stores/auth.state";
@@ -215,16 +215,14 @@ export default {
 				{
 					name: "paymentInterval",
 					align: "left",
-					label: "Payment Interval",
-					field: (row) =>
-						row?.subscription?.interval?.amount +
-							row?.subscription?.interval?.unit ?? "N/A",
+					label: "Subscription Interval",
+					field: (row) => row?.subscription?.interval ?? "N/A",
 					sortable: true,
 				},
 				{
 					name: "cost",
 					align: "left",
-					label: "cost",
+					label: "Subscription Cost",
 					field: (row) => row?.subscription?.cost ?? "N/A",
 					sortable: true,
 				},
@@ -244,7 +242,6 @@ export default {
 				},
 			],
 			visibleColumns: ref([
-				"id",
 				"category",
 				"service",
 				"email",
@@ -255,38 +252,48 @@ export default {
 		};
 	},
 	async mounted() {
-		let grabbedWorks = [
-			{
-				workId: "1283bh",
-				email: "john.doe@example.com",
-				category: "Software",
-				service: "Custom Personal Assistant UI",
-				status: "Working",
-				createdDate: new Date().toDateString(),
-				actions: [
-					{ name: "Accept", link: "/work/confirmation/1283bh" },
-				],
-			},
-			{
-				workId: "weoi33",
-				email: "john.mitcjh@example.com",
-				category: "Photography",
-				service: "Single Picture",
-				status: "Pending",
-				createdDate: new Date().toDateString(),
-				subscription: {
-					interval: {
-						amount: 7,
-						unit: "Days",
-					},
-					cost: 75.0,
-				},
-			},
-		];
+		const data = await dataService.getWorkPageData();
+		data.work.sort((a, b) => {
+			// Check for 'Meeting' status
+			const statusA = a.status === "Meeting" ? 0 : 1;
+			const statusB = b.status === "Meeting" ? 0 : 1;
+
+			if (statusA !== statusB) {
+				return statusA - statusB; // Sort by status first
+			} else {
+				if (a.createdDate > b.createdDate) {
+					return -1;
+				} else if (a.createdDate < b.createdDate) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
+		});
+
+		data.work.map((x) => {
+			x.createdDate = new Date(x.createdDate).toDateString();
+			x.actions = [];
+			if (x.status === "Meeting") {
+				x.actions.push({ name: "Go To Meeting", link: x.meetingLink });
+				x.actions.push({
+					name: "Cancel Meeting",
+					link: `/work/cancel/${x.workId}`,
+				});
+			}
+			if (x.status === "Confirmation Required") {
+				x.actions.push({
+					name: "Confirm Meeting Agreements",
+					link: `/work/confirmation/${x.workId}`,
+				});
+			}
+			return x;
+		});
+
 		//Get Filtering Info
 		// - Add Accept meeting button if any have status new,should lead to WorkEditor
 		let anySubscriptions = false;
-		grabbedWorks.forEach((element) => {
+		data.work.forEach((element) => {
 			console.log(anySubscriptions);
 			if (!anySubscriptions && element.subscription) {
 				anySubscriptions = true;
@@ -297,7 +304,9 @@ export default {
 			this.visibleColumns.push("paymentInterval");
 			this.visibleColumns.push("cost");
 		}
-		this.works = grabbedWorks;
+		console.log(data);
+
+		this.works = data.work;
 		this.$nextTick(() => {
 			let userEmail = this.route?.params?.email;
 			if (userEmail) {
