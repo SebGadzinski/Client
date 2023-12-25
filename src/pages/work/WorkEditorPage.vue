@@ -512,9 +512,9 @@
 						<q-item-label caption>{{
 							$t("interval")
 						}}</q-item-label>
-						<q-input
+						<q-select
 							v-model="work.payment.subscription.interval"
-							type="text"
+							:options="subscriptionIntervalOptions"
 							:rules="[
 								(val) =>
 									work.payment.subscription?.payment <= 0 ||
@@ -710,6 +710,7 @@ export default {
 			this.servicesOptions = data.servicesOptions;
 			this.workStatusOptions = data.workStatusOptions;
 			this.paymentStatusOptions = data.paymentStatusOptions;
+			this.subscriptionIntervalOptions = data.subscriptionIntervalOptions;
 		} catch (err) {
 			console.error(err);
 		} finally {

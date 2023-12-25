@@ -65,12 +65,9 @@
 							v-for="(link, index) in props.row.links"
 							:key="index"
 						>
-							<div class="readonly-text">
-								{{ $t("Name") }}: {{ link.name }}
-							</div>
-							<div class="readonly-text">
-								{{ $t("URL") }}: {{ link.link }}
-							</div>
+							<a :href="link.url" target="_blank"
+								><q-badge>{{ link.name }}</q-badge></a
+							>
 						</div>
 					</q-td>
 					<q-td key="status" :props="props">{{
@@ -118,13 +115,11 @@
 												.links"
 											:key="index"
 										>
-											<div class="readonly-text">
-												{{ $t("Name") }}:
-												{{ link.name }}
-											</div>
-											<div class="readonly-text">
-												{{ $t("URL") }}: {{ link.link }}
-											</div>
+											<a :href="link.url" target="_blank"
+												><q-badge>{{
+													link.name
+												}}</q-badge></a
+											>
 										</div>
 									</q-item-section>
 								</q-item>

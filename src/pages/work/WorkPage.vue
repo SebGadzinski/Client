@@ -21,8 +21,10 @@
 </template>
 
 <script>
+import dataService from "../../services/data.service";
 import { useQuasar, QSpinnerGears } from "quasar";
 import WorkComponent from "src/components/WorkComponent.vue";
+import { useRoute } from "vue-router";
 
 export default {
 	name: "WorkPage",
@@ -32,61 +34,30 @@ export default {
 			loading: true,
 			$q: useQuasar(),
 			work: {},
+			route: useRoute(),
 		};
 	},
 	async mounted() {
-		//Get Work Item
-		this.work = {
-			user: {
-				email: "seb.gadzy@gmail.com",
-			},
-			category: "Software",
-			service: "Custom Personal Assistant UI",
-			status: "Pending",
-			workItems: [
-				{
-					id: "oidfn3",
-					name: "Add Databases",
-					description: "This is a description",
-					links: [{ link: "https://tits", name: "Tits" }],
-					status: "New",
-				},
-				{
-					id: "aoifna3",
-					name: "Write Code",
-					description: "This is a description",
-					status: "Working",
-				},
-			],
-			paymentItems: [
-				{
-					id: "oidfn3",
-					name: "Add Databases",
-					description: "This is a description",
-					payment: 5000,
-					status: "New",
-				},
-				{
-					id: "aoifna3",
-					name: "Write All Code",
-					description: "This is a description",
-					payment: 200,
-					status: "Working",
-				},
-			],
-			payment: {
-				initialPayment: 600,
-				subscription: {
-					payment: 100.0,
-					interval: "7 Days",
-				},
-			},
-			paymentStatus: "Pending",
-		};
+		try {
+			this.loading = true;
+			this.$q.loading.show({
+				spinner: QSpinnerGears,
+				backgroundColor: "#1e5499",
+				message: this.$t("Getting Info..."),
+			});
+			console.log(this.route?.params?.workId);
+			this.work = await dataService.getWorkComponent(
+				this.route?.params?.workId
+			);
+		} catch (err) {
+			console.error(err);
+		} finally {
+			this.$q.loading.hide();
+			this.loading = false;
+		}
 	},
 	unmounted() {},
 	async updated() {},
-
 	methods: {
 		async printReceipt() {
 			try {

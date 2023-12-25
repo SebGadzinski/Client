@@ -255,6 +255,23 @@ class DataService {
             throw err;
         }
     }
+
+    async getWorkComponent(workId) {
+        try{
+            const response = await api.post(`/data/work`, {
+                workId
+              });
+            if(response.data.success){
+                return response.data.data;
+            }else{
+                console.log("Message: ");
+                console.log(response.data.message);
+                throw new Error(`Could not get work data`);
+            }
+        }catch(err){
+            throw err;
+        }
+    }
 }
 
 export default new DataService();

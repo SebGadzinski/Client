@@ -118,7 +118,7 @@
 									</q-item-section>
 
 									<q-item-section
-										>${{ props.row.subscription.cost }}
+										>${{ props.row.subscription.payment }}
 										{{
 											this.$t(
 												"Every " +
@@ -223,7 +223,7 @@ export default {
 					name: "cost",
 					align: "left",
 					label: "Subscription Cost",
-					field: (row) => row?.subscription?.cost ?? "N/A",
+					field: (row) => row?.subscription?.payment ?? "N/A",
 					sortable: true,
 				},
 				{
