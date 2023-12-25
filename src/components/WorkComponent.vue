@@ -55,7 +55,7 @@
 		>
 			<template v-if="$q.screen.gt.sm" v-slot:body="props">
 				<q-tr :props="props">
-					<q-td key="id" :props="props">{{ props.row.id }}</q-td>
+					<q-td key="id" :props="props">{{ props.row._id }}</q-td>
 					<q-td key="name" :props="props">{{ props.row.name }}</q-td>
 					<q-td key="description" :props="props">{{
 						props.row.description
@@ -84,7 +84,7 @@
 						<q-card-section
 							class="flex justify-between bg-secondary"
 						>
-							<span>ID: {{ props.row.id }}</span>
+							<span>ID: {{ props.row._id }}</span>
 						</q-card-section>
 						<q-card-section>
 							<q-list>
@@ -160,7 +160,7 @@
 					<template v-if="$q.screen.gt.sm" v-slot:body="props">
 						<q-tr :props="props">
 							<q-td key="id" :props="props">{{
-								props.row.id
+								props.row._id
 							}}</q-td>
 							<q-td key="name" :props="props">{{
 								props.row.name
@@ -182,7 +182,7 @@
 								<q-card-section
 									class="flex justify-between bg-secondary"
 								>
-									<span>ID: {{ props.row.id }}</span>
+									<span>ID: {{ props.row._id }}</span>
 								</q-card-section>
 								<q-card-section>
 									<q-list>
@@ -289,7 +289,7 @@ export default {
 					name: "id",
 					align: "left",
 					label: "Id",
-					field: (row) => row.id,
+					field: (row) => row._id,
 					sortable: true,
 				},
 				{
@@ -324,7 +324,7 @@ export default {
 					name: "id",
 					align: "left",
 					label: "Id",
-					field: (row) => row.id,
+					field: (row) => row._id,
 					sortable: true,
 				},
 				{

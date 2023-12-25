@@ -1,7 +1,12 @@
 <template>
 	<q-page padding>
 		<!-- Meta Data -->
-		<q-form class="form-class" name="Work" @submit.prevent="handleSave">
+		<q-form
+			v-if="Object.keys(work).length > 0"
+			class="form-class"
+			name="Work"
+			@submit.prevent="handleSave"
+		>
 			<h3 class="text-center">{{ $t("Meta Data") }}</h3>
 			<div class="flex row flex-center">
 				<q-list>
@@ -11,7 +16,7 @@
 								$t("User")
 							}}</q-item-label>
 							<q-select
-								v-model="user.email"
+								v-model="work.user.email"
 								:options="visibleUserOptions"
 								class="full-width"
 								use-input
@@ -25,9 +30,10 @@
 								$t("Category")
 							}}</q-item-label>
 							<q-select
-								v-model="category"
+								v-model="work.category"
 								:options="categoryOptions"
 								class="full-width"
+								@update:model-value="onCategoryChange"
 							/>
 						</q-item-section>
 					</q-item>
@@ -37,8 +43,8 @@
 								$t("Service")
 							}}</q-item-label>
 							<q-select
-								v-model="service"
-								:options="serviceOptions"
+								v-model="work.service"
+								:options="servicesOptions[work.category][0]"
 								class="full-width"
 							/>
 						</q-item-section>
@@ -49,7 +55,7 @@
 								$t("Status")
 							}}</q-item-label>
 							<q-select
-								v-model="status"
+								v-model="work.status"
 								:options="workStatusOptions"
 								class="full-width"
 							/>
@@ -66,7 +72,7 @@
 				@click="addNewWorkItem"
 			/>
 			<q-table
-				:rows="workItems"
+				:rows="work.workItems"
 				:grid="$q.screen.lt.md"
 				class="q-mt-lg"
 				:columns="workItemCols"
@@ -77,7 +83,7 @@
 				<template v-if="$q.screen.gt.sm" v-slot:body="props">
 					<q-tr :props="props">
 						<q-td key="id" :props="props">
-							{{ props.row.id }}
+							{{ props.row._id }}
 						</q-td>
 						<q-td key="name" :props="props">
 							<q-input
@@ -114,7 +120,7 @@
 									filled
 								/>
 								<q-input
-									v-model="link.link"
+									v-model="link.url"
 									:label="$t('URL')"
 									dense
 									filled
@@ -125,7 +131,9 @@
 									flat
 									class="full-width"
 									color="negative"
-									@click="deleteLink(props.row.id, link.name)"
+									@click="
+										deleteLink(props.row._id, link.name)
+									"
 								/>
 							</div>
 							<q-btn
@@ -133,7 +141,7 @@
 								flat
 								class="full-width"
 								color="positive"
-								@click="addNewLink(props.row.id)"
+								@click="addNewLink(props.row._id)"
 							/>
 						</q-td>
 						<q-td key="status" :props="props">
@@ -146,7 +154,7 @@
 							<q-btn
 								color="red"
 								:label="$t('Delete')"
-								@click="deleteWorkItem(props.row.id)"
+								@click="deleteWorkItem(props.row._id)"
 								class="full-width"
 							/>
 						</q-td>
@@ -219,7 +227,7 @@
 													filled
 												/>
 												<q-input
-													v-model="link.link"
+													v-model="link.url"
 													:label="$t('URL')"
 													dense
 													filled
@@ -232,7 +240,7 @@
 													color="negative"
 													@click="
 														deleteLink(
-															props.row.id,
+															props.row._id,
 															link.name
 														)
 													"
@@ -244,7 +252,7 @@
 												class="full-width"
 												color="positive"
 												@click="
-													addNewLink(props.row.id)
+													addNewLink(props.row._id)
 												"
 											/>
 										</q-item-section>
@@ -266,7 +274,9 @@
 												color="red"
 												:label="$t('Delete')"
 												@click="
-													deleteWorkItem(props.row.id)
+													deleteWorkItem(
+														props.row._id
+													)
 												"
 												class="full-width"
 											/>
@@ -289,7 +299,7 @@
 						@click="addNewCostItem"
 					/>
 					<q-table
-						:rows="paymentItems"
+						:rows="work.paymentItems"
 						:grid="$q.screen.lt.md"
 						class="q-mt-lg full-width"
 						:columns="paymentItemCols"
@@ -300,7 +310,7 @@
 						<template v-if="$q.screen.gt.sm" v-slot:body="props">
 							<q-tr :props="props">
 								<q-td key="id" :props="props">
-									{{ props.row.id }}
+									{{ props.row._id }}
 								</q-td>
 								<q-td key="name" :props="props">
 									<q-input
@@ -349,7 +359,7 @@
 									<q-btn
 										color="red"
 										:label="$t('Delete')"
-										@click="deleteCostItem(props.row.id)"
+										@click="deleteCostItem(props.row._id)"
 										class="full-width"
 									/>
 								</q-td>
@@ -453,7 +463,7 @@
 														:label="$t('Delete')"
 														@click="
 															deleteCostItem(
-																props.row.id
+																props.row._id
 															)
 														"
 														class="full-width"
@@ -473,7 +483,7 @@
 							$t("$ Initial Payment")
 						}}</q-item-label>
 						<q-input
-							v-model="payment.initialPayment"
+							v-model="work.payment.initialPayment"
 							type="number"
 							:rules="[
 								(val) =>
@@ -488,7 +498,7 @@
 							$t("$ Subscription")
 						}}</q-item-label>
 						<q-input
-							v-model="payment.subscription.payment"
+							v-model="work.payment.subscription.payment"
 							type="number"
 							:rules="[
 								(val) =>
@@ -503,11 +513,11 @@
 							$t("interval")
 						}}</q-item-label>
 						<q-input
-							v-model="payment.subscription.interval"
+							v-model="work.payment.subscription.interval"
 							type="text"
 							:rules="[
 								(val) =>
-									payment.subscription?.payment <= 0 ||
+									work.payment.subscription?.payment <= 0 ||
 									val !== '' ||
 									$t('Interval Required'),
 							]"
@@ -521,7 +531,7 @@
 							$t("Payment Status")
 						}}</q-item-label>
 						<q-select
-							v-model="paymentStatus"
+							v-model="work.paymentStatus"
 							:options="paymentStatusOptions"
 							class="full-width"
 						/>
@@ -544,8 +554,10 @@
 </template>
 
 <script>
+import dataService from "../../services/data.service";
 import { useQuasar, QSpinnerGears } from "quasar";
 import { ref } from "vue";
+import { useRoute } from "vue-router";
 
 export default {
 	name: "WorkEditorPage",
@@ -553,22 +565,17 @@ export default {
 		return {
 			loading: true,
 			$q: useQuasar(),
-			user: {},
 			visibleUserOptions: [],
-			userOptions: [],
+			usersOptions: [],
 			workStatusOptions: [],
 			categoryOptions: [],
-			serviceOptions: [],
-			workItems: [],
-			paymentItems: [],
-			service: "",
-			category: "",
+			servicesOptions: [],
 			workItemCols: [
 				{
 					name: "id",
 					align: "left",
 					label: "Id",
-					field: (row) => row.id,
+					field: (row) => row._id,
 					sortable: true,
 				},
 				{
@@ -608,7 +615,7 @@ export default {
 					name: "id",
 					align: "left",
 					label: "Id",
-					field: (row) => row.id,
+					field: (row) => row._id,
 					sortable: true,
 				},
 				{
@@ -661,15 +668,8 @@ export default {
 				"status",
 				"delete",
 			]),
-			payment: {
-				initialPayment: 0,
-				subscription: {
-					payment: 0.0,
-					interval: "",
-				},
-			},
-			status: "",
-			paymentStatus: "",
+			work: {},
+			route: useRoute(),
 		};
 	},
 	async mounted() {
@@ -691,86 +691,48 @@ export default {
 				status: "New",
 			},
 		];
-		//Gather Data
-		//Get Status Options
-		this.user = {
-			email: "sebastian.gadzinski@kalder.com",
-		};
-		this.category = "Software";
-		this.service = "Custom Personal Assistant UI";
-		this.status = "Pending";
-		this.paymentStatus = "Pending";
-		let grabbedUserOptions = [
-			"sebastian.gadzinski@kalder.com",
-			"user@gmail.com",
-		];
-		let grabbedServiceOptions = [
-			"App Creation",
-			"Maintain App ",
-			"Custom Personal Assistant UI",
-		];
-		let grabbedCatgoryOptions = ["Software", "Photography", "Videography"];
-		let grabbedWorkStatusOptions = [
-			"New",
-			"Pending",
-			"Working",
-			"Completed",
-		];
-		let grabbedPaymentStatusOptions = [
-			"New",
-			"Pending",
-			"Working",
-			"Completed",
-		];
 
-		let grabbedWorkRows = [
-			{
-				id: "oidfn3",
-				name: "Add Databases",
-				description: "This is a description",
-				links: [{ link: "https://tits", name: "Tits" }],
-				status: "New",
-			},
-			{
-				id: "aoifna3",
-				name: "Write Code",
-				description: "This is a description",
-				status: "Working",
-			},
-		];
-		let grabbedPaymentRows = [
-			{
-				id: "oidfn3",
-				name: "Add Databases",
-				description: "This is a description",
-				payment: 5000,
-				status: "New",
-			},
-			{
-				id: "aoifna3",
-				name: "Write All Code",
-				description: "This is a description",
-				payment: 200,
-				status: "Working",
-			},
-		];
-		this.userOptions = grabbedUserOptions;
-		this.categoryOptions = grabbedCatgoryOptions;
-		this.serviceOptions = grabbedServiceOptions;
-		this.workStatusOptions = grabbedWorkStatusOptions;
-		this.paymentStatusOptions = grabbedPaymentStatusOptions;
-		this.workItems = grabbedWorkRows;
-		this.paymentItems = grabbedPaymentRows;
+		try {
+			this.loading = true;
+			this.$q.loading.show({
+				spinner: QSpinnerGears,
+				backgroundColor: "#1e5499",
+				message: this.$t("Loading Work..."),
+			});
+			const data = await dataService.getWorkEditorPageData(
+				this.route?.params?.workId
+			);
+
+			this.work = data.work;
+
+			this.usersOptions = data.usersOptions;
+			this.categoryOptions = data.categoryOptions;
+			this.servicesOptions = data.servicesOptions;
+			this.workStatusOptions = data.workStatusOptions;
+			this.paymentStatusOptions = data.paymentStatusOptions;
+		} catch (err) {
+			console.error(err);
+		} finally {
+			this.$q.loading.hide();
+			this.loading = false;
+		}
 	},
 	unmounted() {},
 	async updated() {},
 	methods: {
+		onCategoryChange(newValue) {
+			this.work.service = this.servicesOptions[newValue][0][0];
+		},
 		deleteLink(workItemId, name) {
-			let workItem = this.workItems.find((x) => x.id === workItemId);
+			let workItem = this.work.workItems.find(
+				(x) => x._id === workItemId
+			);
 			workItem.links = workItem.links.filter((x) => x.name !== name);
 		},
 		addNewLink(workItemId) {
-			let workItem = this.workItems.find((x) => x.id === workItemId);
+			let workItem = this.work.workItems.find(
+				(x) => x._id === workItemId
+			);
 			if (!workItem.links) workItem.links = [];
 			workItem.links.push({
 				name: `Link ${workItem.links.length}`,
@@ -778,36 +740,37 @@ export default {
 			});
 		},
 		deleteWorkItem(workItemId) {
-			this.workItems = this.workItems.filter((x) => x.id !== workItemId);
+			this.work.workItems = this.work.workItems.filter(
+				(x) => x._id !== workItemId
+			);
 		},
 		deleteCostItem(paymentItemId) {
-			console.log("test");
-			this.paymentItems = this.paymentItems.filter(
-				(x) => x.id !== paymentItemId
+			this.work.paymentItems = this.work.paymentItems.filter(
+				(x) => x._id !== paymentItemId
 			);
 		},
 		addNewWorkItem() {
 			const newWorkItem = {
-				id: `new_${this.workItems.length}`, // Generate a unique ID
+				_id: `new_${this.work.workItems.length}`, // Generate a unique ID
 				name: "",
 				description: "",
 				links: [],
 				status: "New", // Default status or make it blank as per your need
 			};
-			this.workItems.push(newWorkItem);
+			this.work.workItems.push(newWorkItem);
 		},
 
 		addNewCostItem() {
 			const newCostItem = {
-				id: `new_${this.paymentItems.length}`, // Generate a unique ID
+				_id: `new_${this.work.paymentItems.length}`, // Generate a unique ID
 				name: "",
 				description: "",
 				status: "New", // Default status or make it blank as per your need
 			};
-			this.paymentItems.push(newCostItem);
+			this.work.paymentItems.push(newCostItem);
 		},
 		userFilter(val, update) {
-			if (val === "") {
+			if (!val || val === "") {
 				update(() => {
 					this.visibleUserOptions = []; // reset your options or set them to your default list
 				});
@@ -815,7 +778,7 @@ export default {
 				update(() => {
 					// Filter your options based on the input
 					const needle = val.toLowerCase();
-					this.visibleUserOptions = this.userOptions.filter(
+					this.visibleUserOptions = this.usersOptions.filter(
 						(v) => v.toLowerCase().indexOf(needle) > -1
 					);
 				});
@@ -828,15 +791,24 @@ export default {
 				this.$q.loading.show({
 					spinner: QSpinnerGears,
 					backgroundColor: "#1e5499",
-					message: this.$t("Saving"),
+					message: this.$t("Upserting..."),
 				});
-				setTimeout(() => {
-					this.$q.loading.hide();
-				}, 2000);
+
+				await dataService.upsertWork(this.work);
+
+				this.$q
+					.dialog({
+						title: this.$t("Work Saved"),
+						message: this.$t("The work has been saved."),
+					})
+					.onDismiss(() => {
+						this.$router.push("/work");
+					});
 			} catch (err) {
+				console.error(err);
+			} finally {
 				this.$q.loading.hide();
 				this.loading = false;
-				console.error(err);
 			}
 		},
 	},

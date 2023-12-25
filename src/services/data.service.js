@@ -220,6 +220,41 @@ class DataService {
             throw err;
         }
     }
+
+    async getWorkViewComponent(workId) {
+        try{
+            return await api.post('/data/work/viewComponent', {
+                workId
+              });
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async getWorkEditorPageData(workId) {
+        try{
+            const response = await api.post(`/data/getWorkEditorPageData`, {
+                workId
+              });
+            if(response.data.success){
+                return response.data.data;
+            }else{
+                console.log("Message: ");
+                console.log(response.data.message);
+                throw new Error(`Could not get work cancel data`);
+            }
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async upsertWork(work) {
+        try{
+            return await api.post('/data/work/upsert', work);
+        }catch(err){
+            throw err;
+        }
+    }
 }
 
 export default new DataService();
