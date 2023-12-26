@@ -480,21 +480,6 @@
 				<q-item>
 					<q-item-section>
 						<q-item-label caption>{{
-							$t("$ Initial Payment")
-						}}</q-item-label>
-						<q-input
-							v-model="work.payment.initialPayment"
-							type="number"
-							:rules="[
-								(val) =>
-									val >= 0 || $t('Value must be above 0'),
-							]"
-							placeholder="Enter amount"
-							prefix="$"
-						/>
-					</q-item-section>
-					<q-item-section>
-						<q-item-label caption>{{
 							$t("$ Subscription")
 						}}</q-item-label>
 						<q-input
@@ -528,11 +513,59 @@
 				<q-item>
 					<q-item-section>
 						<q-item-label caption>{{
+							$t("$ Initial Payment")
+						}}</q-item-label>
+						<q-input
+							v-model="work.payment.initialPayment"
+							type="number"
+							:rules="[
+								(val) =>
+									val >= 0 || $t('Value must be above 0'),
+							]"
+							placeholder="Enter amount"
+							prefix="$"
+						/>
+					</q-item-section>
+					<q-item-section>
+						<q-item-label caption>{{
 							$t("Initial Payment Status")
 						}}</q-item-label>
 						<q-select
 							v-model="work.initialPaymentStatus"
 							:options="paymentStatusOptions"
+							:rules="[
+								(val) => val !== '' || $t('Status Required'),
+							]"
+							class="full-width"
+						/>
+					</q-item-section>
+				</q-item>
+				<q-item>
+					<q-item-section>
+						<q-item-label caption>{{
+							$t("$ Cancellation Payment")
+						}}</q-item-label>
+						<q-input
+							v-model="work.payment.cancellationPayment"
+							type="number"
+							:rules="[
+								(val) =>
+									val >= 0 || $t('Value must be above 0'),
+							]"
+							placeholder="Enter amount"
+							prefix="$"
+						/>
+					</q-item-section>
+					<q-item-section>
+						<q-item-label caption>{{
+							$t("Cancellation Payment Status")
+						}}</q-item-label>
+						<q-select
+							v-model="work.cancellationPaymentStatus"
+							:options="paymentStatusOptions"
+							:rules="[
+								(val) => val !== '' || $t('Status Required'),
+							]"
 							class="full-width"
 						/>
 					</q-item-section>

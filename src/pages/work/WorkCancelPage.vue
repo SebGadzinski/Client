@@ -22,7 +22,7 @@
 				<br />
 				<br />
 				<q-btn
-					v-if="cancelationFee > 0"
+					v-if="work.payment.cancellationPayment > 0"
 					class="text-h4 full-width"
 					type="submit"
 					:label="$t(`Pay And Accept`)"
@@ -74,7 +74,6 @@ export default {
 				this.route?.params?.workId
 			);
 			this.work = data.work;
-			this.cancelationFee = data.cancelationFee;
 		} catch (err) {
 			console.error(err);
 		} finally {

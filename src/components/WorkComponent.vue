@@ -228,16 +228,6 @@
 					</template>
 				</q-table>
 			</q-item>
-			<q-item>
-				<q-item-section class="flex flex-center">
-					<q-item-label caption>{{
-						$t("$ Initial Payment")
-					}}</q-item-label>
-					<div class="readonly-text">
-						{{ work.payment.initialPayment }}
-					</div>
-				</q-item-section>
-			</q-item>
 			<q-item class="flex flex-center">
 				<div class="subscription-div">
 					<q-item-label caption>{{
@@ -254,15 +244,41 @@
 					</div>
 				</div>
 			</q-item>
-			<q-item>
-				<q-item-section class="flex flex-center">
+			<q-item class="flex flex-center">
+				<div class="subscription-div">
+					<q-item-label caption>{{
+						$t("$ Initial Payment")
+					}}</q-item-label>
+					<div class="readonly-text">
+						{{ work.payment.initialPayment }}
+					</div>
+				</div>
+				<div class="subscription-div">
 					<q-item-label caption>{{
 						$t("Initial Payment Status")
 					}}</q-item-label>
 					<div class="readonly-text">
 						{{ work.initialPaymentStatus }}
 					</div>
-				</q-item-section>
+				</div>
+			</q-item>
+			<q-item class="flex flex-center">
+				<div class="subscription-div">
+					<q-item-label caption>{{
+						$t("$ Cancellation Payment")
+					}}</q-item-label>
+					<div class="readonly-text">
+						{{ work.payment.cancellationPayment }}
+					</div>
+				</div>
+				<div class="subscription-div">
+					<q-item-label caption>{{
+						$t("Cancellation Payment Status")
+					}}</q-item-label>
+					<div class="readonly-text">
+						{{ work.cancellationPaymentStatus }}
+					</div>
+				</div>
 			</q-item>
 		</q-list>
 	</q-page>
