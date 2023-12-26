@@ -16,6 +16,23 @@
 				:rules="[(val) => !!val || $t('Email is required')]"
 				:dense="false"
 			/>
+			<q-input
+				v-model="pUser.phoneNumber"
+				:label="$t('Phone Number')"
+				@update:model-value="checkChanges"
+				:dense="false"
+			/>
+			<!-- Admin -->
+			<template v-if="user?.roles?.includes('admin')">
+				<br />
+				<q-checkbox
+					v-model="pUser.emailConfirmed"
+					@update:model-value="checkChanges"
+					:label="$t('Email Confirmed')"
+				/>
+				<br />
+			</template>
+
 			<br />
 			<div class="flex flex-center">
 				<q-btn
@@ -29,9 +46,11 @@
 	</q-page>
 </template>
 <script>
+import dataService from "../services/data.service";
 import { useQuasar, QSpinnerGears } from "quasar";
 import { mapActions, mapState } from "pinia";
 import { useAuthState } from "src/stores/auth.state";
+import { useRoute } from "vue-router";
 import _ from "lodash";
 
 export default {
@@ -43,16 +62,29 @@ export default {
 			$q: useQuasar(),
 			pUser: {},
 			authState: useAuthState(),
+			route: useRoute(),
 		};
 	},
 	async mounted() {
-		//grab from db
-		this.oldUser = {
-			name: this.user.fullName,
-			email: this.user.email,
-		};
+		try {
+			this.loading = true;
+			this.$q.loading.show({
+				spinner: QSpinnerGears,
+				backgroundColor: "#1e5499",
+				message: this.$t("Gathering Info..."),
+			});
 
-		this.pUser = _.cloneDeep(this.oldUser);
+			this.oldUser = await dataService.getProfile(
+				this.route?.params?.userId
+			);
+
+			this.pUser = _.cloneDeep(this.oldUser);
+		} catch (err) {
+			console.error(err);
+		} finally {
+			this.$q.loading.hide();
+			this.loading = false;
+		}
 	},
 	unmounted() {},
 	async updated() {},
@@ -64,8 +96,33 @@ export default {
 			this.changesMade = !_.isEqual(this.pUser, this.oldUser);
 		},
 		async handleSave() {
-			//Update db
-			//force refresh token here as well
+			try {
+				if (this.changesMade) {
+					this.loading = true;
+					this.$q.loading.show({
+						spinner: QSpinnerGears,
+						backgroundColor: "#1e5499",
+						message: this.$t("Saving..."),
+					});
+					this.oldUser = await dataService.saveProfile(
+						this.route?.params?.userId,
+						this.pUser
+					);
+					this.$q
+						.dialog({
+							title: this.$t("Profile Saved"),
+							message: this.$t("Content has been updated."),
+						})
+						.onDismiss(() => {
+							this.$router.push("/settings");
+						});
+				}
+			} catch (err) {
+				console.error(err);
+			} finally {
+				this.$q.loading.hide();
+				this.loading = false;
+			}
 		},
 	},
 };

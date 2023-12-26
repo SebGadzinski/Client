@@ -528,10 +528,10 @@
 				<q-item>
 					<q-item-section>
 						<q-item-label caption>{{
-							$t("Payment Status")
+							$t("Initial Payment Status")
 						}}</q-item-label>
 						<q-select
-							v-model="work.paymentStatus"
+							v-model="work.initialPaymentStatus"
 							:options="paymentStatusOptions"
 							class="full-width"
 						/>

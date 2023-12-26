@@ -28,7 +28,8 @@ export default route(function (/* { store, ssrContext } */) {
 
   Router.beforeEach((to, from, next) => {
     const nonPublicPages = ['/profile', '/confirmation', '/work'];
-    const isAdminPage =  to.path.includes('/admin');
+    const adminPages = ['admin', '/profile/user/'];
+    const isAdminPage =  adminPages.some(x => to.path.includes(x));
     const authRequired = nonPublicPages.some(x => to.path.includes(x));
 
     let user = {};
@@ -40,7 +41,7 @@ export default route(function (/* { store, ssrContext } */) {
       // uSER DOES NOT EXIST
     }
 
-    if(isAdminPage && user && !user?.roles?.includes('admin')){
+    if(isAdminPage && !user?.roles?.includes('admin')){
       next('/');
     }else{
       if (authRequired && !user?.token) {

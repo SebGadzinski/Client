@@ -257,9 +257,11 @@
 			<q-item>
 				<q-item-section class="flex flex-center">
 					<q-item-label caption>{{
-						$t("Payment Status")
+						$t("Initial Payment Status")
 					}}</q-item-label>
-					<div class="readonly-text">{{ work.paymentStatus }}</div>
+					<div class="readonly-text">
+						{{ work.initialPaymentStatus }}
+					</div>
 				</q-item-section>
 			</q-item>
 		</q-list>

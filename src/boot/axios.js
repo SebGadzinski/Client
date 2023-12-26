@@ -21,8 +21,6 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
     const token = TokenService.getLocalToken();
-    console.log("Token: ");
-    console.log(token);
     if (token) { // config.headers["Authorization"] = 'Bearer ' + token;  // for Spring Boot back-end
         config.headers['authorization'] = token; // for Node.js Express back-end
     }

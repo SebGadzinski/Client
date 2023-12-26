@@ -272,6 +272,48 @@ class DataService {
             throw err;
         }
     }
+
+    async getUserPageData() {
+        try{
+            const response = await api.get(`/data/admin/getUserPageData`);
+            if(response.data.success){
+                return response.data.data;
+            }else{
+                console.log("Message: ");
+                console.log(response.data.message);
+                throw new Error(`Could not get work data`);
+            }
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async getProfile(userId) {
+        try{
+            let body = {};
+            if(userId){
+            body.userId = userId;
+            }
+            const response = await api.post(`/data/getProfile`, body);
+            if(response.data.success){
+                return response.data.data;
+            }else{
+                console.log("Message: ");
+                console.log(response.data.message);
+                throw new Error(`Could not get profile`);
+            }
+        }catch(err){
+            throw err;
+        }
+    }
+
+    async saveProfile(userId, user) {
+        try{
+            return await api.post('/data/saveProfile', {userId, user});
+        }catch(err){
+            throw err;
+        }
+    }
 }
 
 export default new DataService();

@@ -46,6 +46,17 @@
 								</q-item-section>
 							</q-item>
 							<q-item
+								clickable
+								v-close-popup
+								:to="`/profile/user/${props.row._id}`"
+							>
+								<q-item-section>
+									<q-item-label>{{
+										$t("Edit Profile")
+									}}</q-item-label>
+								</q-item-section>
+							</q-item>
+							<q-item
 								v-for="(action, index) in props.row.actions"
 								:key="index"
 								:to="action.link"
@@ -83,7 +94,7 @@
 											$t("ID")
 										}}</q-item-label>
 										<q-item-label>{{
-											props.row.userId
+											props.row._id
 										}}</q-item-label>
 									</q-item-section>
 								</q-item>
@@ -157,6 +168,7 @@
 </template>
 
 <script>
+import dataService from "../../services/data.service";
 import { useQuasar, QSpinnerGears } from "quasar";
 import { ref } from "vue";
 
@@ -173,7 +185,7 @@ export default {
 					name: "id",
 					align: "left",
 					label: "Id",
-					field: (row) => row.userId,
+					field: (row) => row._id,
 					sortable: true,
 				},
 				{
@@ -247,60 +259,22 @@ export default {
 		};
 	},
 	async mounted() {
-		//Gather Data
-		let grabbedRows = [
-			{
-				userId: "user01",
-				fullName: "John Doe",
-				email: "john.doe@example.com",
-				emailConfirmed: true,
-				phoneNumber: "123-456-7890",
-				mfa: false,
-				monthlyCost: 75.0,
-				totalCost: 55.9,
-			},
-			{
-				userId: "user02",
-				fullName: "Jane Smith",
-				email: "jane.smith@example.com",
-				emailConfirmed: false,
-				phoneNumber: "234-567-8901",
-				mfa: true,
-				monthlyCost: 75.0,
-				totalCost: 55.9,
-			},
-			{
-				userId: "user03",
-				fullName: "Alice Johnson",
-				email: "alice.johnson@example.com",
-				emailConfirmed: true,
-				phoneNumber: "345-678-9012",
-				mfa: false,
-				monthlyCost: 0,
-				totalCost: 9,
-			},
-			{
-				userId: "user04",
-				fullName: "Bob Brown",
-				email: "bob.brown@example.com",
-				emailConfirmed: false,
-				phoneNumber: "456-789-0123",
-				mfa: true,
-				monthlyCost: 76.0,
-				totalCost: 52.9,
-			},
-			{
-				userId: "user05",
-				fullName: "Carol White",
-				email: "carol.white@example.com",
-				emailConfirmed: true,
-				phoneNumber: "567-890-1234",
-				mfa: false,
-				monthlyCost: 76.0,
-				totalCost: 52.9,
-			},
-		];
-		this.users = grabbedRows;
+		try {
+			this.loading = true;
+			this.$q.loading.show({
+				spinner: QSpinnerGears,
+				backgroundColor: "#1e5499",
+				message: this.$t("Getting Info..."),
+			});
+			console.log(this.route?.params?.workId);
+			this.users = await dataService.getUserPageData();
+			console.log(this.users);
+		} catch (err) {
+			console.error(err);
+		} finally {
+			this.$q.loading.hide();
+			this.loading = false;
+		}
 		//Validate that jwt token can not let admin who edited app settings on browser through to admin endpoint
 	},
 	unmounted() {},
