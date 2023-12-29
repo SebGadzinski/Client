@@ -203,9 +203,10 @@ class DataService {
 
     async confirmWork(workId) {
         try{
-            return await api.post('/data/work/confirm', {
+            const result = await api.post('/data/work/confirm', {
                 workId
               });
+            if(result?.data?.message) throw new Error(result?.data?.message);
         }catch(err){
             throw err;
         }

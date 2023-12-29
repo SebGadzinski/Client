@@ -97,6 +97,8 @@ export default {
 
 			this.unavailablePeriods = this.meeting.unavailablePeriods;
 
+			console.log(this.unavailablePeriods);
+
 			this.$q.loading.hide();
 			this.loading = false;
 		} catch (err) {
@@ -249,6 +251,7 @@ export default {
 			if (daysDate === currentDate) {
 				hourArray = hourArray.filter((x) => x > currentHour);
 			}
+
 			return hourArray;
 		},
 		updateTime(date) {
@@ -262,23 +265,23 @@ export default {
 		},
 		getNextAvailableDate() {
 			let nextAvailable = new Date();
-			nextAvailable.setMinutes(0, 0, 0); // Set minutes, seconds, and milliseconds to zero
 
-			// Move to the next hour if the current time is not at the start of an hour
-			if (nextAvailable.getTime() !== new Date().setMinutes(0, 0, 0)) {
-				nextAvailable.setHours(nextAvailable.getHours() + 1);
-			}
+			while (true) {
+				// Convert nextAvailable to start of the day for comparison
+				let comparisonDate = new Date(nextAvailable);
+				comparisonDate.setHours(0, 0, 0, 0);
 
-			// Check if the time is within any unavailable period
-			while (
-				this.unavailablePeriods.some((period) => {
-					const start = new Date(period.start);
-					const end = new Date(period.end);
-					return nextAvailable >= start && nextAvailable < end;
-				})
-			) {
-				// Move to the next hour and check again
-				nextAvailable.setHours(nextAvailable.getHours() + 1);
+				// Get hours available for this date
+				const hours = this.getHoursForDate(comparisonDate);
+
+				if (hours.length > 0) {
+					// If there are available hours, set nextAvailable to the first available hour on this date
+					nextAvailable.setHours(hours[0], 0, 0, 0);
+					break; // Exit the loop
+				} else {
+					// If no hours are available, move to the next day and check again
+					nextAvailable.setDate(nextAvailable.getDate() + 1);
+				}
 			}
 
 			return nextAvailable;
