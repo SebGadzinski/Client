@@ -95,7 +95,8 @@ export default {
 						backgroundColor: "#1e5499",
 						message: this.$t("Accepting..."),
 					});
-					await dataService.confirmWork("658bb6316343683f4a39095d");
+					await dataService.confirmWork(this.route?.params?.workId);
+					// await dataService.confirmWork("658bb6316343683f4a39095d");
 					this.$q
 						.dialog({
 							title: this.$t("Work Confirmed"),
