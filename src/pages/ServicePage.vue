@@ -134,6 +134,14 @@ export default {
 			this.$q.loading.hide();
 			this.loading = false;
 			console.error(err);
+			this.$q
+				.dialog({
+					title: this.$t("Error"),
+					message: this.$t(err.toString()),
+				})
+				.onDismiss(() => {
+					this.$router.push("/");
+				});
 		}
 	},
 	unmounted() {},

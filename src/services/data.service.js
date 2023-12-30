@@ -290,27 +290,31 @@ class DataService {
     }
 
     async getProfile(userId) {
-        try{
-            let body = {};
-            if(userId){
+        let body = {};
+        if(userId){
             body.userId = userId;
-            }
-            const response = await api.post(`/data/getProfile`, body);
-            if(response.data.success){
-                return response.data.data;
-            }else{
-                console.log("Message: ");
-                console.log(response.data.message);
-                throw new Error(`Could not get profile`);
-            }
-        }catch(err){
-            throw err;
         }
+        return await this.call(api.post(`/data/getProfile`, body), "Could not get profile");
     }
 
     async saveProfile(userId, user) {
+        return await this.call(api.post('/data/saveProfile', {userId, user}));
+    }
+
+    async call(func, customError = null) {
         try{
-            return await api.post('/data/saveProfile', {userId, user});
+            const result = await func;
+            if(customError){
+                if(result.data.success){
+                    return result.data.data;
+                }else{
+                    console.log("Message: ");
+                    console.log(result.data.message);
+                    throw new Error(customError);
+                }
+            }else{
+                if(result?.data?.message) throw new Error(result?.data?.message);
+            }
         }catch(err){
             throw err;
         }

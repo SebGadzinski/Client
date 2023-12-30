@@ -64,6 +64,10 @@ api.interceptors.response.use((res) => {
                 return Promise.reject(error);
             }
         }
+
+        if(err.response.status === 403){
+            window.location = '/error';
+        }
     }
 
     return Promise.reject(err);

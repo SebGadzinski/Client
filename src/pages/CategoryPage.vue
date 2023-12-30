@@ -68,8 +68,19 @@ export default {
 		};
 	},
 	async mounted() {
-		this.categorySlug = ref(this.route?.params?.category);
-		await this.loadMore();
+		try {
+			this.categorySlug = ref(this.route?.params?.category);
+			await this.loadMore();
+		} catch (err) {
+			this.$q
+				.dialog({
+					title: this.$t("Error"),
+					message: this.$t(err.toString()),
+				})
+				.onDismiss(() => {
+					this.$router.push("/");
+				});
+		}
 	},
 	unmounted() {},
 	async updated() {},
