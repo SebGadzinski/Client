@@ -60,86 +60,23 @@ class DataService {
     }
 
     async getHomePageData() {
-        try{
-            let response = await api.get('/data/getHomePageData');
-            if(response.data.success){
-                return response.data.data;
-            }else{
-                console.log("Message: ");
-                console.log(response.data.message);
-                throw new Error(`Could not get categories`);
-            }
-        }catch(err){
-            throw err;
-        }
+        return await this.call(api.get('/data/getHomePageData'), "Could not get home page data");
     }
 
     async getCategoryPageData(categorySlug) {
-        try{
-            let response = await api.post('/data/getCategoryPageData', {
-                categorySlug
-              });
-            if(response.data.success){
-                return response.data.data;
-            }else{
-                console.log("Message: ");
-                console.log(response.data.message);
-                throw new Error(`Could not get categories`);
-            }
-        }catch(err){
-            throw err;
-        }
+        return await this.call(api.post('/data/getCategoryPageData', { categorySlug }), "Could not get category page data");
     }
 
     async getServicePageData(categorySlug, serviceSlug) {
-        try{
-            let response = await api.post('/data/getServicePageData', {
-                categorySlug, serviceSlug
-              });
-            if(response.data.success){
-                return response.data.data;
-            }else{
-                console.log("Message: ");
-                console.log(response.data.message);
-                throw new Error(`Could not get service data`);
-            }
-        }catch(err){
-            throw err;
-        }
+        return await this.call(api.post('/data/getServicePageData', { categorySlug, serviceSlug }), "Could not get service page data");
     }
 
     async getMeetingPageData(categorySlug, serviceSlug) {
-        try{
-            let response = await api.post('/data/getMeetingPageData', {
-                categorySlug, serviceSlug, date: new Date()
-              });
-            if(response.data.success){
-                return response.data.data;
-            }else{
-                console.log("Message: ");
-                console.log(response.data.message);
-                throw new Error(`Could not get meeting data`);
-            }
-        }catch(err){
-            throw err;
-        }
+        return await this.call(api.post('/data/getMeetingPageData', { categorySlug, serviceSlug, date: new Date() }), "Could not get meeting page data");
     }
 
     async findUnavailableDurations(date) {
-        try{
-            let response = await api.post('/data/meeting/findUnavailableDurations', {
-                 date
-              });
-            if(response.data.success){
-                return response.data.data;
-            }else{
-                console.log("Message: ");
-                console.log(response.data.message);
-                throw new Error(`Could not get meeting data`);
-            }
-        }catch(err){
-            throw err;
-        }
+        return await this.call(api.post('/data/meeting/findUnavailableDurations', { date }), "Could not find unavailable durations");
     }
 
     async bookMeeting({categorySlug, serviceSlug, startDate}) {
@@ -153,140 +90,44 @@ class DataService {
     }
 
     async getWorkPageData() {
-        try{
-            let response = await api.get('/data/getWorkPageData');
-            if(response.data.success){
-                return response.data.data;
-            }else{
-                console.log("Message: ");
-                console.log(response.data.message);
-                throw new Error(`Could not get work data`);
-            }
-        }catch(err){
-            throw err;
-        }
+        return await this.call(api.get('/data/getWorkPageData'), "Could not get work page data");
     }
 
     async getWorkConfirmationPageData(workId) {
-        try{
-            const response = await api.post(`/data/getWorkConfirmationPageData`, {
-                workId
-              });
-            if(response.data.success){
-                return response.data.data;
-            }else{
-                console.log("Message: ");
-                console.log(response.data.message);
-                throw new Error(`Could not get work confirmation data`);
-            }
-        }catch(err){
-            throw err;
-        }
+        return await this.call(api.post('/data/getWorkConfirmationPageData', { workId }), "Could not get work confirmation page data");
     }
 
     async getWorkCancelPageData(workId) {
-        try{
-            const response = await api.post(`/data/getWorkCancelPageData`, {
-                workId
-              });
-            if(response.data.success){
-                return response.data.data;
-            }else{
-                console.log("Message: ");
-                console.log(response.data.message);
-                throw new Error(`Could not get work cancel data`);
-            }
-        }catch(err){
-            throw err;
-        }
+        return await this.call(api.post('/data/getWorkCancelPageData', { workId }), "Could not get work cancel page data");
     }
 
     async confirmWork(workId) {
-        try{
-            const result = await api.post('/data/work/confirm', {
-                workId
-              });
-            if(result?.data?.message) throw new Error(result?.data?.message);
-        }catch(err){
-            throw err;
-        }
+        return await this.call(api.post('/data/work/confirm', { workId }));
     }
 
     async cancelWork(workId) {
-        try{
-            return await api.post('/data/work/cancel', {
-                workId
-              });
-        }catch(err){
-            throw err;
-        }
+        return await this.call(api.post('/data/work/cancel', { workId }));
     }
 
     async getWorkViewComponent(workId) {
-        try{
-            return await api.post('/data/work/viewComponent', {
-                workId
-              });
-        }catch(err){
-            throw err;
-        }
+        return await this.call(api.post('/data/work/viewComponent', { workId }));
     }
 
     async getWorkEditorPageData(workId) {
-        try{
-            const response = await api.post(`/data/getWorkEditorPageData`, {
-                workId
-              });
-            if(response.data.success){
-                return response.data.data;
-            }else{
-                console.log("Message: ");
-                console.log(response.data.message);
-                throw new Error(`Could not get work cancel data`);
-            }
-        }catch(err){
-            throw err;
-        }
+        return await this.call(api.post('/data/getWorkEditorPageData', { workId }), "Could not get work editor page data");
     }
 
     async upsertWork(work) {
-        try{
-            return await api.post('/data/work/upsert', work);
-        }catch(err){
-            throw err;
-        }
+        return await this.call(api.post('/data/work/upsert', work));
     }
 
     async getWorkComponent(workId) {
-        try{
-            const response = await api.post(`/data/work`, {
-                workId
-              });
-            if(response.data.success){
-                return response.data.data;
-            }else{
-                console.log("Message: ");
-                console.log(response.data.message);
-                throw new Error(`Could not get work data`);
-            }
-        }catch(err){
-            throw err;
-        }
+        return await this.call(api.post('/data/work', { workId }), "Could not get work component");
     }
 
+
     async getUserPageData() {
-        try{
-            const response = await api.get(`/data/admin/getUserPageData`);
-            if(response.data.success){
-                return response.data.data;
-            }else{
-                console.log("Message: ");
-                console.log(response.data.message);
-                throw new Error(`Could not get work data`);
-            }
-        }catch(err){
-            throw err;
-        }
+        return await this.call(api.get('/data/admin/getUserPageData'), "Could not get work data");
     }
 
     async getProfile(userId) {

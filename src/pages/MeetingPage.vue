@@ -156,6 +156,7 @@ export default {
 					startDate: new Date(this.date),
 				};
 				let response = await dataService.bookMeeting(meetingInfo);
+				console.log("Testing with stuff");
 				this.$q.loading.hide();
 				this.loading = false;
 				if (!response.data.success) {
