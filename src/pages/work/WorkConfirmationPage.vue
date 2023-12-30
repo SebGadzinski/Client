@@ -1,6 +1,7 @@
 <template>
 	<q-page padding>
 		<div>
+			<h3 class="text-center">{{ $t("Confirmation") }}</h3>
 			<WorkComponent
 				:work="work"
 				v-if="work && Object.keys(work).length > 0"

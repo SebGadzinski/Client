@@ -818,29 +818,64 @@ export default {
 				});
 			}
 		},
-		async handleSave() {
+		handleSave() {
 			try {
-				console.log("Timing out");
-				this.loading = true;
-				this.$q.loading.show({
-					spinner: QSpinnerGears,
-					backgroundColor: "#1e5499",
-					message: this.$t("Upserting..."),
-				});
-
-				await dataService.upsertWork(this.work);
-
 				this.$q
 					.dialog({
-						title: this.$t("Work Saved"),
-						message: this.$t("The work has been saved."),
+						title: this.$t("Update Information"),
+						message: this.$t("Please provide the update message"),
+						prompt: {
+							model: "",
+							type: "textarea",
+						},
 					})
-					.onDismiss(() => {
-						this.$router.push("/work");
+					.onOk((updateMessage) => {
+						this.$q
+							.dialog({
+								options: {
+									type: "checkbox",
+									model: false,
+									items: [
+										{
+											label: this.$t(
+												"Send an email notification?"
+											),
+											value: true,
+										},
+									],
+								},
+							})
+							.onOk(async (sendEmail) => {
+								this.loading = true;
+								this.$q.loading.show({
+									spinner: QSpinnerGears,
+									backgroundColor: "#1e5499",
+									message: this.$t("Upserting..."),
+								});
+
+								await dataService.upsertWork({
+									...this.work,
+									updateMessage,
+									sendEmail,
+								});
+
+								this.$q.loading.hide();
+								this.loading = false;
+
+								this.$q
+									.dialog({
+										title: this.$t("Work Saved"),
+										message: this.$t(
+											"The work has been saved."
+										),
+									})
+									.onDismiss(() => {
+										this.$router.push("/work");
+									});
+							});
 					});
 			} catch (err) {
 				console.error(err);
-			} finally {
 				this.$q.loading.hide();
 				this.loading = false;
 			}

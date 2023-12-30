@@ -133,14 +133,14 @@
 								color="secondary"
 								:label="$t('View')"
 								:to="`/work/${props.row.workId}`"
-								class="full-width"
+								class="text-color full-width"
 							/>
 							<q-btn
 								v-if="user?.roles?.includes('admin')"
 								color="secondary"
 								:label="$t('Edit')"
 								:to="`/work/edit/${props.row.workId}`"
-								class="full-width"
+								class="text-color full-width"
 							/>
 							<q-btn
 								v-for="(action, index) in props.row.actions"
@@ -148,7 +148,7 @@
 								color="secondary"
 								:label="$t(action.name)"
 								:to="action.link"
-								class="full-width"
+								class="text-color full-width"
 							/>
 						</q-card-section>
 					</q-card>
@@ -271,6 +271,8 @@ export default {
 			}
 		});
 
+		const isAdmin = this.user.roles.includes("admin");
+
 		data.work.map((x) => {
 			x.createdDate = new Date(x.createdDate).toDateString();
 			x.actions = [];
@@ -280,11 +282,15 @@ export default {
 					name: "Cancel Meeting",
 					link: `/work/cancel/${x.workId}`,
 				});
-			}
-			if (x.status === "Confirmation Required") {
+			} else if (x.status === "Confirmation Required") {
 				x.actions.push({
 					name: "Confirm Meeting Agreements",
 					link: `/work/confirmation/${x.workId}`,
+				});
+			} else if (x.status === "Cancellation Set Up") {
+				x.actions.push({
+					name: "Cancel Work",
+					link: `/work/cancel/${x.workId}`,
 				});
 			}
 			return x;
@@ -304,7 +310,12 @@ export default {
 			this.visibleColumns.push("paymentInterval");
 			this.visibleColumns.push("cost");
 		}
-		console.log(data);
+
+		if (!isAdmin) {
+			this.visibleColumns = this.visibleColumns.filter(
+				(x) => x !== "email"
+			);
+		}
 
 		this.works = data.work;
 		this.$nextTick(() => {
@@ -324,4 +335,12 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.text-color {
+	color: black !important;
+}
+
+.body--dark .text-color {
+	color: white !important;
+}
+</style>

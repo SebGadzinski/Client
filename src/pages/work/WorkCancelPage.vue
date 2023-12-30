@@ -1,6 +1,9 @@
 <template>
 	<q-page padding>
 		<div>
+			<h3 class="bg-accent text-center">
+				{{ $t("Cancellation") }}
+			</h3>
 			<WorkComponent
 				:work="work"
 				v-if="work && Object.keys(work).length > 0"

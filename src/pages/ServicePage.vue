@@ -76,12 +76,13 @@
 				<q-expansion-item
 					v-for="(faq, index) in service.faqs"
 					:key="index"
+					style="color: white"
 					class="bg-primary text-subtitle1 faq-section text-left"
 					expand-icon-class="text-white"
 					:default-opened="false"
 					:label="$t(faq.question)"
 				>
-					<q-card>
+					<q-card class="card-text-color">
 						<q-card-section class="text-body1">
 							{{ $t(faq.answer) }}
 						</q-card-section>
@@ -160,6 +161,14 @@ export default {
 
 .faq-section {
 	width: 60vw;
+}
+
+.card-text-color {
+	color: black;
+}
+
+.body--dark .card-text-color {
+	color: white;
 }
 
 @media (max-width: 800px) {
