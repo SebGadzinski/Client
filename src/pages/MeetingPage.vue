@@ -200,6 +200,13 @@ export default {
 			} else {
 				//get next closest time?
 			}
+			const parentElement = document.querySelector(
+				".q-time__header-label.row.items-center.no-wrap"
+			);
+			if (parentElement && parentElement.children.length > 0) {
+				const firstChild = parentElement.children[0];
+				firstChild.click();
+			}
 		},
 		getHoursForDate(date) {
 			const selectedDate = new Date(date);

@@ -32,6 +32,10 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use((res) => {
     return res;
 }, async (err) => {
+    //IP Blocked
+    if (err.response.status === 499){
+        window.location = 'ipblocked';
+    }
     const originalConfig = err.config;
     if ((!originalConfig.url.includes('auth') || originalConfig.url === '/auth/sendEmailConfirmation') && err.response) { // Access Token was expired
 
