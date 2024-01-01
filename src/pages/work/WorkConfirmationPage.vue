@@ -43,17 +43,28 @@
 			</q-form>
 		</div>
 	</q-page>
+	<q-dialog
+		v-model="showToS"
+		persistent
+		:maximized="maximizedToggle"
+		transition-show="slide-up"
+		transition-hide="slide-down"
+	>
+		<ConfirmationToSComponent />
+	</q-dialog>
 </template>
 
 <script>
+import { ref } from "vue";
 import dataService from "../../services/data.service";
 import { useQuasar, QSpinnerGears } from "quasar";
 import { useRoute } from "vue-router";
+import ConfirmationToSComponent from "src/components/tos/ConfirmationToSComponent.vue";
 import WorkComponent from "src/components/WorkComponent.vue";
 
 export default {
 	name: "WorkConfirmationPage",
-	components: { WorkComponent },
+	components: { WorkComponent, ConfirmationToSComponent },
 	data() {
 		return {
 			loading: true,
@@ -61,6 +72,8 @@ export default {
 			acceptTNC: false,
 			route: useRoute(),
 			work: {},
+			confirm: true,
+			showToS: ref(false),
 		};
 	},
 	async mounted() {
@@ -85,7 +98,14 @@ export default {
 	},
 	unmounted() {},
 	async updated() {},
-
+	watch: {
+		acceptTNC(newValue) {
+			if (newValue === true) {
+				console.log("set true");
+				this.showToS = true;
+			}
+		},
+	},
 	methods: {
 		async handleSubmit() {
 			try {

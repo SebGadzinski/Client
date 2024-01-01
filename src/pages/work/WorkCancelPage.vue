@@ -18,19 +18,12 @@
 			>
 				<br />
 				<br />
-				<q-checkbox
-					v-model="acceptTNC"
-					:label="$t('Accept Cancel Terms & Conditions')"
-				/>
-				<br />
-				<br />
 				<q-btn
 					v-if="work.payment.cancellationPayment > 0"
 					class="text-h4 full-width"
 					type="submit"
 					:label="$t(`Pay And Accept`)"
 					color="primary"
-					:disabled="!acceptTNC"
 				>
 				</q-btn>
 				<q-btn
@@ -39,7 +32,6 @@
 					type="submit"
 					:label="$t(`Accept`)"
 					color="primary"
-					:disabled="!acceptTNC"
 				>
 				</q-btn>
 			</q-form>
@@ -60,7 +52,6 @@ export default {
 		return {
 			loading: true,
 			$q: useQuasar(),
-			acceptTNC: false,
 			route: useRoute(),
 			work: {},
 		};
@@ -90,25 +81,22 @@ export default {
 	methods: {
 		async handleSubmit() {
 			try {
-				if (this.acceptTNC) {
-					this.loading = true;
-					this.$q.loading.show({
-						spinner: QSpinnerGears,
-						backgroundColor: "#1e5499",
-						message: this.$t("Accepting..."),
-					});
-					// TODO: Payment
-					await dataService.cancelWork(this.route?.params?.workId);
+				this.loading = true;
+				this.$q.loading.show({
+					spinner: QSpinnerGears,
+					backgroundColor: "#1e5499",
+					message: this.$t("Accepting..."),
+				});
+				await dataService.cancelWork(this.route?.params?.workId);
 
-					this.$q
-						.dialog({
-							title: this.$t("Work Cancelled"),
-							message: this.$t("The work has been cancelled."),
-						})
-						.onDismiss(() => {
-							this.$router.push("/work");
-						});
-				}
+				this.$q
+					.dialog({
+						title: this.$t("Work Cancelled"),
+						message: this.$t("The work has been cancelled."),
+					})
+					.onDismiss(() => {
+						this.$router.push("/work");
+					});
 			} catch (err) {
 				console.error(err);
 			} finally {
