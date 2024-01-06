@@ -37,6 +37,14 @@
 			</q-form>
 		</div>
 	</q-page>
+	<template v-if="showPayment">
+		<stripe-checkout
+			ref="checkoutRef"
+			mode="payment"
+			:pk="pk"
+			:session-id="paymentIntent.sessionId"
+		/>
+	</template>
 </template>
 
 <script>
@@ -44,16 +52,22 @@ import dataService from "../../services/data.service";
 import { useQuasar, QSpinnerGears } from "quasar";
 import { useRoute } from "vue-router";
 import WorkComponent from "src/components/WorkComponent.vue";
+import { StripeCheckout } from "@vue-stripe/vue-stripe";
 
 export default {
 	name: "WorkConfirmationPage",
-	components: { WorkComponent },
+	components: { WorkComponent, StripeCheckout },
 	data() {
 		return {
 			loading: true,
 			$q: useQuasar(),
 			route: useRoute(),
 			work: {},
+			pk: process.env.STRIPE_PUBLIC_KEY,
+			paymentIntent: {
+				sessionId: "",
+			},
+			showPayment: false,
 		};
 	},
 	async mounted() {
@@ -79,6 +93,36 @@ export default {
 	async updated() {},
 
 	methods: {
+		async displayPaymentModal() {
+			this.loading = true;
+			this.$q.loading.show({
+				spinner: QSpinnerGears,
+				backgroundColor: "#1e5499",
+				message: this.$t("Getting Payment Ready..."),
+			});
+			await this.generatePaymentIntent();
+			this.$nextTick(() => {
+				//TODO: Showing dialog causes error
+				this.showPayment = true;
+				this.$q.loading.hide();
+				this.$q
+					.dialog({
+						title: this.$t("You can close this window"),
+						message: this.$t(
+							"Please complete payment to cancel work."
+						),
+					})
+					.onDismiss(() => {
+						this.$router.push("/work");
+					});
+			});
+		},
+		async generatePaymentIntent() {
+			this.paymentIntent = await dataService.generateConfirmationPayment(
+				this.route?.params?.workId,
+				"cancellation"
+			);
+		},
 		async handleSubmit() {
 			try {
 				this.loading = true;
@@ -87,17 +131,32 @@ export default {
 					backgroundColor: "#1e5499",
 					message: this.$t("Accepting..."),
 				});
-				await dataService.cancelWork(this.route?.params?.workId);
 
+				if (this.work.payment.cancellationPayment > 0) {
+					await this.displayPaymentModal();
+					this.$nextTick(() => {
+						this.$refs.checkoutRef.redirectToCheckout();
+					});
+				} else {
+					await dataService.cancelWork(this.route?.params?.workId);
+					this.$q
+						.dialog({
+							title: this.$t("Work Cancelled"),
+							message: this.$t("The work has been cancelled."),
+						})
+						.onDismiss(() => {
+							this.$router.push("/work");
+						});
+				}
+			} catch (err) {
 				this.$q
 					.dialog({
-						title: this.$t("Work Cancelled"),
-						message: this.$t("The work has been cancelled."),
+						title: this.$t("Error"),
+						message: this.$t(err.toString()),
 					})
 					.onDismiss(() => {
-						this.$router.push("/work");
+						this.$router.push("/");
 					});
-			} catch (err) {
 				console.error(err);
 			} finally {
 				this.$q.loading.hide();

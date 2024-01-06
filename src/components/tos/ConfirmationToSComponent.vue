@@ -22,56 +22,56 @@
 				{{ $t("tos_welcome_info") }}
 			</p>
 
-			<h2>{{ $t("Acceptance of Terms") }}</h2>
+			<h4>{{ $t("Acceptance of Terms") }}</h4>
 			<p>
 				{{ $t("tos_conf_accept", { company }) }}
 			</p>
 
-			<h2>{{ $t("Registration and Account Security") }}</h2>
+			<h4>{{ $t("Registration and Account Security") }}</h4>
 			<p>
 				{{ $t("tos_conf_reg") }}
 			</p>
 
-			<h2>{{ $t("Scope of Services") }}</h2>
+			<h4>{{ $t("Scope of Services") }}</h4>
 			<p>
 				{{ $t("tos_conf_scope", { company }) }}
 			</p>
 
-			<h2>{{ $t("Payments and Billing") }}</h2>
+			<h4>{{ $t("Payments and Billing") }}</h4>
 			<p>
 				{{ $t("tos_conf_payments", { company }) }}
 			</p>
 
-			<h2>{{ $t("Cancellation and Refund Policy") }}</h2>
+			<h4>{{ $t("Cancellation and Refund Policy") }}</h4>
 			<p>
 				{{ $t("tos_conf_cancel", { company }) }}
 			</p>
 
-			<h2>{{ $t("Intellectual Property Rights") }}</h2>
+			<h4>{{ $t("Intellectual Property Rights") }}</h4>
 			<p>
 				{{ $t("tos_conf_intel", { company }) }}
 			</p>
 
-			<h2>{{ $t("Limitations of Liability") }}</h2>
+			<h4>{{ $t("Limitations of Liability") }}</h4>
 			<p>
 				{{ $t("tos_conf_limits", { company }) }}
 			</p>
 
-			<h2>{{ $t("Amendment of Terms") }}</h2>
+			<h4>{{ $t("Amendment of Terms") }}</h4>
 			<p>
 				{{ $t("tos_conf_amend") }}
 			</p>
-			<h2>{{ $t("Governing Law") }}</h2>
+			<h4>{{ $t("Governing Law") }}</h4>
 			<p>
 				{{ $t("tos_conf_gover") }}
 			</p>
 
-			<h2>{{ $t("Contact Information") }}</h2>
+			<h4>{{ $t("Contact Information") }}</h4>
 			<p>
 				{{ $t("tos_conf_email", { email }) }}
 			</p>
 
-			<h2>{{ $t("Agreement") }}</h2>
+			<h4>{{ $t("Agreement") }}</h4>
 			<p>
 				{{ $t("tos_conf_agreement", { company }) }}
 			</p>

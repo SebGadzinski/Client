@@ -3,6 +3,7 @@
 		<div>
 			<WorkComponent
 				:work="work"
+				:allow-payment="true"
 				v-if="work && Object.keys(work).length > 0"
 			/>
 		</div>

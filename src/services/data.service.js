@@ -6,7 +6,7 @@ import {i18n} from '../boot/i18n';
 class DataService {
     /**
      * Checks to see if there is a update available for the application
-     * @returns {Object} //TODO
+     * @returns {Object}
      */
     async checkForUpdate() {
         return new Promise((resolve, reject) => {
@@ -34,7 +34,7 @@ class DataService {
      * Updates Subscriptio for firebase notification
      * @param {String} token
      * @param {String} enable
-     * @returns //TODO
+     * @returns
      */
     updateNotificationSubscription({token, enable}) {
         return new Promise((resolve, reject) => {
@@ -142,6 +142,16 @@ class DataService {
         return await this.call(api.post('/data/saveProfile', {userId, user}));
     }
 
+    async generateConfirmationPayment(workId, type, paymentItemId = null) {
+        let body = {
+            workId, type
+        };
+        if(paymentItemId) body.paymentItemId = paymentItemId;
+        console.log(body);
+        const result =  await this.call(api.post('/data/work/pay', body));
+        return result;
+    }
+
     async call(func, customError = null) {
         try{
             const result = await func;
@@ -156,6 +166,8 @@ class DataService {
             }else{
                 if(result?.data?.message) throw new Error(result?.data?.message);
             }
+
+            return result.data.data;
         }catch(err){
             throw err;
         }

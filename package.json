@@ -29,6 +29,7 @@
 		"@capgo/capacitor-updater": "^4.17.35",
 		"@quasar/extras": "^1.15.11",
 		"@vue-leaflet/vue-leaflet": "^0.6.1",
+		"@vue-stripe/vue-stripe": "^4.5.0",
 		"@vuelidate/core": "^2.0.0-alpha.44",
 		"axios": "^1.3.3",
 		"canvg": "^4.0.1",

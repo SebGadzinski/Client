@@ -1,7 +1,9 @@
 <template>
 	<q-page padding>
 		<div>
-			<h3 class="text-center">{{ $t("Confirmation") }}</h3>
+			<h3 class="bg-accent text-center">
+				{{ $t("Confirmation") }}
+			</h3>
 			<WorkComponent
 				:work="work"
 				v-if="work && Object.keys(work).length > 0"
@@ -52,6 +54,16 @@
 	>
 		<ConfirmationToSComponent />
 	</q-dialog>
+	<q-dialog v-model="showPayment">
+		<q-card>
+			<stripe-checkout
+				ref="checkoutRef"
+				mode="payment"
+				:pk="pk"
+				:session-id="paymentIntent.sessionId"
+			/>
+		</q-card>
+	</q-dialog>
 </template>
 
 <script>
@@ -61,10 +73,17 @@ import { useQuasar, QSpinnerGears } from "quasar";
 import { useRoute } from "vue-router";
 import ConfirmationToSComponent from "src/components/tos/ConfirmationToSComponent.vue";
 import WorkComponent from "src/components/WorkComponent.vue";
+import { StripeCheckout } from "@vue-stripe/vue-stripe";
+
+//Fix up as you need
 
 export default {
 	name: "WorkConfirmationPage",
-	components: { WorkComponent, ConfirmationToSComponent },
+	components: {
+		WorkComponent,
+		ConfirmationToSComponent,
+		StripeCheckout,
+	},
 	data() {
 		return {
 			loading: true,
@@ -74,6 +93,12 @@ export default {
 			work: {},
 			confirm: true,
 			showToS: ref(false),
+			showPayment: ref(false),
+			pk: process.env.STRIPE_PUBLIC_KEY,
+			paymentIntent: {
+				sessionId: "",
+			},
+			stripeCardRef: ref(null),
 		};
 	},
 	async mounted() {
@@ -88,7 +113,6 @@ export default {
 			this.work = await dataService.getWorkConfirmationPageData(
 				this.route?.params?.workId
 			);
-			console.log(this.work);
 		} catch (err) {
 			console.error(err);
 		} finally {
@@ -107,6 +131,36 @@ export default {
 		},
 	},
 	methods: {
+		async displayPaymentModal() {
+			this.loading = true;
+			this.$q.loading.show({
+				spinner: QSpinnerGears,
+				backgroundColor: "#1e5499",
+				message: this.$t("Getting Payment Ready..."),
+			});
+			await this.generatePaymentIntent();
+			this.$q.loading.hide();
+			this.$nextTick(() => {
+				//TODO: Showing dialog causes error
+				this.showPayment = true;
+				this.$q
+					.dialog({
+						title: this.$t("You can close this window"),
+						message: this.$t(
+							"Please complete payment to confirm work."
+						),
+					})
+					.onDismiss(() => {
+						this.$router.push("/work");
+					});
+			});
+		},
+		async generatePaymentIntent() {
+			this.paymentIntent = await dataService.generateConfirmationPayment(
+				this.route?.params?.workId,
+				"confirmation"
+			);
+		},
 		async handleSubmit() {
 			try {
 				if (this.acceptTNC) {
@@ -116,15 +170,22 @@ export default {
 						backgroundColor: "#1e5499",
 						message: this.$t("Accepting..."),
 					});
-					await dataService.confirmWork(this.route?.params?.workId);
-					this.$q
-						.dialog({
-							title: this.$t("Work Confirmed"),
-							message: this.$t("The work has been confirmed."),
-						})
-						.onDismiss(() => {
-							this.$router.push("/work");
-						});
+					if (this.work.payment.initialPayment > 0) {
+					} else {
+						await dataService.confirmWork(
+							this.route?.params?.workId
+						);
+						this.$q
+							.dialog({
+								title: this.$t("Work Confirmed"),
+								message: this.$t(
+									"The work has been confirmed."
+								),
+							})
+							.onDismiss(() => {
+								this.$router.push("/work");
+							});
+					}
 				}
 			} catch (err) {
 				this.$q

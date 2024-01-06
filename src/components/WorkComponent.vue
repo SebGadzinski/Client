@@ -169,6 +169,20 @@
 							<q-td key="status" :props="props">{{
 								props.row.status
 							}}</q-td>
+							<q-td
+								v-if="
+									allowPayment &&
+									props.row.status !== 'Completed'
+								"
+								key="pay"
+								:props="props"
+							>
+								<q-btn
+									color="primary"
+									:label="$t('Pay')"
+									@click="pay('paymentItem', props.row._id)"
+								/>
+							</q-td>
 						</q-tr>
 					</template>
 					<template v-if="$q.screen.lt.md" v-slot:item="props">
@@ -222,6 +236,18 @@
 											</q-item-section>
 										</q-item>
 									</q-list>
+									<q-btn
+										v-if="
+											allowPayment &&
+											props.row.status !== 'Completed'
+										"
+										color="primary"
+										:label="$t('Pay')"
+										@click="
+											pay('paymentItem', props.row._id)
+										"
+										class="full-width"
+									/>
 								</q-card-section>
 							</q-card>
 						</div>
@@ -280,23 +306,59 @@
 					</div>
 				</div>
 			</q-item>
+			<q-item
+				style="margin-top: 100px"
+				v-if="
+					allowPayment &&
+					work.paymentItems.some((x) => x.status !== 'Completed')
+				"
+			>
+				<q-item-section>
+					<q-btn
+						class="text-h3"
+						color="primary"
+						:label="$t('Pay Full')"
+						@click="pay('full')"
+					>
+					</q-btn>
+				</q-item-section>
+			</q-item>
 		</q-list>
+
+		<template v-if="allowPayment && paymentIntent.sessionId !== ''">
+			<stripe-checkout
+				ref="checkoutRef"
+				mode="payment"
+				:pk="pk"
+				:session-id="paymentIntent.sessionId"
+			/>
+		</template>
 	</q-page>
 </template>
 
 <script>
 import { useQuasar, QSpinnerGears } from "quasar";
 import { ref } from "vue";
+import { StripeCheckout } from "@vue-stripe/vue-stripe";
+import dataService from "../services/data.service";
 
 export default {
 	name: "WorkComponent",
 	props: {
 		work: Object,
+		allowPayment: Boolean,
+	},
+	components: {
+		StripeCheckout,
 	},
 	data() {
 		return {
 			loading: false,
 			$q: useQuasar(),
+			pk: process.env.STRIPE_PUBLIC_KEY,
+			paymentIntent: {
+				sessionId: "",
+			},
 			workItemCols: [
 				{
 					name: "id",
@@ -368,6 +430,11 @@ export default {
 					field: (row) => row.status,
 					sortable: true,
 				},
+				{
+					name: "pay",
+					align: "center",
+					label: "Pay",
+				},
 			],
 			workItemVisibleCols: ref([
 				"id",
@@ -387,11 +454,36 @@ export default {
 	},
 	async mounted() {
 		console.log("Mounted");
+		if (this.allowPayment) {
+			this.paymentItemVisibleCols.push("pay");
+		}
 	},
 	async updated() {
 		console.log(this.work);
 	},
-	methods: {},
+	methods: {
+		async pay(type, paymentItemId = null) {
+			this.$q.loading.show({
+				spinner: QSpinnerGears,
+				backgroundColor: "#1e5499",
+				message: this.$t("Getting Payment Ready..."),
+			});
+			this.paymentIntent = await dataService.generateConfirmationPayment(
+				this.work._id,
+				type,
+				paymentItemId
+			);
+			this.$q.loading.hide();
+			this.$q
+				.dialog({
+					title: this.$t("Payment Ready"),
+					message: this.$t("Please complete payment."),
+				})
+				.onDismiss(() => {
+					this.$router.push("/work");
+				});
+		},
+	},
 };
 </script>
 
