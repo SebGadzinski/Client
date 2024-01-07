@@ -355,7 +355,12 @@ export default {
 		return {
 			loading: false,
 			$q: useQuasar(),
-			pk: process.env.STRIPE_PUBLIC_KEY,
+			pks: {
+				software: process.env.STRIPE_PUBLIC_KEY_SOFTWARE,
+				photography: process.env.STRIPE_PUBLIC_KEY_PHOTOGRAPHY,
+				videography: process.env.STRIPE_PUBLIC_KEY_VIDEOGRAPHY,
+			},
+			pk: "",
 			paymentIntent: {
 				sessionId: "",
 			},
@@ -458,9 +463,6 @@ export default {
 			this.paymentItemVisibleCols.push("pay");
 		}
 	},
-	async updated() {
-		console.log(this.work);
-	},
 	methods: {
 		async pay(type, paymentItemId = null) {
 			this.$q.loading.show({
@@ -468,20 +470,15 @@ export default {
 				backgroundColor: "#1e5499",
 				message: this.$t("Getting Payment Ready..."),
 			});
+			this.pk = this.pks[this.work.category.toLowerCase()];
 			this.paymentIntent = await dataService.generateConfirmationPayment(
 				this.work._id,
 				type,
 				paymentItemId
 			);
-			this.$q.loading.hide();
-			this.$q
-				.dialog({
-					title: this.$t("Payment Ready"),
-					message: this.$t("Please complete payment."),
-				})
-				.onDismiss(() => {
-					this.$router.push("/work");
-				});
+			this.$nextTick(() => {
+				this.$refs.checkoutRef.redirectToCheckout();
+			});
 		},
 	},
 };

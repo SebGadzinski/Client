@@ -1,27 +1,17 @@
 <template>
 	<q-page padding>
 		<div>
+			<h3 class="bg-accent text-center q-py-lg">
+				{{ $t("Payment") }}
+			</h3>
 			<WorkComponent
 				:work="work"
-				:allow-payment="
-					work.status !== 'Meeting' &&
-					work.status !== 'Completed' &&
-					work.status !== 'Cancelled'
-				"
+				:allow-payment="false"
 				v-if="work && Object.keys(work).length > 0"
 			/>
 		</div>
 		<div></div>
-		<div>
-			<q-btn
-				v-if="['Completed', 'Some Paid'].includes(work.paymentStatus)"
-				class="text-h4 full-width"
-				:label="$t(`Print Receipt`)"
-				color="primary"
-				@click="printReceipt"
-			>
-			</q-btn>
-		</div>
+		<div></div>
 	</q-page>
 </template>
 
@@ -32,7 +22,7 @@ import WorkComponent from "src/components/WorkComponent.vue";
 import { useRoute } from "vue-router";
 
 export default {
-	name: "WorkPage",
+	name: "WorkPaymentPage",
 	components: { WorkComponent },
 	data() {
 		return {
@@ -48,12 +38,23 @@ export default {
 			this.$q.loading.show({
 				spinner: QSpinnerGears,
 				backgroundColor: "#1e5499",
-				message: this.$t("Getting Info..."),
+				message: this.$t("Processing Payment..."),
 			});
-			console.log(this.route?.params?.workId);
-			this.work = await dataService.getWorkComponent(
-				this.route?.params?.workId
+
+			const wordId = await dataService.confirmPaymentIntent(
+				this.route?.params?.paymentHistoryId
 			);
+			console.log(wordId);
+
+			this.work = await dataService.getWorkComponent(wordId);
+
+			this.$q.loading.hide();
+			this.loading = false;
+
+			this.$q.notify({
+				message: "Payment Completed",
+				type: "positive",
+			});
 		} catch (err) {
 			console.error(err);
 			this.$q
@@ -64,33 +65,13 @@ export default {
 				.onDismiss(() => {
 					this.$router.push("/work");
 				});
-		} finally {
 			this.$q.loading.hide();
 			this.loading = false;
 		}
 	},
 	unmounted() {},
 	async updated() {},
-	methods: {
-		async printReceipt() {
-			try {
-				console.log("Printing Receipt");
-				this.loading = true;
-				this.$q.loading.show({
-					spinner: QSpinnerGears,
-					backgroundColor: "#1e5499",
-					message: this.$t("Printing..."),
-				});
-				setTimeout(() => {
-					this.$q.loading.hide();
-				}, 2000);
-			} catch (err) {
-				this.$q.loading.hide();
-				this.loading = false;
-				console.error(err);
-			}
-		},
-	},
+	methods: {},
 };
 </script>
 

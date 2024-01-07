@@ -12,6 +12,7 @@ const ESLintPlugin = require('eslint-webpack-plugin');
 
 const {configure} = require('quasar/wrappers');
 const internalIp = require('internal-ip');
+const config = require('./config');
 
 module.exports = configure(function (ctx) {
     return {
@@ -74,9 +75,8 @@ module.exports = configure(function (ctx) {
 
             env: {
                 //If using android ensure to set the ip address to the on you are working on
-                //TODO: Replace the latter with correct domain
                 SERVER_DOMAIN: ctx.dev ? `http://${internalIp.v4.sync()}:5000/api` : `http://${internalIp.v4.sync()}:5000/api`,
-                STRIPE_PUBLIC_KEY: `pk_test_51OTuPnKKWIvXkNEdw3BIXsxleNAgVpei1iQCA5Bc2AUhhzLJSOEr6ng3ezRrDbhnpNzgsiLaVp12zlv0Ogczc1kN00m6QTgo2a`
+                ...config[ctx.dev ? "development" : "production"]
             },
 
             chainWebpack(chain) {

@@ -18,6 +18,8 @@ const layout = {
     { path: 'work/edit/:workId', component: () => import('pages/work/WorkEditorPage.vue'), },
     { path: 'work/cancel/:workId', component: () => import('pages/work/WorkCancelPage.vue'), },
     { path: 'work/confirmation/:workId', component: () => import('pages/work/WorkConfirmationPage.vue'), },
+    { path: 'work/pay/confirm/:paymentHistoryId', component: () => import('pages/work/WorkPaymentPage.vue'), },
+
     { path: 'settings', component: () => import('pages/SettingsPage.vue') },
     { path: 'admin/users', component: () => import('pages/admin/UsersPage.vue'), },
     { path: 'ipblocked', component: () => import('pages/IPBlocked410.vue'), },

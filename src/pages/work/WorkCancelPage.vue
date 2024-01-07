@@ -1,7 +1,7 @@
 <template>
 	<q-page padding>
 		<div>
-			<h3 class="bg-accent text-center">
+			<h3 class="bg-accent text-center q-py-lg">
 				{{ $t("Cancellation") }}
 			</h3>
 			<WorkComponent
@@ -37,7 +37,7 @@
 			</q-form>
 		</div>
 	</q-page>
-	<template v-if="showPayment">
+	<template v-if="showPayment && paymentIntent.sessionId !== ''">
 		<stripe-checkout
 			ref="checkoutRef"
 			mode="payment"
@@ -63,7 +63,12 @@ export default {
 			$q: useQuasar(),
 			route: useRoute(),
 			work: {},
-			pk: process.env.STRIPE_PUBLIC_KEY,
+			pks: {
+				software: process.env.STRIPE_PUBLIC_KEY_SOFTWARE,
+				photography: process.env.STRIPE_PUBLIC_KEY_PHOTOGRAPHY,
+				videography: process.env.STRIPE_PUBLIC_KEY_VIDEOGRAPHY,
+			},
+			pk: "",
 			paymentIntent: {
 				sessionId: "",
 			},
@@ -82,6 +87,7 @@ export default {
 				this.route?.params?.workId
 			);
 			this.work = data.work;
+			this.pk = this.pks[this.work.category.toLowerCase()];
 		} catch (err) {
 			console.error(err);
 		} finally {
@@ -93,35 +99,20 @@ export default {
 	async updated() {},
 
 	methods: {
-		async displayPaymentModal() {
-			this.loading = true;
+		async pay() {
 			this.$q.loading.show({
 				spinner: QSpinnerGears,
 				backgroundColor: "#1e5499",
 				message: this.$t("Getting Payment Ready..."),
 			});
-			await this.generatePaymentIntent();
-			this.$nextTick(() => {
-				//TODO: Showing dialog causes error
-				this.showPayment = true;
-				this.$q.loading.hide();
-				this.$q
-					.dialog({
-						title: this.$t("You can close this window"),
-						message: this.$t(
-							"Please complete payment to cancel work."
-						),
-					})
-					.onDismiss(() => {
-						this.$router.push("/work");
-					});
-			});
-		},
-		async generatePaymentIntent() {
+			this.showPayment = true;
 			this.paymentIntent = await dataService.generateConfirmationPayment(
 				this.route?.params?.workId,
 				"cancellation"
 			);
+			this.$nextTick(() => {
+				this.$refs.checkoutRef.redirectToCheckout();
+			});
 		},
 		async handleSubmit() {
 			try {
@@ -133,10 +124,7 @@ export default {
 				});
 
 				if (this.work.payment.cancellationPayment > 0) {
-					await this.displayPaymentModal();
-					this.$nextTick(() => {
-						this.$refs.checkoutRef.redirectToCheckout();
-					});
+					await this.pay();
 				} else {
 					await dataService.cancelWork(this.route?.params?.workId);
 					this.$q

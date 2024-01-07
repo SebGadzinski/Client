@@ -1,7 +1,7 @@
 <template>
 	<q-page padding>
 		<div>
-			<h3 class="bg-accent text-center">
+			<h3 class="bg-accent text-center q-py-lg">
 				{{ $t("Confirmation") }}
 			</h3>
 			<WorkComponent
@@ -54,16 +54,14 @@
 	>
 		<ConfirmationToSComponent />
 	</q-dialog>
-	<q-dialog v-model="showPayment">
-		<q-card>
-			<stripe-checkout
-				ref="checkoutRef"
-				mode="payment"
-				:pk="pk"
-				:session-id="paymentIntent.sessionId"
-			/>
-		</q-card>
-	</q-dialog>
+	<template v-if="showPayment && paymentIntent.sessionId !== ''">
+		<stripe-checkout
+			ref="checkoutRef"
+			mode="payment"
+			:pk="pk"
+			:session-id="paymentIntent.sessionId"
+		/>
+	</template>
 </template>
 
 <script>
@@ -74,8 +72,6 @@ import { useRoute } from "vue-router";
 import ConfirmationToSComponent from "src/components/tos/ConfirmationToSComponent.vue";
 import WorkComponent from "src/components/WorkComponent.vue";
 import { StripeCheckout } from "@vue-stripe/vue-stripe";
-
-//Fix up as you need
 
 export default {
 	name: "WorkConfirmationPage",
@@ -91,10 +87,15 @@ export default {
 			acceptTNC: false,
 			route: useRoute(),
 			work: {},
+			pks: {
+				software: process.env.STRIPE_PUBLIC_KEY_SOFTWARE,
+				photography: process.env.STRIPE_PUBLIC_KEY_PHOTOGRAPHY,
+				videography: process.env.STRIPE_PUBLIC_KEY_VIDEOGRAPHY,
+			},
+			pk: "",
 			confirm: true,
 			showToS: ref(false),
 			showPayment: ref(false),
-			pk: process.env.STRIPE_PUBLIC_KEY,
 			paymentIntent: {
 				sessionId: "",
 			},
@@ -113,6 +114,7 @@ export default {
 			this.work = await dataService.getWorkConfirmationPageData(
 				this.route?.params?.workId
 			);
+			this.pk = this.pks[this.work.category.toLowerCase()];
 		} catch (err) {
 			console.error(err);
 		} finally {
@@ -131,46 +133,31 @@ export default {
 		},
 	},
 	methods: {
-		async displayPaymentModal() {
-			this.loading = true;
+		async pay() {
 			this.$q.loading.show({
 				spinner: QSpinnerGears,
 				backgroundColor: "#1e5499",
 				message: this.$t("Getting Payment Ready..."),
 			});
-			await this.generatePaymentIntent();
-			this.$q.loading.hide();
-			this.$nextTick(() => {
-				//TODO: Showing dialog causes error
-				this.showPayment = true;
-				this.$q
-					.dialog({
-						title: this.$t("You can close this window"),
-						message: this.$t(
-							"Please complete payment to confirm work."
-						),
-					})
-					.onDismiss(() => {
-						this.$router.push("/work");
-					});
-			});
-		},
-		async generatePaymentIntent() {
+			this.showPayment = true;
 			this.paymentIntent = await dataService.generateConfirmationPayment(
 				this.route?.params?.workId,
 				"confirmation"
 			);
+			this.$nextTick(() => {
+				this.$refs.checkoutRef.redirectToCheckout();
+			});
 		},
 		async handleSubmit() {
 			try {
 				if (this.acceptTNC) {
-					this.loading = true;
 					this.$q.loading.show({
 						spinner: QSpinnerGears,
 						backgroundColor: "#1e5499",
 						message: this.$t("Accepting..."),
 					});
 					if (this.work.payment.initialPayment > 0) {
+						await this.pay();
 					} else {
 						await dataService.confirmWork(
 							this.route?.params?.workId

@@ -152,6 +152,10 @@ class DataService {
         return result;
     }
 
+    async confirmPaymentIntent(paymentHistoryId) {
+        return await this.call(api.get(`data/work/pay/confirm?id=${paymentHistoryId}`));
+    }
+
     async call(func, customError = null) {
         try{
             const result = await func;

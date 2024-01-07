@@ -338,7 +338,8 @@
 								<q-td key="payment" :props="props">
 									<q-input
 										v-model="props.row.payment"
-										type="number"
+										mask="#.##"
+										reverse-fill-mask
 										:rules="[
 											(val) =>
 												val >= 0 ||
@@ -428,7 +429,8 @@
 														v-model="
 															props.row.payment
 														"
-														type="number"
+														mask="#.##"
+														reverse-fill-mask
 														:rules="[
 															(val) =>
 																val >= 0 ||
@@ -484,7 +486,8 @@
 						}}</q-item-label>
 						<q-input
 							v-model="work.payment.subscription.payment"
-							type="number"
+							mask="#.##"
+							reverse-fill-mask
 							:rules="[
 								(val) =>
 									val >= 0 || $t('Value must be above 0'),
@@ -517,7 +520,8 @@
 						}}</q-item-label>
 						<q-input
 							v-model="work.payment.initialPayment"
-							type="number"
+							mask="#.##"
+							reverse-fill-mask
 							:rules="[
 								(val) =>
 									val >= 0 || $t('Value must be above 0'),
@@ -547,7 +551,8 @@
 						}}</q-item-label>
 						<q-input
 							v-model="work.payment.cancellationPayment"
-							type="number"
+							mask="#.##"
+							reverse-fill-mask
 							:rules="[
 								(val) =>
 									val >= 0 || $t('Value must be above 0'),
@@ -735,6 +740,17 @@ export default {
 			const data = await dataService.getWorkEditorPageData(
 				this.route?.params?.workId
 			);
+
+			// Update numbers to work
+			data.work.paymentItems.map((x) => {
+				x.payment = x.payment.toFixed(2);
+				return x;
+			});
+			console.log(data.work);
+			data.work.payment.initialPayment =
+				data.work.payment.initialPayment.toFixed(2);
+			data.work.payment.cancellationPayment =
+				data.work.payment.cancellationPayment.toFixed(2);
 
 			this.work = data.work;
 
