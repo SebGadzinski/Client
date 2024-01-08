@@ -35,4 +35,6 @@ yarn-error.log*
 #Visual Studio
 /.vs
 
+#Env vars
 .env.*
+config.js
