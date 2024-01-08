@@ -22,7 +22,7 @@ const layout = {
 
     { path: 'settings', component: () => import('pages/SettingsPage.vue') },
     { path: 'admin/users', component: () => import('pages/admin/UsersPage.vue'), },
-    { path: 'ipblocked', component: () => import('pages/IPBlocked410.vue'), },
+    { path: 'ipblocked', component: () => import('pages/IPBlocked499.vue'), },
     {
       path: ':catchAll(.*)*',
       component: () => import('pages/Error404.vue')

@@ -28,7 +28,7 @@ module.exports = configure(function (ctx) {
         // --> boot files are part of "main.js"
         // https://v2.quasar.dev/quasar-cli-webpack/boot-files
         boot: [
-            'pinia', 'i18n', 'axios', 'vuelidate','google-analytics'
+            'pinia', 'i18n', 'axios', 'vuelidate','google-analytics', 'currency'
         ],
 
         // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-css

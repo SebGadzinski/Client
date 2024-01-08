@@ -19,7 +19,7 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-	name: "IPBlocked410",
+	name: "IPBlocked499",
 });
 </script>
 <style>

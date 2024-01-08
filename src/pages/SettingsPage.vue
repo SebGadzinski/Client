@@ -55,7 +55,7 @@
 				<q-item-section>
 					<q-item-label>{{ $t("Language") }}:</q-item-label>
 				</q-item-section>
-				<q-item-section side top>
+				<q-item-section>
 					<q-btn-dropdown
 						color="primary"
 						class="full-width"
@@ -64,12 +64,14 @@
 					>
 						<q-list>
 							<q-item
+								v-for="(lan, index) in languages"
+								:key="index"
 								clickable
 								v-close-popup
-								@click="onLanguageClick('en-US')"
+								@click="onLanguageClick(lan.value)"
 							>
 								<q-item-section>
-									<q-item-label>English</q-item-label>
+									<q-item-label>{{ lan.name }}</q-item-label>
 								</q-item-section>
 							</q-item>
 
@@ -88,6 +90,35 @@
 								<q-item-label>Español</q-item-label>
 							</q-item-section>
 							</q-item> -->
+						</q-list>
+					</q-btn-dropdown>
+				</q-item-section>
+			</q-item>
+
+			<!-- SET Currency -->
+			<q-item tag="label" v-ripple>
+				<q-item-section>
+					<q-item-label>{{ $t("Currency") }}:</q-item-label>
+				</q-item-section>
+				<q-item-section>
+					<q-btn-dropdown
+						color="primary"
+						class="full-width"
+						split
+						:label="currencyText"
+					>
+						<q-list>
+							<q-item
+								v-for="(cur, index) in currencies"
+								:key="index"
+								clickable
+								v-close-popup
+								@click="onCurrencyClick(cur)"
+							>
+								<q-item-section>
+									<q-item-label>{{ cur }}</q-item-label>
+								</q-item-section>
+							</q-item>
 						</q-list>
 					</q-btn-dropdown>
 				</q-item-section>
@@ -214,6 +245,17 @@ export default {
 			message: null,
 			filter: null,
 			authState: useAuthState(),
+			currencies: ["CAD", "USD", "EUR", "PLN", "MXN"],
+			languages: [
+				{
+					name: "English",
+					value: "en-US",
+				},
+				{
+					name: "Français",
+					value: "fr",
+				},
+			],
 		};
 	},
 	computed: {
@@ -225,6 +267,7 @@ export default {
 			"notificationsEnabled",
 			"language",
 			"darkMode",
+			"currency",
 		]),
 		darkMode: {
 			get() {
@@ -252,6 +295,11 @@ export default {
 					default:
 						return "English";
 				}
+			},
+		},
+		currencyText: {
+			get() {
+				return this.settingsState.currency;
 			},
 		},
 		_notificationsEnabled: {
@@ -339,6 +387,9 @@ export default {
 				this.$q.lang.set(lang.default);
 			});
 			this.$i18n.locale = langName;
+		},
+		onCurrencyClick(currency) {
+			this.settingsState.setCurrency(currency);
 		},
 		async updateNotifications() {
 			Notify.register({

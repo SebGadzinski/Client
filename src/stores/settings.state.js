@@ -18,6 +18,7 @@ const defaultState = {
   debug: false,
   darkMode: false,
   language: "en-US",
+  currency: "CAD",
 };
 
 /**
@@ -88,6 +89,14 @@ export const useSettingsState = defineStore("Settings", {
       saveState(this);
     },
     /**
+     * Sets the currency.
+     * @param {string} cur - The currency to set.
+     */
+    setCurrency(cur) {
+      this.currency = cur;
+      saveState(this);
+    },
+    /**
      * Adds an entry to the event log.
      * @param {string} entry - The entry to add to the event log.
      */
@@ -134,6 +143,7 @@ let saveState = (that) => {
     debug: that.debug || false,
     darkMode: that.darkMode || false,
     language: that.language || "en-US",
+    currency: that.currency || "CAD",
   };
   localStorage.setItem("settings", JSON.stringify(object));
 };

@@ -164,7 +164,7 @@
 								props.row.description
 							}}</q-td>
 							<q-td key="payment" :props="props">{{
-								props.row.payment
+								$c(props.row.payment)
 							}}</q-td>
 							<q-td key="status" :props="props">{{
 								props.row.status
@@ -221,7 +221,7 @@
 													$t("Payment")
 												}}</q-item-label>
 												<div class="readonly-text">
-													{{ props.row.payment }}
+													{{ $c(props.row.payment) }}
 												</div>
 											</q-item-section>
 										</q-item>
@@ -260,7 +260,7 @@
 						$t("$ Subscription")
 					}}</q-item-label>
 					<div class="readonly-text">
-						{{ work.payment.subscription.payment }}
+						{{ $c(work.payment.subscription.payment) }}
 					</div>
 				</div>
 				<div class="subscription-div">
@@ -276,7 +276,7 @@
 						$t("$ Initial Payment")
 					}}</q-item-label>
 					<div class="readonly-text">
-						{{ work.payment.initialPayment }}
+						{{ $c(work.payment.initialPayment) }}
 					</div>
 				</div>
 				<div class="subscription-div">
@@ -294,7 +294,7 @@
 						$t("$ Cancellation Payment")
 					}}</q-item-label>
 					<div class="readonly-text">
-						{{ work.payment.cancellationPayment }}
+						{{ $c(work.payment.cancellationPayment) }}
 					</div>
 				</div>
 				<div class="subscription-div">
