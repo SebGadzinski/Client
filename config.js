@@ -1,7 +1,0 @@
-module.exports = {
-    development: {
-        STRIPE_PUBLIC_KEY_SOFTWARE: `pk_test_51OTuPnKKWIvXkNEdw3BIXsxleNAgVpei1iQCA5Bc2AUhhzLJSOEr6ng3ezRrDbhnpNzgsiLaVp12zlv0Ogczc1kN00m6QTgo2a`,
-        STRIPE_PUBLIC_KEY_PHOTOGRAPHY: `pk_test_51OTunWFOSEIM9vEtDA0ltHJ9ygY2ro2tmghMDP6NQUyUCJqpRJ1k9xTgNz2b8cbRmbL3Fj7w6FdWUzPOeJmsnwvc007qOznUbY`,
-        STRIPE_PUBLIC_KEY_VIDEOGRAPHY: `pk_test_51OTupuGDD9i08mQtUcTlwvMLFCVyDTODJj18diZ3m2Ft4Mr9E1fgfNYZZkegkLo2qNyFP6Sfpy0JYghUFAOPpRyJ00KE0v2oRE`
-    },
-}
