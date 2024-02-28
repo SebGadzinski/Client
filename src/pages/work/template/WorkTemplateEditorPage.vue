@@ -755,6 +755,13 @@ export default {
 					data.work.subscription.payment.toFixed(2);
 			}
 
+			if (!data.work?.subscription?.payment) {
+				data.work.subscription = {
+					payment: 0,
+					interval: "N/A",
+				};
+			}
+
 			this.work = data.work;
 
 			this.usersOptions = data.usersOptions;
