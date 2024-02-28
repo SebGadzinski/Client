@@ -1,0 +1,12 @@
+{
+  "appId": "com.workwebsite.app",
+  "appName": "Gadzy Work",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "plugins": {
+    "CapacitorUpdater": {
+      "autoUpdateUrl": "http://localhost:5000/api/app/getLatestVersion"
+    }
+  }
+}
