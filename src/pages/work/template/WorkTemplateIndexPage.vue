@@ -235,6 +235,7 @@ export default {
 					label: "Initial $",
 					field: (row) => this.$c(row.initialPayment),
 					sortable: true,
+					sort: (a, b) => this.sortCurrency(a, b),
 				},
 				{
 					name: "paymentInterval",
@@ -263,6 +264,7 @@ export default {
 					label: "Cancellation $",
 					field: (row) => this.$c(row.cancellationPayment),
 					sortable: true,
+					sort: (a, b) => this.sortCurrency(a, b),
 				},
 				{
 					name: "createdDate",
