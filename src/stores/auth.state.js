@@ -54,7 +54,6 @@ export const useAuthState = defineStore("Auth", {
     signUp(user) {
       return AuthService.signUp(user).then(
         () => {
-          console.log("Sign Up Successful");
           return this.login(user.email, user.password).then(user => Promise.resolve(user));
         }).catch(error => {
           this.user = null;

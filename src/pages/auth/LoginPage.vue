@@ -107,7 +107,6 @@ export default {
 										error.response.data.message) ||
 									error.message ||
 									error.toString(),
-								message: JSON.stringify(error),
 							});
 						}
 					);

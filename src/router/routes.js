@@ -11,7 +11,7 @@ const mainLayouts = {
 const meta = { title: 'Gadzy Works',  favicon: '/favicon.ico'  };
 const layout = {
   path: '/',
-  component: () => import(`layouts/main/${mainLayouts.header}.vue`),
+  component: () => import(`layouts/main/${mainLayouts.tab}.vue`),
   meta,
   children: [
     { path: '', redirect: '/home' },
