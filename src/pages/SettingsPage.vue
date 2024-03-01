@@ -1,7 +1,7 @@
 <template>
 	<div class="q-pa-md">
 		<q-list>
-			<template v-if="user?.roles.includes('admin')">
+			<!-- <template v-if="user?.roles.includes('admin')">
 				<template v-if="this.$q.screen.lt.md">
 					<q-item>
 						<q-item-section>
@@ -34,7 +34,7 @@
 						</q-item-section>
 					</q-item>
 				</template>
-			</template>
+			</template> -->
 			<!-- Work Status -->
 			<q-item v-if="user?.roles.includes('admin')" clickable v-ripple>
 				<q-item-section>{{ $t("Edit Work Status") }}</q-item-section>
