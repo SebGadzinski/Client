@@ -373,26 +373,28 @@
 							></q-btn></q-card-section
 					></q-card>
 				</div>
-				<div class="row justify-center" v-else>
+				<div class="row justify-center q-my-sm" v-else>
 					<div class="col-12 text-center">
 						<q-item-label caption>{{
 							$t("Payment Card")
 						}}</q-item-label>
 					</div>
-					<q-btn
-						class="q-ma-sm"
-						color="primary"
-						:label="
-							`************` +
-							work.payment.subscription.last4Digits
-						"
-					/>
-					<q-btn color="primary">
-						<q-icon name="edit_square" @click="toggleCard" />
-					</q-btn>
-					<q-btn class="q-mx-sm" color="negative">
-						<q-icon name="delete" @click="deleteCard" />
-					</q-btn>
+					<q-card>
+						<q-btn
+							class="q-ma-sm"
+							color="primary"
+							:label="
+								`************` +
+								work.payment.subscription.last4Digits
+							"
+						/>
+						<q-btn color="primary">
+							<q-icon name="edit_square" @click="toggleCard" />
+						</q-btn>
+						<q-btn class="q-mx-sm" color="negative">
+							<q-icon name="delete" @click="deleteCard" />
+						</q-btn>
+					</q-card>
 				</div>
 			</template>
 			<q-item v-if="paymentHistory?.length > 0">

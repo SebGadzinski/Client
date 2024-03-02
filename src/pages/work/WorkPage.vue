@@ -75,7 +75,6 @@ export default {
 	methods: {
 		async printReceipt() {
 			try {
-				console.log("Printing Receipt");
 				this.loading = true;
 				this.$q.loading.show({
 					spinner: QSpinnerGears,

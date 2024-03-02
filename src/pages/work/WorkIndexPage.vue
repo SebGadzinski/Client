@@ -118,7 +118,23 @@
 							<span v-if="isAdmin"
 								>ID:{{ props.row.workId }}</span
 							>
-							<q-badge>{{ $t(props.row.status) }}</q-badge>
+							<q-badge
+								color="negative"
+								v-if="
+									['Payments Failed'].includes(
+										props.row.status
+									)
+								"
+								>{{ $t(props.row.status) }}</q-badge
+							>
+							<q-badge
+								color="accent"
+								v-else-if="
+									['Cancelled'].includes(props.row.status)
+								"
+								>{{ $t(props.row.status) }}</q-badge
+							>
+							<q-badge v-else>{{ $t(props.row.status) }}</q-badge>
 						</q-card-section>
 						<q-card-section>
 							<q-list bordered separator>
