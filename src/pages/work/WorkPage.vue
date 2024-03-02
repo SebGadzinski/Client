@@ -52,7 +52,7 @@ export default {
 				message: this.$t("Getting Info..."),
 			});
 			console.log(this.route?.params?.workId);
-			this.work = await dataService.getWorkComponent(
+			this.work = await dataService.getWorkViewComponent(
 				this.route?.params?.workId
 			);
 		} catch (err) {

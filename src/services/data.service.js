@@ -102,15 +102,15 @@ class DataService {
     }
 
     async confirmWork(workId) {
-        return await this.call(api.post('/data/work/confirm', { workId }));
+        return await this.call(api.post(`/data/work/confirm/${workId}`));
     }
 
     async cancelWork(workId) {
-        return await this.call(api.post('/data/work/cancel', { workId }));
+        return await this.call(api.post(`/data/work/cancel/${workId}`));
     }
 
     async getWorkViewComponent(workId) {
-        return await this.call(api.post('/data/work/viewComponent', { workId }));
+        return await this.call(api.get(`/data/work/${workId}`));
     }
 
     async getWorkEditorPageData(workId) {
@@ -119,10 +119,6 @@ class DataService {
 
     async upsertWork(work) {
         return await this.call(api.post('/data/work/upsert', work));
-    }
-
-    async getWorkComponent(workId) {
-        return await this.call(api.post('/data/work', { workId }), "Could not get work component");
     }
 
     async getUserPageData() {
