@@ -520,6 +520,17 @@
 					</q-btn>
 				</q-item-section>
 			</q-item>
+			<q-item v-if="allowReceipt">
+				<q-item-section>
+					<q-btn
+						class="text-h3"
+						color="primary"
+						:label="$t('Print Receipt')"
+						@click="printReceipt"
+					>
+					</q-btn>
+				</q-item-section>
+			</q-item>
 		</q-list>
 	</q-page>
 </template>
@@ -529,6 +540,7 @@ import { useQuasar, QSpinnerGears } from "quasar";
 import { ref } from "vue";
 import dataService from "../services/data.service";
 import DateService from "../services/date.service";
+import WorkReceiptComponent from "./WorkReceiptComponent.vue";
 
 export default {
 	name: "WorkComponent",
@@ -536,9 +548,12 @@ export default {
 		showWorkers: Boolean,
 		work: Object,
 		allowPayment: Boolean,
+		allowReceipt: Boolean,
 	},
 	data() {
 		return {
+			receipt: {},
+			showReceipt: false,
 			loading: false,
 			$q: useQuasar(),
 			stripe: null,
@@ -878,6 +893,20 @@ export default {
 					}
 				}
 			});
+		},
+		printReceipt() {
+			try {
+				this.$q
+					.dialog({
+						title: this.$t("Print Receipt?"),
+						message: this.$t("Any payments made will be displayed"),
+					})
+					.onOk(() => {
+						this.$router.push(`/work/receipt/${this.work._id}`);
+					});
+			} catch (err) {
+				console.error(err);
+			}
 		},
 	},
 };

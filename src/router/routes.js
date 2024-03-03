@@ -11,7 +11,7 @@ const mainLayouts = {
 const meta = { title: 'Gadzy Works',  favicon: '/favicon.ico'  };
 const layout = {
   path: '/',
-  component: () => import(`layouts/main/${mainLayouts.drawer}.vue`),
+  component: () => import(`layouts/main/${mainLayouts.header}.vue`),
   meta,
   children: [
     { path: '', redirect: '/home' },
@@ -27,6 +27,7 @@ const layout = {
     { path: 'work/template/edit/:workTemplateId', component: () => import('pages/work/template/WorkTemplateEditorPage.vue'), },
     { path: 'work/user/:email', component: () => import('pages/work/WorkIndexPage.vue'), },
     { path: 'work/edit/:workId', component: () => import('pages/work/WorkEditorPage.vue'), },
+    { path: 'work/edit', component: () => import('pages/work/WorkEditorPage.vue'), },
     { path: 'work/cancel/:workId', component: () => import('pages/work/WorkCancelPage.vue'), },
     { path: 'work/confirmation/:workId', component: () => import('pages/work/WorkConfirmationPage.vue'), },
     { path: 'work/pay/confirm/:paymentHistoryId', component: () => import('pages/work/WorkPaymentPage.vue'), },
@@ -64,7 +65,7 @@ const routes = [
       }
     ]
   },
-
+  { path: '/work/receipt/:workId', meta: {title: "Print"}, component: () => import('pages/work/WorkReceiptPage.vue'), },
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',

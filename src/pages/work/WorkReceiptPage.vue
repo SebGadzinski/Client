@@ -1,35 +1,25 @@
 <template>
-	<q-page padding>
-		<div>
-			<WorkComponent
-				:work="work"
-				:allowPayment="
-					work.status !== 'Meeting' &&
-					work.status !== 'Completed' &&
-					work.status !== 'Cancelled'
-				"
-				:allowReceipt="true"
-				:showWorkers="true"
-				v-if="work && Object.keys(work).length > 0"
-			/>
-		</div>
-	</q-page>
+	<div class="flex full-width">
+		<WorkReceiptComponent :receipt="receipt" />
+	</div>
 </template>
 
 <script>
 import dataService from "../../services/data.service";
 import { useQuasar, QSpinnerGears } from "quasar";
-import WorkComponent from "src/components/WorkComponent.vue";
+import WorkReceiptComponent from "src/components/WorkReceiptComponent.vue";
 import { useRoute } from "vue-router";
 
 export default {
-	name: "WorkPage",
-	components: { WorkComponent },
+	name: "WorkReceiptPage",
+	components: {
+		WorkReceiptComponent,
+	},
 	data() {
 		return {
 			loading: true,
 			$q: useQuasar(),
-			work: {},
+			receipt: {},
 			route: useRoute(),
 		};
 	},
@@ -39,12 +29,19 @@ export default {
 			this.$q.loading.show({
 				spinner: QSpinnerGears,
 				backgroundColor: "#1e5499",
-				message: this.$t("Getting Info..."),
+				message: this.$t("Printing..."),
 			});
-			console.log(this.route?.params?.workId);
-			this.work = await dataService.getWorkViewComponent(
-				this.route?.params?.workId
+			this.receipt = await dataService.generatePaymentReceipt(
+				this.route.params.workId
 			);
+
+			this.$q.loading.hide();
+			this.loading = false;
+
+			// print page
+			setTimeout(() => {
+				window.print();
+			}, 1000);
 		} catch (err) {
 			console.error(err);
 			this.$q

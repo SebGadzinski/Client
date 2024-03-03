@@ -1,5 +1,13 @@
 <template>
 	<q-page padding class="">
+		<div class="flex row flex-center q-my-sm">
+			<q-btn
+				class="col-8 col-md-3 q-mx-sm"
+				:label="$t('Create Work')"
+				color="primary"
+				to="/work/edit?isNew=true"
+			/>
+		</div>
 		<div class="q-px-lg">
 			<q-input v-model="search" placeholder="Search" />
 		</div>
@@ -56,6 +64,17 @@
 								<q-item-section>
 									<q-item-label>{{
 										$t("View")
+									}}</q-item-label>
+								</q-item-section>
+							</q-item>
+							<q-item
+								clickable
+								v-close-popup
+								@click="() => printReceipt(props.row.workId)"
+							>
+								<q-item-section>
+									<q-item-label>{{
+										$t("Print Receipt")
 									}}</q-item-label>
 								</q-item-section>
 							</q-item>
@@ -186,6 +205,12 @@
 								color="secondary"
 								:label="$t('View')"
 								:to="`/work/${props.row.workId}`"
+								class="text-color full-width"
+							/>
+							<q-btn
+								color="secondary"
+								:label="$t('Print Receipt')"
+								@click="() => printReceipt(props.row.workId)"
 								class="text-color full-width"
 							/>
 							<q-btn
@@ -462,6 +487,20 @@ export default {
 		// Custom sort function for currency fields
 		sortCurrency(a, b) {
 			return this.parseCurrency(a) - this.parseCurrency(b);
+		},
+		printReceipt(workId) {
+			try {
+				this.$q
+					.dialog({
+						title: this.$t("Print Receipt?"),
+						message: this.$t("Any payments made will be displayed"),
+					})
+					.onOk(() => {
+						this.$router.push(`/work/receipt/${workId}`);
+					});
+			} catch (err) {
+				console.error(err);
+			}
 		},
 	},
 };

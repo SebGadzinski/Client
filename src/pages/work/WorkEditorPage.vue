@@ -805,6 +805,7 @@ export default {
 			]),
 			work: {},
 			route: useRoute(),
+			isNew: false,
 		};
 	},
 	async mounted() {
@@ -834,9 +835,13 @@ export default {
 				backgroundColor: "#1e5499",
 				message: this.$t("Loading Work..."),
 			});
+			this.isNew = this.route?.query?.isNew === "true";
 			const data = await dataService.getWorkEditorPageData(
-				this.route?.params?.workId
+				this.route?.params?.workId,
+				this.isNew
 			);
+
+			console.log(data.usersOptions);
 
 			if (data?.work?.workers) {
 				data.work.workers = data?.work?.workers.map((x) => x.email);
@@ -1122,6 +1127,7 @@ export default {
 								});
 
 								await dataService.upsertWork({
+									isNew: this.isNew,
 									...this.work,
 									updateMessage,
 									sendEmail,

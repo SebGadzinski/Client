@@ -113,8 +113,8 @@ class DataService {
         return await this.call(api.get(`/data/work/${workId}`));
     }
 
-    async getWorkEditorPageData(workId) {
-        return await this.call(api.post('/data/getWorkEditorPageData', { workId }), "Could not get work editor page data");
+    async getWorkEditorPageData(workId, isNew = false) {
+        return await this.call(api.post('/data/getWorkEditorPageData', { workId, isNew }), "Could not get work editor page data");
     }
 
     async upsertWork(work) {
@@ -261,6 +261,9 @@ class DataService {
     }
     async saveAcceptingWorkState(state){
         return await this.call(api.post(`/data/admin/acceptingWorkState/save`, {state}));
+    }
+    async generatePaymentReceipt(workId) {
+        return await this.call(api.get(`data/work/receipt/${workId}`));
     }
 
     async call(func, customError = null) {
