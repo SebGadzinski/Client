@@ -9,6 +9,8 @@ import dataService from "../../services/data.service";
 import { useQuasar, QSpinnerGears } from "quasar";
 import WorkReceiptComponent from "src/components/WorkReceiptComponent.vue";
 import { useRoute } from "vue-router";
+import { useSettingsState } from "src/stores/settings.state";
+import { mapActions } from "pinia";
 
 export default {
 	name: "WorkReceiptPage",
@@ -21,6 +23,7 @@ export default {
 			$q: useQuasar(),
 			receipt: {},
 			route: useRoute(),
+			settingsState: useSettingsState(),
 		};
 	},
 	async mounted() {
@@ -39,8 +42,15 @@ export default {
 			this.loading = false;
 
 			// print page
+			const wasDark = this.$q.dark;
+			this.settingsState.toggleDarkMode(false);
 			setTimeout(() => {
-				window.print();
+				if (this.$q.dark) {
+					window.print();
+					if (wasDark) {
+						this.settingsState.toggleDarkMode(true);
+					}
+				}
 			}, 1000);
 		} catch (err) {
 			console.error(err);
@@ -60,6 +70,9 @@ export default {
 	unmounted() {},
 	async updated() {},
 	methods: {},
+	computed: {
+		...mapActions(useSettingsState, ["toggleDarkMode"]),
+	},
 };
 </script>
 

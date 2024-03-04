@@ -65,7 +65,7 @@ export const useSettingsState = defineStore("Settings", {
      * @param {boolean} value - The value to set dark mode to.
      */
     toggleDarkMode(value) {
-      this.darkMode = value;
+      this.darkMode = value ?? false;
       Dark.set(this.darkMode);
       this.applyTheme(this.darkMode ? darkTheme : lightTheme);
 

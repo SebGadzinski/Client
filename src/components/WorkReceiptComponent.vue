@@ -9,9 +9,12 @@
 					class="q-mr-md logo-image q-mt-auto cursor-pointer"
 				/>
 				<q-space />
-				<h4 class="inline-block q-my-auto">
+				<h4 v-if="this.$q.screen.gt.sm" class="inline-block q-my-auto">
 					Gadzy Software & Consulting
 				</h4>
+				<span v-else class="q-my-auto">
+					Gadzy Software & Consulting
+				</span>
 			</q-card-section>
 			<q-card-section>
 				<div class="text-h6">{{ $t("Receipt Details") }}</div>
@@ -111,61 +114,21 @@
 
 <script>
 import DateService from "../services/date.service";
+import { useQuasar } from "quasar";
 
 export default {
 	props: {
 		receipt: Object,
 	},
 	data() {
-		return {};
+		return {
+			$q: useQuasar(),
+		};
 	},
 	mounted() {},
 	methods: {
 		$d(date) {
 			return DateService.convertISOLocalDisplay(date);
-		},
-		print() {
-			// Get the HTML content of the component
-			const componentHtml =
-				document.getElementById("receipt-card").outerHTML;
-			// Open a new window or tab
-			const printWindow = window.open("", "_blank");
-
-			// Write the component's HTML to the new window, along with some basic styling
-			printWindow.document.write(`
-				<html>
-				<head>
-					<title>Print</title>
-					<style>
-					body {
-						font-family: Arial, sans-serif;
-						margin: 0;
-						padding: 20px;
-					}
-					.receipt-card {
-						/* Your styles here */
-					}
-					/* Add other styles if needed */
-					</style>
-				</head>
-				<body>
-					${componentHtml}
-				</body>
-				</html>
-			`);
-
-			// Close the document for writing to render the content
-			printWindow.document.close();
-
-			// Wait for the new document to load to ensure styles are applied
-			printWindow.onload = function () {
-				// Focus the new window, invoke the print dialog, and close after printing
-				printWindow.focus();
-				printWindow.print();
-				printWindow.onafterprint = function () {
-					printWindow.close();
-				};
-			};
 		},
 	},
 };
