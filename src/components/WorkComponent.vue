@@ -3,13 +3,17 @@
 		<q-list>
 			<q-item v-if="work?.meetingLink" class="column">
 				<q-item-section>
-					<a :href="work.meetingLink" target="_blank">
+					<div class="flex flex-center">
 						<q-btn
-							class="text-h3 full-width"
+							:class="
+								(this.$q.screen.lt.md ? '' : 'text-h3') +
+								' full-width'
+							"
 							color="primary"
 							:label="$t('Go To Meeting')"
+							@click="goToMeeting()"
 						/>
-					</a>
+					</div>
 				</q-item-section>
 			</q-item>
 		</q-list>
@@ -741,6 +745,21 @@ export default {
 		},
 		$d(date) {
 			return DateService.convertISOLocalDisplay(date);
+		},
+		goToMeeting() {
+			if (this.work.meetingLink) {
+				window.open(this.work.meetingLink, "_blank");
+			} else {
+				// Optionally handle the case where there is no meeting link
+				console.error("Meeting link not available");
+				// Or use Quasar Notify for user feedback
+				this.$q.notify({
+					color: "negative",
+					position: "top",
+					message: "Meeting link is not available",
+					icon: "report_problem",
+				});
+			}
 		},
 		loadStripe() {
 			if (!window.Stripe) {
