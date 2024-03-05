@@ -1,5 +1,19 @@
 <template>
 	<q-page padding>
+		<q-list>
+			<q-item v-if="work?.meetingLink" class="column">
+				<q-item-section>
+					<a :href="work.meetingLink" target="_blank">
+						<q-btn
+							class="text-h3 full-width"
+							color="primary"
+							:label="$t('Go To Meeting')"
+						/>
+					</a>
+				</q-item-section>
+			</q-item>
+		</q-list>
+
 		<!-- Meta Data -->
 		<div class="form-class full-width">
 			<h3 class="text-center">{{ $t("Meta Data") }}</h3>
@@ -540,7 +554,6 @@ import { useQuasar, QSpinnerGears } from "quasar";
 import { ref } from "vue";
 import dataService from "../services/data.service";
 import DateService from "../services/date.service";
-import WorkReceiptComponent from "./WorkReceiptComponent.vue";
 
 export default {
 	name: "WorkComponent",
