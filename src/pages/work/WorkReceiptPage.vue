@@ -41,15 +41,13 @@ export default {
 			this.$q.loading.hide();
 			this.loading = false;
 
-			// print page
-			const wasDark = this.$q.dark;
+			// Print White Sheet
+			const wasDark = document.body.classList.contains("body--dark");
 			this.settingsState.toggleDarkMode(false);
 			setTimeout(() => {
-				if (this.$q.dark) {
-					window.print();
-					if (wasDark) {
-						this.settingsState.toggleDarkMode(true);
-					}
+				window.print();
+				if (wasDark) {
+					this.settingsState.toggleDarkMode(true);
 				}
 			}, 1000);
 		} catch (err) {
