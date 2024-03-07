@@ -16,8 +16,8 @@
 					Gadzy Software & Consulting
 				</span>
 			</q-card-section>
-			<q-card-section>
-				<div class="text-h6">{{ $t("Receipt Details") }}</div>
+			<q-card-section class="large-text">
+				<div class="text-h4">{{ $t("Receipt Details") }}</div>
 				<div>
 					<strong>{{ $t("Work ID") }}:</strong>
 					{{ receipt.metaData.workId }}
@@ -162,8 +162,13 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
-.logo-image
-  width: 2.5rem
-  height: 2.5rem
+<style scoped>
+.logo-image {
+	width: 2.5rem;
+	height: 2.5rem;
+}
+
+.large-text div * {
+	font-size: large;
+}
 </style>
