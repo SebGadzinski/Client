@@ -39,57 +39,85 @@
 			<q-card-section>
 				<div class="text-h6">{{ $t("Checkouts") }}</div>
 				<q-list bordered>
-					<q-item
+					<div
 						v-for="(checkout, index) in receipt.checkouts"
 						:key="'checkout-' + index"
 					>
-						<q-item-section>
-							<div>
-								<strong>{{ $t("ID") }}:</strong>
-								{{ checkout.id }}
-							</div>
-							<div>
-								<strong>{{ $t("Payment") }}:</strong>
-								{{ checkout.payment }}
-							</div>
-							<div>
-								<strong>{{ $t("Payment Method") }}:</strong>
-								{{ checkout.paymentMethod }}
-							</div>
-							<div>
-								<strong>{{ $t("Date") }}:</strong>
-								{{ $d(checkout.date) }}
-							</div>
-						</q-item-section>
-					</q-item>
+						<q-item>
+							<q-item-section>
+								<div>
+									<strong>{{ $t("ID") }}:</strong>
+									{{ checkout.id }}
+								</div>
+								<div>
+									<strong>{{ $t("Payment") }}:</strong>
+									{{ checkout.payment }}
+								</div>
+								<div>
+									<strong>{{ $t("Payment Method") }}:</strong>
+									{{ checkout.paymentMethod }}
+								</div>
+								<div>
+									<strong>{{ $t("Date") }}:</strong>
+									{{ $d(checkout.date) }}
+								</div>
+								<div>
+									<strong>Items:</strong>
+									<q-list bordered>
+										<q-item
+											v-for="item in checkout.items"
+											:key="item.description"
+										>
+											<q-item-section>
+												<q-item-label>
+													{{
+														item.description
+													}}</q-item-label
+												>
+												<q-item-label caption
+													>Total:
+													{{ item.total }}
+												</q-item-label>
+											</q-item-section>
+										</q-item>
+									</q-list>
+								</div>
+							</q-item-section>
+						</q-item>
+						<q-separator color="secondary" style="height: 5px" />
+					</div>
 				</q-list>
 			</q-card-section>
 
 			<q-card-section>
 				<div class="text-h6">{{ $t("Subscriptions") }}</div>
 				<q-list bordered>
-					<q-item
+					<div
 						v-for="(sub, index) in receipt.subs"
 						:key="'sub-' + index"
 					>
-						<q-item-section>
-							<div>
-								<strong>{{ $t("ID") }}:</strong> {{ sub.id }}
-							</div>
-							<div>
-								<strong>{{ $t("Payment") }}:</strong>
-								{{ sub.payment }}
-							</div>
-							<div>
-								<strong>{{ $t("Payment Method") }}:</strong>
-								{{ sub.paymentMethod }}
-							</div>
-							<div>
-								<strong>{{ $t("Date") }}:</strong>
-								{{ $d(sub.date) }}
-							</div>
-						</q-item-section>
-					</q-item>
+						<q-item>
+							<q-item-section>
+								<div>
+									<strong>{{ $t("ID") }}:</strong>
+									{{ sub.id }}
+								</div>
+								<div>
+									<strong>{{ $t("Payment") }}:</strong>
+									{{ sub.payment }}
+								</div>
+								<div>
+									<strong>{{ $t("Payment Method") }}:</strong>
+									{{ sub.paymentMethod }}
+								</div>
+								<div>
+									<strong>{{ $t("Date") }}:</strong>
+									{{ $d(sub.date) }}
+								</div>
+							</q-item-section>
+						</q-item>
+						<q-separator color="secondary" style="height: 5px" />
+					</div>
 				</q-list>
 			</q-card-section>
 
