@@ -96,7 +96,9 @@
 							</div>
 							<div class="row no-wrap items-center">
 								<span class="text-caption text-grey q-ml-sm">{{
-									$t(`${category.services.length} Services`)
+									$t("servicesCount", {
+										count: category.services.length,
+									})
 								}}</span>
 							</div>
 						</q-card-section>
