@@ -37,12 +37,14 @@ api.interceptors.response.use(
 	async (err) => {
 		console.log(err);
 		//IP Blocked
+		const domain = window.location.hostname;
+		const preFix = domain !== "localhost" ? "#/" : "";
 		if (err.response.status === 499) {
-			window.location = "#/ipblocked";
+			window.location = preFix + "ipblocked";
 			return;
 		}
 		if (err.response.status === 477) {
-			window.location = "#/auth/check-confirm/email";
+			window.location = preFix + "auth/check-confirm/email";
 			return;
 		}
 		const originalConfig = err.config;
