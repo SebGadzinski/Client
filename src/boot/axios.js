@@ -38,11 +38,11 @@ api.interceptors.response.use(
 		console.log(err);
 		//IP Blocked
 		if (err.response.status === 499) {
-			window.location = "ipblocked";
+			window.location = "#/ipblocked";
 			return;
 		}
 		if (err.response.status === 477) {
-			window.location = "auth/check-confirm/email";
+			window.location = "#/auth/check-confirm/email";
 			return;
 		}
 		const originalConfig = err.config;
