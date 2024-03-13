@@ -2,11 +2,17 @@
 	<div class="q-pa-md row justify-center items-center full-height">
 		<div class="column items-center">
 			<!-- Spinner -->
-			<q-spinner color="primary" size="40px" />
+			<q-spinner v-if="confirming" color="primary" size="40px" />
 
 			<!-- Confirmation Message -->
-			<div class="q-mt-md text-h6">
+			<div v-if="confirming" class="q-mt-md text-h6">
 				{{ $t("Confirm Email...") }}
+			</div>
+			<div v-else class="flex flex-center column">
+				<h6>{{ $t("Confirmed!") }}</h6>
+				<p class="text-body1">
+					{{ $t("You can close this browser.") }}
+				</p>
 			</div>
 		</div>
 	</div>
@@ -24,6 +30,7 @@ export default {
 	name: "EmailConfirmationPage",
 	data() {
 		return {
+			confirming: true,
 			route: useRoute(),
 			settingsState: useSettingsState(),
 		};
@@ -33,31 +40,21 @@ export default {
 			const token = this.route?.query?.token;
 			this.confirmEmail(token).then(
 				() => {
-					this.logout();
-					this.loading = false;
-					this.$q.loading.hide();
-					this.$q
-						.dialog({
-							title: this.$t(
-								"Email Confirmed. Please Sign In Again."
-							),
-						})
-						.onOk(() => {
-							this.$router.push("/");
-						})
-						.onDismiss(() => {
-							this.$router.push("/");
-						});
+					setTimeout(() => {
+						this.loading = false;
+						this.confirming = false;
+						this.$q.loading.hide();
+					}, 1500);
 				},
 				(error) => {
 					this.loading = false;
 					this.$q.loading.hide();
 					this.$q.dialog({
 						title:
-							(error.response &&
-								error.response.data &&
-								error.response.data.message) ||
-							error.message ||
+							(error?.response &&
+								error?.response?.data &&
+								error?.response?.data?.message) ||
+							error?.message ||
 							error.toString(),
 					});
 				}

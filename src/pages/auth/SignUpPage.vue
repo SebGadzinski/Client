@@ -84,49 +84,15 @@ export default {
 				) {
 					window.localStorage.setItem("auth-email", this.user.email);
 					this.signUp(this.user).then((data) => {
-						console.log("sign up went through");
 						console.log(data);
 						this.loading = false;
 						this.$q.loading.hide();
-						this.$q
-							.dialog({
-								title: this.$t("Check email for confirmation"),
-							})
-							.onDismiss(() => {
-								const bookMeeting =
-									this.route?.query["book-meeting"];
-								const templateId = this.route?.query?.enroll;
-								if (bookMeeting) {
-									let possibleMeeting =
-										window.localStorage.getItem(
-											"book-meeting"
-										);
-									if (possibleMeeting) {
-										let meeting =
-											JSON.parse(possibleMeeting);
-										dataService.bookMeeting(meeting);
-									}
-									this.$q
-										.dialog({
-											title: this.$t("Meeting Confirmed"),
-											message: this.$t(
-												"Meeting details sent to email."
-											),
-										})
-										.onDismiss(() => {
-											this.$router.push("/work");
-										});
-								} else if (templateId) {
-									this.$router.push(
-										`/work/template/${templateId}`
-									);
-								} else {
-									this.$router.push("/");
-								}
-							});
+						this.$router.push({
+							path: "/auth/check-confirm/email",
+							query: this.route.query,
+						});
 					});
 				} else {
-					console.log("Test");
 					this.message = this.$t("Missing Inputs");
 					//this.message = `Must Provide Username and Password. ${inputElement.value}`;
 					this.$q.loading.hide();

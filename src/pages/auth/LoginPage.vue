@@ -65,9 +65,16 @@ export default {
 				if (this.user.email && this.user.password) {
 					window.localStorage.setItem("auth-email", this.user.email);
 					this.login(this.user.email, this.user.password).then(
-						() => {
+						(myUser) => {
 							this.loading = false;
 							this.$q.loading.hide();
+							if (!myUser?.emailConfirmed) {
+								this.$router.push({
+									path: "/auth/check-confirm/email",
+									query: this.route.query,
+								});
+								return;
+							}
 							const bookMeeting =
 								this.route?.query["book-meeting"];
 							const templateId = this.route?.query?.enroll;
