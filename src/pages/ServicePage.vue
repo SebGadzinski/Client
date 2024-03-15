@@ -292,8 +292,6 @@ export default {
 				}
 			}
 
-			console.log(this.service);
-
 			this.$q.loading.hide();
 			this.loading = false;
 		} catch (err) {

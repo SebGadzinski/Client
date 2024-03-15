@@ -36,15 +36,17 @@ api.interceptors.response.use(
 	},
 	async (err) => {
 		console.log(err);
-		//IP Blocked
+
 		const domain = window.location.hostname;
 		const preFix = domain !== "localhost" ? "#/" : "";
+		const fullPath = window.location.pathname + window.location.search;
+		const nextUrl = err?.config?.url ? `?redirectURL=${fullPath}` : ``;
 		if (err.response.status === 499) {
 			window.location = preFix + "ipblocked";
 			return;
 		}
 		if (err.response.status === 477) {
-			window.location = preFix + "auth/check-confirm/email";
+			window.location = preFix + "auth/check-confirm/email" + nextUrl;
 			return;
 		}
 		const originalConfig = err.config;

@@ -24,6 +24,7 @@
 <script>
 import { useQuasar, QSpinnerGears } from "quasar";
 import { ref } from "vue";
+import dataService from "../../services/data.service";
 import AuthService from "../../services/auth.service";
 import { mapActions, mapState } from "pinia";
 // import LocaleSwitcher from "../components/Select/LocalSwitcher.vue";
@@ -55,6 +56,11 @@ export default {
 			}
 			this.timeLeft--;
 		}, 1000);
+	},
+	beforeUnmount() {
+		if (this.timerInterval) {
+			clearInterval(this.timerInterval);
+		}
 	},
 	computed: {
 		...mapState(useAuthState, ["user"]),
@@ -95,6 +101,11 @@ export default {
 				await this.refreshSession();
 				clearInterval(this.timerInterval);
 				setTimeout(() => {
+					const redirectURL = this.route?.query["redirectURL"];
+					if (redirectURL) {
+						this.$router.push(redirectURL);
+						return;
+					}
 					const bookMeeting = this.route?.query["book-meeting"];
 					const templateId = this.route?.query?.enroll;
 					if (bookMeeting) {
