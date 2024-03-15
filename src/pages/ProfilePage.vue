@@ -85,14 +85,10 @@ export default {
 
 			this.pUser = _.cloneDeep(this.oldUser);
 		} catch (err) {
-			this.$q
-				.dialog({
-					title: this.$t("Error"),
-					message: this.$t(err.toString()),
-				})
-				.onDismiss(() => {
-					this.$router.push("/");
-				});
+			this.$q.notify({
+				title: this.$t("Error"),
+				message: this.$t(err.toString()),
+			});
 			console.error(err);
 		} finally {
 			this.$q.loading.hide();
