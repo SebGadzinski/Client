@@ -42,11 +42,11 @@ export default {
 		};
 	},
 	async mounted() {
-		if (this?.user?.emailConfirmed) {
-			// This may need to be where the user wanted to go getting sent here
-			this.$router.push({ path: "/" });
-			return;
-		}
+		// if (this?.user?.emailConfirmed) {
+		// 	// This may need to be where the user wanted to go getting sent here
+		// 	this.$router.push({ path: "/" });
+		// 	return;
+		// }
 		await this.checkStatus();
 		this.timerInterval = setInterval(async () => {
 			if (this.timeLeft == 1) {
