@@ -39,8 +39,7 @@ api.interceptors.response.use(
 
 		const domain = window.location.hostname;
 		const preFix = domain !== "localhost" ? "#/" : "";
-		const fullPath =
-			preFix + window.location.pathname + window.location.search;
+		const fullPath = window.location.pathname + window.location.search;
 		const nextUrl = err?.config?.url ? `?redirectURL=${fullPath}` : ``;
 		if (err.response.status === 499) {
 			window.location = preFix + "ipblocked";
