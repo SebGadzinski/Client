@@ -102,9 +102,6 @@ export default {
 				clearInterval(this.timerInterval);
 				setTimeout(() => {
 					const redirectURL = this.route?.query["redirectURL"];
-					console.log("redirect URL");
-					console.log(redirectURL);
-					return;
 					if (redirectURL) {
 						this.$router.push(redirectURL);
 						return;
