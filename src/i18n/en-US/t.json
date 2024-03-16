@@ -81,7 +81,7 @@
 	"tos_conf_gover": "tos_conf_gover",
 	"tos_conf_email": "tos_conf_email",
 	"tos_conf_agreement": "tos_conf_agreement",
-	"servicesCount": "servicesCount",
+	"servicesCount": "{count} Services",
 	"Work": "Work",
 	"Templates": "Templates",
 	"Users": "Users",
