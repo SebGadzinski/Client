@@ -241,7 +241,13 @@ class DataService {
 	}
 
 	async getProfile(userId) {
-		let body = {};
+		let body = {
+			onError: {
+				route: {
+					query: `redirectPath=/profile`,
+				},
+			},
+		};
 		if (userId) {
 			body.userId = userId;
 		}
