@@ -11,7 +11,7 @@
 								$t("Name")
 							}}</q-item-label>
 							<div class="readonly-text">
-								{{ template.name }}
+								{{ $t(template.name) }}
 							</div>
 						</q-item-section>
 					</q-item>
@@ -21,7 +21,7 @@
 								$t("Category")
 							}}</q-item-label>
 							<div class="readonly-text">
-								{{ template.category }}
+								{{ $t(template.category) }}
 							</div>
 						</q-item-section>
 					</q-item>
@@ -31,7 +31,7 @@
 								$t("Service")
 							}}</q-item-label>
 							<div class="readonly-text">
-								{{ template.service }}
+								{{ $t(template.service) }}
 							</div>
 						</q-item-section>
 					</q-item>
@@ -41,7 +41,7 @@
 								$t("Status")
 							}}</q-item-label>
 							<div class="readonly-text">
-								{{ template.status }}
+								{{ $t(template.status) }}
 							</div>
 						</q-item-section>
 					</q-item>
@@ -51,7 +51,7 @@
 								$t("Class Type")
 							}}</q-item-label>
 							<div class="readonly-text">
-								{{ template.classType }}
+								{{ $t(template.classType) }}
 							</div>
 						</q-item-section>
 					</q-item>
@@ -74,10 +74,10 @@
 					<q-tr :props="props">
 						<q-td key="id" :props="props">{{ props.row._id }}</q-td>
 						<q-td key="name" :props="props">{{
-							props.row.name
+							$t(props.row.name)
 						}}</q-td>
 						<q-td key="description" :props="props">{{
-							props.row.description
+							$t(props.row.description)
 						}}</q-td>
 						<q-td key="links" :props="props">
 							<div
@@ -85,12 +85,12 @@
 								:key="index"
 							>
 								<a :href="link.url" target="_blank"
-									><q-badge>{{ link.name }}</q-badge></a
+									><q-badge>{{ $t(link.name) }}</q-badge></a
 								>
 							</div>
 						</q-td>
 						<q-td v-if="isAdmin" key="status" :props="props">{{
-							props.row.status
+							$t(props.row.status)
 						}}</q-td>
 					</q-tr>
 				</template>
@@ -110,7 +110,7 @@
 												$t("Name")
 											}}</q-item-label>
 											<div class="readonly-text">
-												{{ props.row.name }}
+												{{ $t(props.row.name) }}
 											</div>
 										</q-item-section>
 									</q-item>
@@ -120,7 +120,7 @@
 												$t("Description")
 											}}</q-item-label>
 											<div class="readonly-text">
-												{{ props.row.description }}
+												{{ $t(props.row.description) }}
 											</div>
 										</q-item-section>
 									</q-item>
@@ -138,7 +138,7 @@
 													:href="link.url"
 													target="_blank"
 													><q-badge>{{
-														link.name
+														$t(link.name)
 													}}</q-badge></a
 												>
 											</div>
@@ -150,7 +150,7 @@
 												$t("Status")
 											}}</q-item-label>
 											<div class="readonly-text">
-												{{ props.row.status }}
+												{{ $t(props.row.status) }}
 											</div>
 										</q-item-section>
 									</q-item>
@@ -190,7 +190,7 @@
 													$t("Name")
 												}}</q-item-label>
 												<div class="readonly-text">
-													{{ props.row.name }}
+													{{ $t(props.row.name) }}
 												</div>
 											</q-item-section>
 										</q-item>
@@ -200,7 +200,12 @@
 													$t("Description")
 												}}</q-item-label>
 												<div class="readonly-text">
-													{{ props.row.description }}
+													{{
+														$t(
+															props.row
+																.description
+														)
+													}}
 												</div>
 											</q-item-section>
 										</q-item>
@@ -220,7 +225,7 @@
 													$t("Status")
 												}}</q-item-label>
 												<div class="readonly-text">
-													{{ props.row.status }}
+													{{ $t(props.row.status) }}
 												</div>
 											</q-item-section>
 										</q-item>

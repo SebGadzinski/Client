@@ -122,22 +122,6 @@
 									<q-item-label>{{ lan.name }}</q-item-label>
 								</q-item-section>
 							</q-item>
-
-							<q-item
-								clickable
-								v-close-popup
-								@click="onLanguageClick('fr')"
-							>
-								<q-item-section>
-									<q-item-label>Français</q-item-label>
-								</q-item-section>
-							</q-item>
-
-							<!-- <q-item clickable v-close-popup @click="onItemClick">
-							<q-item-section>
-								<q-item-label>Español</q-item-label>
-							</q-item-section>
-							</q-item> -->
 						</q-list>
 					</q-btn-dropdown>
 				</q-item-section>
