@@ -101,9 +101,9 @@ export default {
 				await this.refreshSession();
 				clearInterval(this.timerInterval);
 				setTimeout(() => {
-					const redirectURL = this.route?.query["redirectURL"];
-					if (redirectURL) {
-						this.$router.push(redirectURL);
+					const redirectPath = this.route?.query["redirectPath"];
+					if (redirectPath) {
+						this.$router.push(redirectPath);
 						return;
 					}
 					const bookMeeting = this.route?.query["book-meeting"];

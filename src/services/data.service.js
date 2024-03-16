@@ -112,6 +112,11 @@ class DataService {
 				serviceSlug,
 				startDate,
 				bookingMessage,
+				onError: {
+					route: {
+						query: `book-meeting=true`,
+					},
+				},
 			});
 		} catch (err) {
 			throw err;
@@ -338,12 +343,25 @@ class DataService {
 	}
 	async enrollmentStatus(templateId) {
 		return await this.call(
-			api.post(`/data/work/class/enroll/status/${templateId}`)
+			api.post(`/data/work/class/enroll/status/${templateId}`, {
+				onError: {
+					route: {
+						query: `redirectPath=/work/template/${templateId}`,
+					},
+				},
+			})
 		);
 	}
 	async enrollInClass(templateId) {
 		return await this.call(
 			api.post(`/data/work/class/enroll/${templateId}`),
+			{
+				onError: {
+					route: {
+						query: `enroll=${templateId}`,
+					},
+				},
+			},
 			"Could not enroll."
 		);
 	}

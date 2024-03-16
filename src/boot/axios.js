@@ -2,7 +2,6 @@ import { boot } from "quasar/wrappers";
 import axios from "axios";
 import TokenService from "../services/token.service";
 import AuthService from "../services/auth.service";
-
 import eventBus from "../services/EventBus";
 
 // Be careful when using SSR for cross-request state pollution
@@ -39,8 +38,11 @@ api.interceptors.response.use(
 
 		const domain = window.location.hostname;
 		const preFix = domain !== "localhost" ? "#/" : "";
-		const fullPath = window.location.pathname + window.location.search;
-		const nextUrl = err?.config?.url ? `?redirectURL=${fullPath}` : ``;
+		const { route } = err?.response?.data?.onError ?? {};
+		let nextUrl = "";
+		if (route?.query) {
+			nextUrl = err?.config?.url ? `?${route.query}` : ``;
+		}
 		if (err.response.status === 499) {
 			window.location = preFix + "ipblocked";
 			return;
