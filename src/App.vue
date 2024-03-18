@@ -25,14 +25,26 @@ export default defineComponent({
 		};
 	},
 	computed: {
-		...mapState(useSettingsState, ["notificationsEnabled", "debug"]),
+		...mapState(useSettingsState, [
+			"notificationsEnabled",
+			"debug",
+			"language",
+		]),
 		...mapState(useAuthState, ["user"]),
 	},
 	async onBeforeUnmount() {
 		window.removeEventListener("resize", this.OrientationCheck);
 	},
 	async mounted() {
-		console.log("Initilizing Dark Mode");
+		if (this.language) {
+			import(
+				/* webpackInclude: /(fr|en-US)\.js$/ */
+				`quasar/lang/${this.language}`
+			).then((lang) => {
+				this.$q.lang.set(lang.default);
+			});
+			this.$i18n.locale = this.language;
+		}
 		this.initializeDarkMode();
 		window.addEventListener("resize", this.OrientationCheck);
 		this.OrientationCheck();

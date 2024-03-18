@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import { Dark, setCssVar } from 'quasar';
-import { lightTheme, darkTheme } from 'src/themes/gray';
+import { Dark, setCssVar } from "quasar";
+import { lightTheme, darkTheme } from "src/themes/gray";
 
 /**
  * Parsed settings from localStorage.
@@ -13,12 +13,12 @@ const _settings = JSON.parse(localStorage.getItem("settings"));
  * @type {Object}
  */
 const defaultState = {
-  notificationsEnabled: false,
-  eventLog: [],
-  debug: false,
-  darkMode: false,
-  language: "en-US",
-  currency: "CAD",
+	notificationsEnabled: false,
+	eventLog: [],
+	debug: false,
+	darkMode: false,
+	language: "en-US",
+	currency: "CAD",
 };
 
 /**
@@ -28,15 +28,15 @@ const defaultState = {
  * @returns {Object} The merged state.
  */
 const mergeWithDefaultState = (settings, defaultState) => {
-  const mergedState = { ...defaultState };
-  if (settings && typeof settings === 'object') {
-    Object.keys(defaultState).forEach(key => {
-      if (Object.hasOwnProperty.call(settings, key)) {
-        mergedState[key] = settings[key];
-      }
-    });
-  }
-  return mergedState;
+	const mergedState = { ...defaultState };
+	if (settings && typeof settings === "object") {
+		Object.keys(defaultState).forEach((key) => {
+			if (Object.hasOwnProperty.call(settings, key)) {
+				mergedState[key] = settings[key];
+			}
+		});
+	}
+	return mergedState;
 };
 
 /**
@@ -53,83 +53,83 @@ console.log("Dark mode on: " + initialState.darkMode);
  * @exports
  */
 export const useSettingsState = defineStore("Settings", {
-  state: () => ({ ...initialState, eventLog: [] }),
-  actions: {
-    /** Initializes dark mode settings and applies the theme. */
-    initializeDarkMode() {
-      Dark.set(this.darkMode);
-      this.applyTheme(this.darkMode ? darkTheme : lightTheme);
-    },
-    /**
-     * Toggles dark mode.
-     * @param {boolean} value - The value to set dark mode to.
-     */
-    toggleDarkMode(value) {
-      this.darkMode = value ?? false;
-      Dark.set(this.darkMode);
-      this.applyTheme(this.darkMode ? darkTheme : lightTheme);
+	state: () => ({ ...initialState, eventLog: [] }),
+	actions: {
+		/** Initializes dark mode settings and applies the theme. */
+		initializeDarkMode() {
+			Dark.set(this.darkMode);
+			this.applyTheme(this.darkMode ? darkTheme : lightTheme);
+		},
+		/**
+		 * Toggles dark mode.
+		 * @param {boolean} value - The value to set dark mode to.
+		 */
+		toggleDarkMode(value) {
+			this.darkMode = value ?? false;
+			Dark.set(this.darkMode);
+			this.applyTheme(this.darkMode ? darkTheme : lightTheme);
 
-      saveState(this);
-    },
-    /**
-     * Sets notification enablement.
-     * @param {boolean} bool - The value to set notification enablement to.
-     */
-    setNotificationsEnable(bool) {
-      console.log("SET Notifications ", bool);
-      this.notificationsEnabled = bool;
-      saveState(this);
-    },
-    /**
-     * Sets the language.
-     * @param {string} lang - The language to set.
-     */
-    setLanguage(lang) {
-      this.language = lang;
-      saveState(this);
-    },
-    /**
-     * Sets the currency.
-     * @param {string} cur - The currency to set.
-     */
-    setCurrency(cur) {
-      this.currency = cur;
-      saveState(this);
-    },
-    /**
-     * Adds an entry to the event log.
-     * @param {string} entry - The entry to add to the event log.
-     */
-    addToEventLog(entry) {
-      if (typeof this.eventLog != typeof []) this.eventLog = [];
-      this.eventLog.unshift(entry);
-      this.eventLog.length = Math.min(this.eventLog.length, 15);
-    },
-    /**
-     * Sets debug mode.
-     * @param {boolean} bool - The value to set debug mode to.
-     */
-    setDebug(bool) {
-      this.debug = bool;
-      saveState(this);
-    },
-    /**
-     * Applies the theme.
-     * @param {Object} theme - The theme to apply.
-     */
-    applyTheme(theme){
-      setCssVar("primary", theme["primary"]);
-      setCssVar("secondary", theme["secondary"]);
-      setCssVar("accent", theme["accent"]);
-      setCssVar("positive", theme["positive"]);
-      setCssVar("negative", theme["negative"]);
-      setCssVar("info", theme["info"]);
-      setCssVar("warning", theme["warning"]);
-      setCssVar("background", theme["background"]);
-      setCssVar("dark", theme["background"]);
-      setCssVar("dark-page", theme["background"]);
-    },
-  },
+			saveState(this);
+		},
+		/**
+		 * Sets notification enablement.
+		 * @param {boolean} bool - The value to set notification enablement to.
+		 */
+		setNotificationsEnable(bool) {
+			console.log("SET Notifications ", bool);
+			this.notificationsEnabled = bool;
+			saveState(this);
+		},
+		/**
+		 * Sets the language.
+		 * @param {string} lang - The language to set.
+		 */
+		setLanguage(lang) {
+			this.language = lang;
+			saveState(this);
+		},
+		/**
+		 * Sets the currency.
+		 * @param {string} cur - The currency to set.
+		 */
+		setCurrency(cur) {
+			this.currency = cur;
+			saveState(this);
+		},
+		/**
+		 * Adds an entry to the event log.
+		 * @param {string} entry - The entry to add to the event log.
+		 */
+		addToEventLog(entry) {
+			if (typeof this.eventLog != typeof []) this.eventLog = [];
+			this.eventLog.unshift(entry);
+			this.eventLog.length = Math.min(this.eventLog.length, 15);
+		},
+		/**
+		 * Sets debug mode.
+		 * @param {boolean} bool - The value to set debug mode to.
+		 */
+		setDebug(bool) {
+			this.debug = bool;
+			saveState(this);
+		},
+		/**
+		 * Applies the theme.
+		 * @param {Object} theme - The theme to apply.
+		 */
+		applyTheme(theme) {
+			setCssVar("primary", theme["primary"]);
+			setCssVar("secondary", theme["secondary"]);
+			setCssVar("accent", theme["accent"]);
+			setCssVar("positive", theme["positive"]);
+			setCssVar("negative", theme["negative"]);
+			setCssVar("info", theme["info"]);
+			setCssVar("warning", theme["warning"]);
+			setCssVar("background", theme["background"]);
+			setCssVar("dark", theme["background"]);
+			setCssVar("dark-page", theme["background"]);
+		},
+	},
 });
 
 /**
@@ -137,13 +137,13 @@ export const useSettingsState = defineStore("Settings", {
  * @param {Object} that - The current context of the store.
  */
 let saveState = (that) => {
-  let object = {
-    theme: that.theme || "light",
-    notificationsEnabled: that.notificationsEnabled || false,
-    debug: that.debug || false,
-    darkMode: that.darkMode || false,
-    language: that.language || "en-US",
-    currency: that.currency || "CAD",
-  };
-  localStorage.setItem("settings", JSON.stringify(object));
+	let object = {
+		theme: that.theme || "light",
+		notificationsEnabled: that.notificationsEnabled || false,
+		debug: that.debug || false,
+		darkMode: that.darkMode || false,
+		language: that.language || "en-US",
+		currency: that.currency || "CAD",
+	};
+	localStorage.setItem("settings", JSON.stringify(object));
 };
