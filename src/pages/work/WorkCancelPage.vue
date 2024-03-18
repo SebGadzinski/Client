@@ -20,7 +20,11 @@
 				<br />
 				<q-btn
 					v-if="work.payment.cancellationPayment > 0"
-					class="text-h4 full-width"
+					:class="
+						$q.screen.lt.md
+							? 'text-h6 full-width'
+							: 'text-h3 full-width'
+					"
 					type="submit"
 					:label="$t(`Pay And Accept`)"
 					color="primary"
@@ -28,7 +32,11 @@
 				</q-btn>
 				<q-btn
 					v-else
-					class="text-h3 full-width"
+					:class="
+						$q.screen.lt.md
+							? 'text-h6 full-width'
+							: 'text-h3 full-width'
+					"
 					type="submit"
 					:label="$t(`Accept`)"
 					color="primary"

@@ -541,7 +541,7 @@
 			<q-item v-if="allowReceipt">
 				<q-item-section>
 					<q-btn
-						class="text-h3"
+						:class="$q.screen.lt.md ? 'text-h6' : 'text-h3'"
 						color="primary"
 						:label="$t('Print Receipt')"
 						@click="printReceipt"
