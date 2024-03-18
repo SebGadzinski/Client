@@ -190,7 +190,8 @@
 				<div class="text-body1">
 					<q-badge class="q-pa-sm" color="secondary">Zoom</q-badge>
 					<q-badge class="q-pa-sm q-mx-sm"
-						>{{ meetingTime.weekday }} at {{ meetingTime.time }} -
+						>{{ $t(meetingTime.weekday) }} {{ $t("at") }}
+						{{ meetingTime.time }} -
 						{{ meetingTime.timezone }}</q-badge
 					>
 				</div>
