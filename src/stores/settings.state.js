@@ -76,7 +76,6 @@ export const useSettingsState = defineStore("Settings", {
 		 * @param {boolean} bool - The value to set notification enablement to.
 		 */
 		setNotificationsEnable(bool) {
-			console.log("SET Notifications ", bool);
 			this.notificationsEnabled = bool;
 			saveState(this);
 		},

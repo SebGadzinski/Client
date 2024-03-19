@@ -585,7 +585,11 @@
 				<q-item class="q-mt-lg">
 					<q-item-section>
 						<q-btn
-							class="text-h3"
+							:class="
+								$q.screen.lt.md
+									? 'text-h6 full-width'
+									: 'text-h3 full-width'
+							"
 							type="submit"
 							:label="$t(`Submit`)"
 							color="primary"
@@ -732,7 +736,6 @@ export default {
 			});
 			let data;
 			if (this.route?.query?.isNew) {
-				console.log("getting new one.");
 				data = await dataService.getWorkTemplateEditorPageData({
 					isNew: true,
 				});
@@ -835,14 +838,6 @@ export default {
 
 								this.work = selectedTemplate;
 							});
-					})
-					.onCancel(() => {
-						// Handle cancellation (if necessary)
-						console.log("User cancelled template selection.");
-					})
-					.onDismiss(() => {
-						// Handle dialog dismissal (if necessary)
-						console.log("Dialog dismissed.");
 					});
 			} else {
 				// Handle case where no templates are returned or an error occurred
@@ -964,10 +959,6 @@ export default {
 								message: "Template name cannot be empty.",
 							});
 						}
-					})
-					.onCancel(() => {
-						// User clicked cancel or closed the dialog
-						console.log("User cancelled saving template.");
 					});
 			} catch (err) {
 				console.error(err);

@@ -84,7 +84,6 @@ export default {
 				) {
 					window.localStorage.setItem("auth-email", this.user.email);
 					this.signUp(this.user).then((data) => {
-						console.log(data);
 						this.loading = false;
 						this.$q.loading.hide();
 						this.$router.push({
@@ -113,7 +112,6 @@ export default {
 			}
 		},
 		onLanguageClick(langName) {
-			console.log(langName);
 			this.settingsState.setLanguage(langName);
 			import(
 				/* webpackInclude: /(fr|en-US)\.js$/ */

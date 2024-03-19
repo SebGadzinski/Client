@@ -287,9 +287,7 @@ export default {
 				backgroundColor: "#1e5499",
 				message: this.$t("Getting Info..."),
 			});
-			console.log(this.route?.params?.workId);
 			this.users = await dataService.getUserPageData();
-			console.log(this.users);
 		} catch (err) {
 			console.error(err);
 		} finally {

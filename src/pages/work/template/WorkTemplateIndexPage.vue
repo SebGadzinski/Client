@@ -296,7 +296,6 @@ export default {
 		const isAdmin = this.user.roles.includes("admin");
 
 		templates.map((x) => {
-			console.log(x.createdAt);
 			x.createdDate = DateService.convertISOLocalDisplay(x.createdAt);
 			x.actions = [];
 			// idk why would ever need these
@@ -339,7 +338,6 @@ export default {
 		},
 		// Custom sort function for currency fields
 		sortCurrency(a, b) {
-			console.log(a);
 			return this.parseCurrency(a) - this.parseCurrency(b);
 		},
 		async deleteTemplate(id) {

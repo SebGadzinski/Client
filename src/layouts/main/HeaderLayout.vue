@@ -117,7 +117,6 @@ export default {
 		};
 	},
 	mounted() {
-		console.log(this.user);
 		window.addEventListener("scroll", this.onScroll);
 	},
 	beforeUnmount() {

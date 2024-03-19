@@ -69,7 +69,6 @@ export default {
 	methods: {
 		...mapActions(useAuthState, ["confirmEmail", "logout"]),
 		onLanguageClick(langName) {
-			console.log(langName);
 			this.settingsState.setLanguage(langName);
 			import(
 				/* webpackInclude: /(fr|en-US)\.js$/ */

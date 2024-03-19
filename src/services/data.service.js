@@ -17,7 +17,6 @@ class DataService {
 				.then((response) => {
 					if (!response.data) return reject("No Data In Response");
 
-					console.log(response);
 					resolve(response.data);
 				})
 				.catch((err) => {
@@ -186,7 +185,6 @@ class DataService {
 		formData.append("id", id);
 
 		try {
-			console.log(formData);
 			let response = await api.post(
 				"data/admin/vm/downloadVMStatusReport",
 				formData,
@@ -206,13 +204,10 @@ class DataService {
 				);
 				const link = document.createElement("a");
 				link.href = url;
-				console.log(response.headers);
 				const contentDisposition =
 					response.headers["content-disposition"];
 				let fileName = "downloaded_file.json"; // default file name
-				console.log(contentDisposition);
 				if (contentDisposition) {
-					console.log(contentDisposition);
 					fileName = contentDisposition.split("attachment; ")[1];
 				}
 				link.setAttribute("download", fileName);

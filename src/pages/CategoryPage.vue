@@ -164,7 +164,6 @@ export default {
 			);
 			this.watchMeImg = data[0].watchMeImg;
 			this.watchMeLink = data[0].watchMeLink;
-			console.log(this.watchMeLink);
 			const newServices = data[0].services;
 			if (newServices && newServices.length > 0) {
 				for (let i = 0; i < newServices.length; i++) {

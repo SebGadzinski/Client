@@ -3,7 +3,7 @@ import { FCM } from "@capacitor-community/fcm";
 import { PushNotifications } from "@capacitor/push-notifications";
 import DataService from "./data.service";
 import { i18n } from "../boot/i18n";
-import { Notify as qNotifiy } from 'quasar';
+import { Notify as qNotifiy } from "quasar";
 
 const Notify = {
 	/**
@@ -15,9 +15,7 @@ const Notify = {
 	 * @param {string[]} options.notificationsStoreList - A list of store identifiers for which notifications are enabled.
 	 * @returns {void} - This function does not return anything.
 	 */
-	register({
-		notificationsEnabled
-	}) {
+	register({ notificationsEnabled }) {
 		return new Promise((resolve, reject) => {
 			try {
 				if (!notificationsEnabled)
@@ -103,7 +101,6 @@ const Notify = {
 	 * @param {Router} router
 	 */
 	addListeners(router) {
-		console.log(JSON.stringify(location));
 		Notify.PushNotifications.removeAllListeners();
 		Notify.PushNotifications.addListener(
 			"pushNotificationReceived",
@@ -114,26 +111,27 @@ const Notify = {
 					message: notification.body,
 				};
 
-				if(notification?.data?.jsonData){
+				if (notification?.data?.jsonData) {
 					const data = JSON.parse(notification?.data?.jsonData);
-					if(data?.to){
-						notifyData.actions = [ {
-							label: data.to.label,
-							color: data.to.color,
-							handler: () => {
-								router.push(data.to.route);
-							}
-						} ];
+					if (data?.to) {
+						notifyData.actions = [
+							{
+								label: data.to.label,
+								color: data.to.color,
+								handler: () => {
+									router.push(data.to.route);
+								},
+							},
+						];
 					}
 
-					if(data?.dotdotdot){
-						notifyData= {
+					if (data?.dotdotdot) {
+						notifyData = {
 							...notifyData,
-							...data.dotdotdot
-						}
+							...data.dotdotdot,
+						};
 					}
 				}
-
 
 				qNotifiy.create(notifyData);
 			}
@@ -144,7 +142,7 @@ const Notify = {
 			async (event) => {
 				console.log(event);
 				let { actionId, notification } = event;
-				if(notification?.data?.jsonData){
+				if (notification?.data?.jsonData) {
 					const data = JSON.parse(notification.data.jsonData);
 					// Route should contain all the info you need to go to a route
 					router.push(data.to.route);

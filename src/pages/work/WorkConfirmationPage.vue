@@ -109,7 +109,6 @@ export default {
 				backgroundColor: "#1e5499",
 				message: this.$t("Accepting..."),
 			});
-			console.log(this.route?.params?.workId);
 			this.work = await dataService.getWorkConfirmationPageData(
 				this.route?.params?.workId
 			);
@@ -126,7 +125,6 @@ export default {
 	watch: {
 		acceptTNC(newValue) {
 			if (newValue === true) {
-				console.log("set true");
 				this.showToS = true;
 			}
 		},

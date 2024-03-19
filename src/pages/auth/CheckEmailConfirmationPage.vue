@@ -134,7 +134,6 @@ export default {
 			}
 		},
 		onLanguageClick(langName) {
-			console.log(langName);
 			this.settingsState.setLanguage(langName);
 			import(
 				/* webpackInclude: /(fr|en-US)\.js$/ */

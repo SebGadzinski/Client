@@ -40,7 +40,6 @@ export default {
 				backgroundColor: "#1e5499",
 				message: this.$t("Getting Info..."),
 			});
-			console.log(this.route?.params?.workTemplateId);
 			this.template = await dataService.getWorkTemplateComponent(
 				this.route?.params?.workTemplateId
 			);
@@ -64,7 +63,6 @@ export default {
 	methods: {
 		async printReceipt() {
 			try {
-				console.log("Printing Receipt");
 				this.loading = true;
 				this.$q.loading.show({
 					spinner: QSpinnerGears,

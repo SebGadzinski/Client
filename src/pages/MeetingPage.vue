@@ -85,12 +85,8 @@ export default {
 			const currentDateTime = new Date();
 			this.category = this.meeting.category;
 			this.service = this.meeting.service;
-			const currentDate = new Date();
-			const currentDayOfWeek = currentDate.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
-			console.log(this.meeting);
 
 			// Filter the intervals for those that match the current day of the week
-			const now = DateTime.local();
 			this.bookMeetingIntervals = this.meeting.bookMeetingIntervals.map(
 				(dates) => ({
 					start: DateTime.fromISO(dates.start, {

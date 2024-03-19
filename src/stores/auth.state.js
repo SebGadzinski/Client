@@ -72,7 +72,6 @@ export const useAuthState = defineStore("Auth", {
 		forgotPassword(email) {
 			return AuthService.forgotPassword(email)
 				.then(() => {
-					console.log("Sent Email");
 					return Promise.resolve(email);
 				})
 				.catch((error) => {
@@ -91,7 +90,6 @@ export const useAuthState = defineStore("Auth", {
 		resetPassword(newPassword, token) {
 			return AuthService.resetPassword(newPassword, token)
 				.then(() => {
-					console.log("Sent Reset Password");
 					return Promise.resolve();
 				})
 				.catch((error) => {
@@ -108,7 +106,6 @@ export const useAuthState = defineStore("Auth", {
 		confirmEmail(token) {
 			return AuthService.confirmEmail(token)
 				.then(() => {
-					console.log("Confirmed Email");
 					return Promise.resolve();
 				})
 				.catch((error) => {
@@ -118,7 +115,6 @@ export const useAuthState = defineStore("Auth", {
 		sendEmailConfirmation() {
 			return AuthService.sendEmailConfirmation()
 				.then(() => {
-					console.log("Email Sent");
 					return Promise.resolve();
 				})
 				.catch((error) => {

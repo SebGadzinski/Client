@@ -41,7 +41,6 @@ export default {
 				backgroundColor: "#1e5499",
 				message: this.$t("Getting Info..."),
 			});
-			console.log(this.route?.params?.workId);
 			this.work = await dataService.getWorkViewComponent(
 				this.route?.params?.workId
 			);

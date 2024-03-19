@@ -672,7 +672,11 @@
 				<q-item class="q-mt-lg">
 					<q-item-section>
 						<q-btn
-							class="text-h3"
+							:class="
+								$q.screen.lt.md
+									? 'text-h6 full-width'
+									: 'text-h3 full-width'
+							"
 							type="submit"
 							:label="$t(`Submit`)"
 							color="primary"
@@ -841,8 +845,6 @@ export default {
 				this.isNew
 			);
 
-			console.log(data.usersOptions);
-
 			if (data?.work?.workers) {
 				data.work.workers = data?.work?.workers.map((x) => x.email);
 			}
@@ -893,8 +895,6 @@ export default {
 				category: this.work.category,
 				service: this.work.service,
 			});
-			console.log("Templates found");
-			console.log(this.workTemplates);
 
 			// Check if workTemplates are fetched successfully and has at least one template
 			if (this.workTemplates && this.workTemplates.length > 0) {
@@ -971,14 +971,6 @@ export default {
 									selectedTemplate.cancellationPaymentStatus;
 								this.work.status = selectedTemplate.status;
 							});
-					})
-					.onCancel(() => {
-						// Handle cancellation (if necessary)
-						console.log("User cancelled template selection.");
-					})
-					.onDismiss(() => {
-						// Handle dialog dismissal (if necessary)
-						console.log("Dialog dismissed.");
 					});
 			} else {
 				// Handle case where no templates are returned or an error occurred
@@ -996,31 +988,24 @@ export default {
 					title: "Save As Template",
 					message: "Enter a name for the new template:",
 					prompt: {
-						model: "", // Initial value for the input
-						type: "text", // Specify that you want the user to input text
+						model: "",
+						type: "text",
 					},
-					cancel: true, // Show a cancel button
-					persistent: true, // The dialog cannot be closed by clicking outside of it
+					cancel: true,
+					persistent: true,
 				})
 				.onOk(async (name) => {
-					// User clicked OK, and entered a name
+					name = name.trim();
 					if (name.trim().length > 0) {
-						// Do work to save the template with the given name
-						console.log("Template name entered:", name);
 						this.workTemplates = await dataService.saveWorkTemplate(
 							{ name, work: this.work }
 						);
 					} else {
-						// Handle case where name is not entered or only whitespace
 						this.$q.notify({
 							color: "negative",
 							message: "Template name cannot be empty.",
 						});
 					}
-				})
-				.onCancel(() => {
-					// User clicked cancel or closed the dialog
-					console.log("User cancelled saving template.");
 				});
 		},
 		onCategoryChange(newValue) {

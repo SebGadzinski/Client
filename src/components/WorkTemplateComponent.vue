@@ -438,7 +438,6 @@ export default {
 		};
 	},
 	mounted() {
-		console.log(this.template.workItems);
 		if (!this.template.workItems.some((x) => x?.links?.length > 0)) {
 			this.workItemVisibleCols = this.workItemVisibleCols.filter(
 				(x) => x !== "links"

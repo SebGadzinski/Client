@@ -426,8 +426,6 @@ export default {
 		},
 	},
 	async mounted() {
-		console.log(this.settingsState.darkMode);
-		console.log(this.user);
 		try {
 			let keys =
 				(await Capacitor.getPlatform()) == "web"
@@ -456,7 +454,6 @@ export default {
 			"toggleDarkMode",
 		]),
 		onLanguageClick(langName) {
-			console.log(langName);
 			this.settingsState.setLanguage(langName);
 			import(
 				/* webpackInclude: /(fr|en-US)\.js$/ */
@@ -533,8 +530,6 @@ export default {
 				DataService.checkForUpdate()
 					.then((response) => {
 						this.$q.loading.hide();
-						console.log("Made it here");
-
 						if (!response || !response.message)
 							return console.log("No response.message");
 						switch (response.message) {
@@ -568,7 +563,6 @@ export default {
 										cancel: true,
 									})
 									.onOk(async () => {
-										console.log(response.data);
 										const version =
 											await CapacitorUpdater.download({
 												url: response.data?.url,
@@ -576,9 +570,7 @@ export default {
 													response.data?.newVersion,
 											});
 										SplashScreen.show();
-										let result = await CapacitorUpdater.set(
-											version
-										);
+										await CapacitorUpdater.set(version);
 										SplashScreen.hide(); // in case the set fail,
 										document.location.href = "index.html";
 									});
@@ -613,14 +605,6 @@ export default {
 				});
 			}
 		},
-		filterFn(val, update, abort) {
-			this.filter = val;
-			update(() => {
-				console.log("update");
-				console.log("update");
-				// this.stores = this.stores;
-			});
-		},
 		async reseedDB() {
 			this.$q.loading.show({
 				spinner: QSpinnerGears,
@@ -631,8 +615,7 @@ export default {
 			});
 			try {
 				DataService.reseedDB()
-					.then((data) => {
-						console.log(data);
+					.then(() => {
 						this.$q.loading.hide();
 						this.$q.dialog({
 							title: this.$t("VM Reseed Process Started"),
@@ -669,8 +652,7 @@ export default {
 			});
 			try {
 				DataService.gitPullServer()
-					.then((data) => {
-						console.log(data);
+					.then(() => {
 						this.$q.loading.hide();
 						this.$q.dialog({
 							title: this.$t("Git Pull Started"),

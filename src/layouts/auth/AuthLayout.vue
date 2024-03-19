@@ -145,7 +145,6 @@ export default {
 	},
 	methods: {
 		onLanguageClick(langName) {
-			console.log(langName);
 			// Assuming settingsState is defined and imported somewhere
 			this.settingsState.setLanguage(langName);
 			import(
@@ -158,7 +157,6 @@ export default {
 		},
 		routeTo(route) {
 			const currentQuery = this.route.query;
-			console.log(currentQuery);
 			// Carry any params over to the new route
 			this.$router.push({
 				path: route,

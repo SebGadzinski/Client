@@ -12,9 +12,7 @@ class AuthService {
 	 * @returns Logged in user
 	 */
 	login(email, password) {
-		console.log(`"${email}" "${password}"`);
 		return api.post("/auth", { email, password }).then((response) => {
-			console.log(response);
 			if (response.data.success) {
 				TokenService.setUser(response.data.data.user);
 				TokenService.setLocalToken(response.data.data.token);
@@ -36,7 +34,6 @@ class AuthService {
 	signUp({ email, password, confirmPassword }) {
 		if (password !== confirmPassword)
 			throw new Error("Passwords not matching");
-		console.log(`"${email}" Signing Up...`);
 		return api
 			.post("/auth/signUp", { email, password })
 			.then((response) => {
@@ -55,7 +52,6 @@ class AuthService {
 	forgotPassword(email) {
 		if (!email || email.length < 3 || !email.includes("@"))
 			throw new Error("Invalid Email");
-		console.log(`Sending Password Reset: "${email}"`);
 		return api
 			.post("/auth/sendEmailResetPassword", { email })
 			.then((response) => {
@@ -103,14 +99,12 @@ class AuthService {
 		const rs = await api.post("/auth/refresh", {
 			token: TokenService.getLocalRefreshToken(),
 		});
-		console.log(rs);
 		if (!rs || !rs.data.success) {
 			this.logout();
 			return;
 		}
 
 		// Success, can refresh token
-		console.log(rs.data);
 		const { token, refreshToken, user } = rs.data.data;
 
 		TokenService.setUser(user);

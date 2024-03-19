@@ -463,7 +463,6 @@ export default {
 					),
 				});
 				const meetingLink = await dataService.useSingleSession(workId);
-				console.log("Meeting Link " + meetingLink);
 				window.location.href = meetingLink;
 			} catch (err) {
 				console.error(err);
