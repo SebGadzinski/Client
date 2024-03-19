@@ -20,7 +20,7 @@
 			row-key="id"
 			:filter="search"
 			:visible-columns="visibleColumns"
-			:pagination="{ rowsPerPage: $q.screen.lt.md ? 5 : 25 }"
+			:pagination="{ rowsPerPage: $q.screen.lt.md ? 5 : 10 }"
 		>
 			<template v-if="$q.screen.gt.sm" v-slot:top>
 				<q-space />
