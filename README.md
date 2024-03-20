@@ -4,7 +4,7 @@ Client for Gadzy Work. This application hooks up to the /Server Repo.
 
 ## SETTING UP WITH /Server
 
-If you are setting this front end with my /Server repo, please complete the /Server repo first as the client need to connect to the server.
+If you are setting this front end with my /Server repo, please complete the /Server repo first as the client needs to connect to the server.
 
 ## Uses
 
@@ -14,7 +14,7 @@ If you are setting this front end with my /Server repo, please complete the /Ser
 
 ## Before Running
 
-1. Navigate to a folder that you would like the server inside. (Typically the folder you have your server in)
+1. Navigate to a folder that you would like the server inside. (Typically the folder you have your /Server in)
 2. [git clone](https://github.com/SebGadzinski/Client.git)
 3. cd Client
 4. Make a .env file (This is just needed for the client to run nothing inside)
@@ -29,3 +29,19 @@ If you are setting this front end with my /Server repo, please complete the /Ser
 ## Run the client
 
 7. npm run dev
+
+## Publishing
+
+### Web
+
+1. npm run build-www
+    - This create static files in /src-capacitor/www
+    - These files can be hosted on a web server
+
+### Android
+
+WIP
+
+### ios
+
+WIP
