@@ -50,18 +50,16 @@ export const useAuthState = defineStore("Auth", {
 		 * @throws Will throw an error if passwords do not match.
 		 * @returns {Promise<void>} - A promise.
 		 */
-		signUp(user) {
-			return AuthService.signUp(user)
-				.then(() => {
-					return this.login(user.email, user.password).then((user) =>
-						Promise.resolve(user)
-					);
-				})
-				.catch((error) => {
-					this.user = null;
-					this.status.loggedIn = false;
-					return Promise.reject(error);
-				});
+		async signUp(user) {
+			try {
+				await AuthService.signUp(user);
+				const updatedUser = await this.login(user.email, user.password);
+				return updatedUser;
+			} catch (err) {
+				this.user = null;
+				this.status.loggedIn = false;
+				throw err;
+			}
 		},
 
 		/**

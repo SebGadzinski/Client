@@ -67,7 +67,7 @@ export default {
 	},
 	methods: {
 		...mapActions(useAuthState, ["signUp"]),
-		handleSignUp() {
+		async handleSignUp() {
 			try {
 				this.loading = true;
 				this.$q.loading.show({
@@ -83,13 +83,12 @@ export default {
 					this.user.confirmPassword
 				) {
 					window.localStorage.setItem("auth-email", this.user.email);
-					this.signUp(this.user).then((data) => {
-						this.loading = false;
-						this.$q.loading.hide();
-						this.$router.push({
-							path: "/auth/check-confirm/email",
-							query: this.route.query,
-						});
+					await this.signUp(this.user);
+					this.loading = false;
+					this.$q.loading.hide();
+					this.$router.push({
+						path: "/auth/check-confirm/email",
+						query: this.route.query,
 					});
 				} else {
 					this.message = this.$t("Missing Inputs");
@@ -108,7 +107,6 @@ export default {
 						error.message ||
 						error.toString(),
 				});
-				this.$q.loading.hide();
 			}
 		},
 		onLanguageClick(langName) {
