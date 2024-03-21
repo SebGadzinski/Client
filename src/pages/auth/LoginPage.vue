@@ -16,7 +16,7 @@
 			/>
 			<br />
 			<div class="flex flex-center">
-				<q-btn label="Submit" type="submit" color="primary" />
+				<q-btn :label="$t('Submit')" type="submit" color="primary" />
 			</div>
 		</q-form>
 	</div>
