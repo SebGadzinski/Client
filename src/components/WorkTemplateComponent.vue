@@ -323,7 +323,7 @@
 						class="text-h3"
 						color="primary"
 						:label="$t('Book Meeting')"
-						:to="`/${template.categorySlug}/${template.serviceSlug}/meeting?template=${template.name}`"
+						:to="`/${template.categorySlug}/${template.serviceSlug}/meeting?template=${template.name}&templateId=${template._id}`"
 					>
 					</q-btn>
 				</q-item-section>

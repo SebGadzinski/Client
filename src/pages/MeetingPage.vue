@@ -234,6 +234,7 @@ export default {
 						let meetingInfo = {
 							categorySlug: this.categorySlug,
 							serviceSlug: this.serviceSlug,
+							templateId: this.route?.query?.templateId,
 							startDate: new Date(this.date),
 							bookingMessage,
 						};

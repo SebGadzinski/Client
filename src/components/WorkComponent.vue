@@ -538,7 +538,7 @@
 					</q-btn>
 				</q-item-section>
 			</q-item>
-			<q-item v-if="allowReceipt">
+			<q-item v-if="allowReceipt && work.status !== 'Meeting'">
 				<q-item-section>
 					<q-btn
 						:class="$q.screen.lt.md ? 'text-h6' : 'text-h3'"

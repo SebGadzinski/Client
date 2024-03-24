@@ -3,7 +3,7 @@
 		<!-- Meta Data -->
 		<q-form
 			v-if="Object.keys(work).length > 0"
-			class="form-class"
+			class="form-class full-width"
 			name="Work"
 			@submit.prevent="handleSave"
 		>

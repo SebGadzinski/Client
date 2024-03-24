@@ -69,6 +69,7 @@
 							</q-item>
 							<q-item
 								clickable
+								v-if="props.row.status !== 'Meeting'"
 								v-close-popup
 								@click="() => printReceipt(props.row.workId)"
 							>
@@ -208,6 +209,7 @@
 								class="text-color full-width"
 							/>
 							<q-btn
+								v-if="props.row.status !== 'Meeting'"
 								color="secondary"
 								:label="$t('Print Receipt')"
 								@click="() => printReceipt(props.row.workId)"

@@ -103,12 +103,14 @@ class DataService {
 		categorySlug,
 		serviceSlug,
 		startDate,
+		templateId,
 		bookingMessage,
 	}) {
 		try {
 			return await api.post("/data/meeting/book", {
 				categorySlug,
 				serviceSlug,
+				templateId,
 				startDate,
 				bookingMessage,
 				onError: {
