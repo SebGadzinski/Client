@@ -1,26 +1,26 @@
 {
-  "name": "workwebsite",
-  "version": "1.0.88",
-  "description": "My Client",
-  "productName": "workwebsite",
-  "author": "sebastian gadzinski <sebastiangadzinskiwork@gmail.com>",
-  "private": true,
-  "scripts": {
-    "capgo-dev": "capgo upload com.workwebsite.app --apikey=79057f89-0e83-4788-a195-28b8de1597e3 --channel=dev",
-    "capgo-release": "capgo upload com.workwebsite.app --apikey=79057f89-0e83-4788-a195-28b8de1597e3 --channel=release"
-  },
-  "dependencies": {
-    "@capacitor-community/fcm": "^2.0.2",
-    "@capacitor/android": "^4.6.3",
-    "@capacitor/app": "^4.1.1",
-    "@capacitor/core": "^4.6.3",
-    "@capacitor/ios": "^4.6.3",
-    "@capacitor/preferences": "^4.0.2",
-    "@capacitor/push-notifications": "^4.1.2",
-    "@capacitor/splash-screen": "^4.1.4",
-    "@capgo/capacitor-updater": "^4.17.35"
-  },
-  "devDependencies": {
-    "@capacitor/cli": "^4.0.0"
-  }
+	"name": "workwebsite",
+	"version": "1.0.0",
+	"description": "My Client",
+	"productName": "workwebsite",
+	"author": "sebastian gadzinski <sebastiangadzinskiwork@gmail.com>",
+	"private": true,
+	"scripts": {
+		"capgo-dev": "capgo upload com.workwebsite.app --apikey=79057f89-0e83-4788-a195-28b8de1597e3 --channel=dev",
+		"capgo-release": "capgo upload com.workwebsite.app --apikey=79057f89-0e83-4788-a195-28b8de1597e3 --channel=release"
+	},
+	"dependencies": {
+		"@capacitor-community/fcm": "^2.0.2",
+		"@capacitor/android": "^4.6.3",
+		"@capacitor/app": "^4.1.1",
+		"@capacitor/core": "^4.6.3",
+		"@capacitor/ios": "^4.6.3",
+		"@capacitor/preferences": "^4.0.2",
+		"@capacitor/push-notifications": "^4.1.2",
+		"@capacitor/splash-screen": "^4.1.4",
+		"@capgo/capacitor-updater": "^4.17.35"
+	},
+	"devDependencies": {
+		"@capacitor/cli": "^4.0.0"
+	}
 }
