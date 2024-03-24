@@ -684,7 +684,8 @@ export default {
 	mounted() {
 		this.showCard =
 			!this.work.payment.subscription?.noSub &&
-			!this.work.payment.subscription?.last4Digits;
+			!this.work.payment.subscription?.last4Digits &&
+			this.work.payment.subscription.isEnabled;
 		if (this.showCard) {
 			this.loadStripe();
 		}
