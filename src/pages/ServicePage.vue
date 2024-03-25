@@ -174,7 +174,11 @@
 					:key="tIndex"
 					:to="`/work/template/${template._id}`"
 					color="primary"
-					class="text-h5 col-10 col-md-4 q-my-sm q-mx-auto"
+					:class="
+						$q.screen.lt.md
+							? 'text-h6 col-10 col-md-4 q-my-sm q-mx-auto'
+							: 'text-h5 col-10 col-md-4 q-my-sm q-mx-auto'
+					"
 					:label="$t(template.name)"
 				/>
 			</div>

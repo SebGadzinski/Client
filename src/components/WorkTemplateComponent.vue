@@ -320,7 +320,7 @@
 				</q-item-section>
 				<q-item-section v-else>
 					<q-btn
-						class="text-h3"
+						:class="$q.screen.gt.sm ? 'text-h3' : 'text-h6'"
 						color="primary"
 						:label="$t('Book Meeting')"
 						:to="`/${template.categorySlug}/${template.serviceSlug}/meeting?template=${template.name}&templateId=${template._id}`"
