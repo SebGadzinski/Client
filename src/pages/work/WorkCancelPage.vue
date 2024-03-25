@@ -6,6 +6,7 @@
 			</h3>
 			<WorkComponent
 				:work="work"
+				:isAdmin="isAdmin"
 				v-if="work && Object.keys(work).length > 0"
 			/>
 		</div>
@@ -61,6 +62,8 @@ import { useQuasar, QSpinnerGears } from "quasar";
 import { useRoute } from "vue-router";
 import WorkComponent from "src/components/WorkComponent.vue";
 import { StripeCheckout } from "@vue-stripe/vue-stripe";
+import { mapState } from "pinia";
+import { useAuthState } from "src/stores/auth.state";
 
 export default {
 	name: "WorkConfirmationPage",
@@ -70,6 +73,7 @@ export default {
 			loading: true,
 			$q: useQuasar(),
 			route: useRoute(),
+			isAdmin: false,
 			work: {},
 			pks: {
 				classes: process.env.STRIPE_PUBLIC_KEY_CLASSES,
@@ -86,6 +90,7 @@ export default {
 	},
 	async mounted() {
 		try {
+			this.isAdmin = this.user?.roles?.includes("admin");
 			this.loading = true;
 			this.$q.loading.show({
 				spinner: QSpinnerGears,
@@ -106,7 +111,9 @@ export default {
 	},
 	unmounted() {},
 	async updated() {},
-
+	computed: {
+		...mapState(useAuthState, ["user"]),
+	},
 	methods: {
 		async pay() {
 			this.$q.loading.show({

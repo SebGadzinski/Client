@@ -6,6 +6,7 @@
 			</h3>
 			<WorkComponent
 				:work="work"
+				:isAdmin="isAdmin"
 				v-if="work && Object.keys(work).length > 0"
 			/>
 		</div>
@@ -71,6 +72,8 @@ import { useQuasar, QSpinnerGears } from "quasar";
 import { useRoute } from "vue-router";
 import ConfirmationToSComponent from "src/components/tos/ConfirmationToSComponent.vue";
 import WorkComponent from "src/components/WorkComponent.vue";
+import { mapState } from "pinia";
+import { useAuthState } from "src/stores/auth.state";
 
 export default {
 	name: "WorkConfirmationPage",
@@ -85,6 +88,7 @@ export default {
 			acceptTNC: false,
 			route: useRoute(),
 			work: {},
+			isAdmin: false,
 			pks: {
 				software: process.env.STRIPE_PUBLIC_KEY_SOFTWARE,
 				classes: process.env.STRIPE_PUBLIC_KEY_CLASSES,
@@ -103,6 +107,7 @@ export default {
 	},
 	async mounted() {
 		try {
+			this.isAdmin = this.user?.roles?.includes("admin");
 			this.loading = true;
 			this.$q.loading.show({
 				spinner: QSpinnerGears,
@@ -128,6 +133,9 @@ export default {
 				this.showToS = true;
 			}
 		},
+	},
+	computed: {
+		...mapState(useAuthState, ["user"]),
 	},
 	methods: {
 		async pay() {

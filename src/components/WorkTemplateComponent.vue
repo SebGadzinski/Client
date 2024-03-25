@@ -100,7 +100,9 @@
 							<q-card-section
 								class="flex justify-between bg-secondary"
 							>
-								<span>ID: {{ props.row._id }}</span>
+								<span v-if="isAdmin"
+									>ID: {{ props.row._id }}</span
+								>
 							</q-card-section>
 							<q-card-section>
 								<q-list>
@@ -180,7 +182,9 @@
 								<q-card-section
 									class="flex justify-between bg-secondary"
 								>
-									<span>ID: {{ props.row._id }}</span>
+									<span v-if="isAdmin"
+										>ID: {{ props.row._id }}</span
+									>
 								</q-card-section>
 								<q-card-section>
 									<q-list>

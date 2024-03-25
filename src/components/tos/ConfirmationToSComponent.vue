@@ -1,10 +1,15 @@
 <template>
 	<q-card style="max-width: none">
-		<q-bar>
+		<q-bar class="q-py-lg">
 			<q-space />
-			<q-btn dense flat icon="close" v-close-popup>
+			<q-btn
+				class="q-px-sm"
+				color="primary"
+				:label="$t('I Agree')"
+				v-close-popup
+			>
 				<q-tooltip class="bg-white text-primary">{{
-					$t("Close")
+					$t("I Agree")
 				}}</q-tooltip>
 			</q-btn>
 		</q-bar>

@@ -10,6 +10,7 @@
 				"
 				:allowReceipt="true"
 				:showWorkers="true"
+				:isAdmin="isAdmin"
 				v-if="work && Object.keys(work).length > 0"
 			/>
 		</div>
@@ -21,6 +22,8 @@ import dataService from "../../services/data.service";
 import { useQuasar, QSpinnerGears } from "quasar";
 import WorkComponent from "src/components/WorkComponent.vue";
 import { useRoute } from "vue-router";
+import { mapState } from "pinia";
+import { useAuthState } from "src/stores/auth.state";
 
 export default {
 	name: "WorkPage",
@@ -28,13 +31,18 @@ export default {
 	data() {
 		return {
 			loading: true,
+			isAdmin: false,
 			$q: useQuasar(),
 			work: {},
 			route: useRoute(),
 		};
 	},
+	computed: {
+		...mapState(useAuthState, ["user"]),
+	},
 	async mounted() {
 		try {
+			this.isAdmin = this.user?.roles?.includes("admin");
 			this.loading = true;
 			this.$q.loading.show({
 				spinner: QSpinnerGears,
