@@ -184,7 +184,10 @@
 			</div>
 		</template>
 		<!-- Meeting Times -->
-		<div class="text-center" v-if="categorySlug === 'classes'">
+		<div
+			class="text-center"
+			v-if="categorySlug === 'classes' && meetingTimes?.length > 0"
+		>
 			<h3>{{ $t("Meeting Times") }}</h3>
 			<div
 				v-for="(meetingTime, m) in meetingTimes"
