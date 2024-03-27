@@ -1,1 +1,7 @@
 // app global css in SCSS form
+.table-spacing-around .q-table__grid-content.row {
+	justify-content: space-around !important;
+}
+.table-spacing-center .q-table__grid-content.row {
+	justify-content: space-center !important;
+}

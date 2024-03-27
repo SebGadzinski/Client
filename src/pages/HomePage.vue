@@ -1,46 +1,52 @@
 <template>
-	<q-page class="flex column q-py-lg">
-		<q-infinite-scroll
-			class="flex row justify-center w-full"
-			@load="loadMore"
+	<q-page :class="$q.screen.gt.sm ? 'table-spacing-around' : ''" padding>
+		<div class="q-px-lg">
+			<q-input v-model="search" placeholder="Search" />
+		</div>
+		<q-table
+			:rows="categorys"
+			:grid="true"
+			:loading="loading"
+			class="q-mt-lg"
+			:columns="columns"
+			row-key="id"
+			:filter="search"
 		>
-			<template v-if="$q.screen.gt.sm">
+			<template v-slot:item="props">
 				<div
-					v-for="(category, index) in categorys"
-					:key="index"
-					class="full-width"
+					v-if="$q.screen.gt.sm"
+					style="width: 45%"
+					class="q-pa-xs q-mb-lg cursor-pointer"
 				>
 					<q-card
-						:id="`custom-card-${index}`"
-						class="q-my-lg custom-card"
+						:id="`custom-card-${props.row.id}`"
 						flat
 						bordered
-						@mouseenter="hideImage(index)"
-						@mouseleave="showImage(index)"
-						@click="navigateToCategory(category.slug)"
+						@mouseenter="hideImage(props.row.id)"
+						@mouseleave="showImage(props.row.id)"
+						@click="navigateToCategory(props.row.slug)"
 					>
 						<div class="media-container">
 							<img
-								:class="`category-picture-${index}`"
-								v-lazy="category.thumbnailImg"
+								:class="`category-picture-${props.row.id}`"
+								v-lazy="props.row.thumbnailImg"
 							/>
 							<div
 								class="q-pa-md"
-								:class="`category-list-${index} hidden`"
+								:class="`category-list-${props.row.id} hidden`"
 							>
 								<q-list bordered separator>
 									<q-item
 										clickable
 										v-ripple
-										v-for="(
-											service, dlIndex
-										) in category.services"
-										:to="`/${category.slug}/${service.slug}`"
+										v-for="(service, dlIndex) in props.row
+											.services"
+										:to="`/${props.row.slug}/${service.slug}`"
 										@click="
 											(event) =>
 												onListItemClick(
 													event,
-													category.slug,
+													props.row.slug,
 													service.slug
 												)
 										"
@@ -60,44 +66,39 @@
 						</div>
 						<q-card-section>
 							<div class="text-h6 q-mb-xs">
-								{{ $t(category.name) }}
+								{{ $t(props.row.name) }}
 							</div>
 							<div class="row no-wrap items-center">
 								<span class="text-caption text-grey q-ml-sm">{{
-									$t(`${category.services.length} Services`)
+									$t("servicesCount", {
+										count: props.row.services.length,
+									})
 								}}</span>
 							</div>
 						</q-card-section>
 					</q-card>
 				</div>
-			</template>
-			<template v-else>
-				<div
-					v-for="(category, index) in categorys"
-					:key="index"
-					class="full-width"
-				>
+				<div v-else class="q-pa-xs col-12 q-mb-lg cursor-pointer">
 					<q-card
-						:id="`custom-card-${index}`"
-						class="q-my-lg custom-card"
+						:id="`custom-card-${props.row.id}`"
 						flat
 						bordered
-						@click="navigateToCategory(category.slug)"
+						@click="navigateToCategory(props.row.slug)"
 					>
 						<div class="media-container">
 							<img
-								:class="`category-picture-${index}`"
-								v-lazy="category.thumbnailImg"
+								:class="`category-picture-${props.row.id}`"
+								v-lazy="props.row.thumbnailImg"
 							/>
 						</div>
 						<q-card-section>
 							<div class="text-h6 q-mb-xs">
-								{{ $t(category.name) }}
+								{{ $t(props.row.name) }}
 							</div>
 							<div class="row no-wrap items-center">
 								<span class="text-caption text-grey q-ml-sm">{{
 									$t("servicesCount", {
-										count: category.services.length,
+										count: props.row.services.length,
 									})
 								}}</span>
 							</div>
@@ -105,32 +106,62 @@
 					</q-card>
 				</div>
 			</template>
-
-			<div v-if="loading" class="q-mt-md flex flex-center column">
-				<q-spinner-gears size="5em" />
-				<h1 class="text-h1">{{ $t(`Loading`) }}</h1>
-			</div>
-		</q-infinite-scroll>
+			<template v-slot:bottom></template>
+		</q-table>
 	</q-page>
 </template>
 <script>
 import dataService from "../services/data.service";
-import { useQuasar, QSpinnerGears, QInfiniteScroll } from "quasar";
+import { useQuasar } from "quasar";
 import VanillaTilt from "vanilla-tilt";
 
 export default {
 	name: "HomePage",
-	components: {
-		QSpinnerGears,
-		QInfiniteScroll,
-	},
+	components: {},
 	data() {
 		return {
 			loading: false,
+			search: "",
+			columns: [
+				{
+					name: "name",
+					align: "left",
+					label: "Name",
+					field: (row) => row.name,
+				},
+				{
+					name: "slug",
+					align: "left",
+					label: "Slug",
+					field: (row) => row.slug,
+				},
+			],
 			categorys: [],
 			players: [],
 			$q: useQuasar(),
 		};
+	},
+	async mounted() {
+		const newCategories = await dataService.getHomePageData();
+		console.log(newCategories);
+		if (newCategories && newCategories.length > 0) {
+			for (let i = 0; i < newCategories.length; i++) {
+				newCategories[i].id = i;
+				this.categorys.push(newCategories[i]);
+			}
+		}
+		this.loading = false;
+		this.$nextTick(() => {
+			// Access DOM elements here
+			for (let i = 0; i < this.categorys.length; i++) {
+				const tiltElement = document.getElementById(`custom-card-${i}`);
+				VanillaTilt.init(tiltElement, {
+					max: 2,
+					glare: false,
+					"max-glare": 1,
+				});
+			}
+		});
 	},
 	methods: {
 		onListItemClick(event, categorySlug, serviceSlug) {
@@ -175,28 +206,6 @@ export default {
 		},
 		navigateToCategory(category) {
 			this.$router.push(`/${category}`);
-		},
-		async loadMore() {
-			const newCategories = await dataService.getHomePageData();
-			if (newCategories && newCategories.length > 0) {
-				for (let i = 0; i < newCategories.length; i++) {
-					this.categorys.push(newCategories[i]);
-				}
-			}
-			this.loading = false;
-			this.$nextTick(() => {
-				// Access DOM elements here
-				for (let i = 0; i < this.categorys.length; i++) {
-					const tiltElement = document.getElementById(
-						`custom-card-${i}`
-					);
-					VanillaTilt.init(tiltElement, {
-						max: 2,
-						glare: false,
-						"max-glare": 1,
-					});
-				}
-			});
 		},
 		killTilt(index) {
 			// Destroy the tilt effect
@@ -271,8 +280,5 @@ export default {
 }
 
 @media (max-width: 991px) {
-	.custom-card {
-		width: 90vw;
-	}
 }
 </style>

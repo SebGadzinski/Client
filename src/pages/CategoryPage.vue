@@ -1,77 +1,82 @@
 <template>
-	<q-page class="flex column q-py-lg">
-		<q-infinite-scroll
-			class="flex justify-center w-full flex-wrap"
-			@load="loadMore"
+	<q-page :class="$q.screen.gt.sm ? 'table-spacing-center' : ''" padding>
+		<div class="q-px-lg">
+			<q-input v-model="search" placeholder="Search" />
+		</div>
+		<q-table
+			:rows="services"
+			:grid="true"
+			:loading="loading"
+			class="q-mt-lg"
+			:columns="columns"
+			row-key="id"
+			:filter="search"
 		>
-			<a class="card-container" :href="watchMeLink">
-				<q-card
-					:id="`custom-card-${index}`"
-					class="q-my-lg custom-card"
-					flat
-					bordered
-					@mouseenter="hideImage(index)"
-					@mouseleave="showImage(index)"
+			<template v-slot:item="props">
+				<div
+					v-if="$q.screen.gt.sm"
+					class="q-pa-xs col-4 q-mb-lg cursor-pointer"
 				>
-					<div class="media-container">
-						<!-- Fix Here -->
-						<img
-							:class="`service-picture-${index}`"
-							:src="watchMeImg"
-						/>
-						<div
-							class="q-pa-md"
-							:class="`service-list-${index} hidden`"
-						>
-							<span class="text-body1">{{
-								$t("Watch Me!")
-							}}</span>
+					<q-card
+						:id="`custom-card-${props.row.id}`"
+						flat
+						bordered
+						@mouseenter="hideImage(props.row.id)"
+						@mouseleave="showImage(props.row.id)"
+						@click="navigateToService(props.row.slug)"
+					>
+						<div class="media-container">
+							<img
+								:class="`service-picture-${props.row.id}`"
+								v-lazy="props.row.thumbnailImg"
+							/>
+							<div
+								class="q-pa-md"
+								:class="`service-list-${props.row.id} hidden`"
+							>
+								<span class="text-body1">{{
+									$t(props.row.description)
+								}}</span>
+							</div>
 						</div>
-					</div>
-					<q-card-section>
-						<div class="text-h6 q-mb-xs">
-							{{ $t("Watch Me!") }}
+						<q-card-section>
+							<div class="text-h6 q-mb-xs">
+								{{ $t(props.row.name) }}
+							</div>
+						</q-card-section>
+					</q-card>
+				</div>
+				<div v-else class="q-pa-xs col-12 q-mb-lg cursor-pointer">
+					<q-card
+						:id="`custom-card-${props.row.id}`"
+						flat
+						bordered
+						@click="navigateToService(props.row.slug)"
+					>
+						<div class="media-container">
+							<img
+								:class="`service-picture-${props.row.id}`"
+								v-lazy="props.row.thumbnailImg"
+							/>
+							<div
+								class="q-pa-md"
+								:class="`service-list-${props.row.id} hidden`"
+							>
+								<span class="text-body1">{{
+									$t(props.row.description)
+								}}</span>
+							</div>
 						</div>
-					</q-card-section>
-				</q-card>
-			</a>
-			<!-- Service Cards -->
-			<div
-				v-for="(service, index) in services"
-				:key="index"
-				class="card-container"
-			>
-				<q-card
-					:id="`custom-card-${index + 1}`"
-					class="q-my-lg custom-card"
-					flat
-					bordered
-					@mouseenter="hideImage(index)"
-					@mouseleave="showImage(index)"
-					@click="navigateToService(service.slug)"
-				>
-					<div class="media-container">
-						<img
-							:class="`service-picture-${index}`"
-							v-lazy="service.thumbnailImg"
-						/>
-						<div
-							class="q-pa-md"
-							:class="`service-list-${index} hidden`"
-						>
-							<span class="text-body1">{{
-								$t(service.description)
-							}}</span>
-						</div>
-					</div>
-					<q-card-section>
-						<div class="text-h6 q-mb-xs">
-							{{ $t(service.name) }}
-						</div>
-					</q-card-section>
-				</q-card>
-			</div>
-		</q-infinite-scroll>
+						<q-card-section>
+							<div class="text-h6 q-mb-xs">
+								{{ $t(props.row.name) }}
+							</div>
+						</q-card-section>
+					</q-card>
+				</div>
+			</template>
+			<template v-slot:bottom></template>
+		</q-table>
 	</q-page>
 </template>
 
@@ -87,8 +92,29 @@ export default {
 	data() {
 		return {
 			loading: true,
+			search: "",
 			categorySlug: ref(""),
 			services: [],
+			columns: [
+				{
+					name: "name",
+					align: "left",
+					label: "Name",
+					field: (row) => row.name,
+				},
+				{
+					name: "slug",
+					align: "left",
+					label: "Slug",
+					field: (row) => row.slug,
+				},
+				{
+					name: "description",
+					align: "left",
+					label: "Description",
+					field: (row) => row.description,
+				},
+			],
 			route: useRoute(),
 			$q: useQuasar(),
 			expandVideo: false,
@@ -99,7 +125,34 @@ export default {
 	async mounted() {
 		try {
 			this.categorySlug = ref(this.route?.params?.category);
-			await this.loadMore();
+			if (this.categorySlug === "") return;
+			this.loading = true;
+			const data = await dataService.getCategoryPageData(
+				this.categorySlug
+			);
+			this.watchMeImg = data[0].watchMeImg;
+			this.watchMeLink = data[0].watchMeLink;
+			const newServices = data[0].services;
+			if (newServices && newServices.length > 0) {
+				for (let i = 0; i < newServices.length; i++) {
+					newServices[i].id = i;
+					this.services.push(newServices[i]);
+				}
+			}
+			this.loading = false;
+			this.$nextTick(() => {
+				// Access DOM elements here
+				for (let i = 0; i < this.services.length; i++) {
+					const tiltElement = document.getElementById(
+						`custom-card-${i}`
+					);
+					VanillaTilt.init(tiltElement, {
+						max: 5,
+						glare: true,
+						"max-glare": 1,
+					});
+				}
+			});
 		} catch (err) {
 			this.$q
 				.dialog({
@@ -155,35 +208,6 @@ export default {
 		},
 		navigateToService(serviceSlug) {
 			this.$router.push(`/${this.categorySlug}/${serviceSlug}`);
-		},
-		async loadMore() {
-			if (this.categorySlug === "") return;
-			this.loading = true;
-			const data = await dataService.getCategoryPageData(
-				this.categorySlug
-			);
-			this.watchMeImg = data[0].watchMeImg;
-			this.watchMeLink = data[0].watchMeLink;
-			const newServices = data[0].services;
-			if (newServices && newServices.length > 0) {
-				for (let i = 0; i < newServices.length; i++) {
-					this.services.push(newServices[i]);
-				}
-			}
-			this.loading = false;
-			this.$nextTick(() => {
-				// Access DOM elements here
-				for (let i = 0; i < this.services.length; i++) {
-					const tiltElement = document.getElementById(
-						`custom-card-${i}`
-					);
-					VanillaTilt.init(tiltElement, {
-						max: 5,
-						glare: true,
-						"max-glare": 1,
-					});
-				}
-			});
 		},
 		killTilt(index) {
 			// Destroy the tilt effect
