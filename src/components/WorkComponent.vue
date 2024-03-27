@@ -88,118 +88,134 @@
 			</div>
 		</div>
 		<!-- Work Items -->
-		<template v-if="work?.workItems?.length > 0">
-			<h3 class="text-center">{{ $t("Work Items") }}</h3>
-			<q-table
-				:rows="work.workItems"
-				:grid="$q.screen.lt.md"
-				class="q-mt-lg"
-				:columns="workItemCols"
-				row-key="id"
-				:hide-bottom="true"
-				:visible-columns="workItemVisibleCols"
-			>
-				<template v-if="$q.screen.gt.sm" v-slot:body="props">
-					<q-tr :props="props">
-						<q-td key="id" :props="props">{{ props.row._id }}</q-td>
-						<q-td key="name" :props="props">{{
-							props.row.name
-						}}</q-td>
-						<q-td key="description" :props="props">{{
-							props.row.description
-						}}</q-td>
-						<q-td key="links" :props="props">
-							<div
-								v-for="(link, index) in props.row.links"
-								:key="index"
+		<div
+			v-if="work?.workItems?.length > 0"
+			class="flex row full-width justify-center q-mb-lg"
+		>
+			<div :class="!isAdmin && this.$q.screen.gt.sm ? 'col-8' : 'col-12'">
+				<h3 class="text-center q-mb-none">{{ $t("Work Items") }}</h3>
+				<q-table
+					:rows="work.workItems"
+					:grid="$q.screen.lt.md"
+					class="q-mt-lg"
+					:columns="workItemCols"
+					row-key="id"
+					:hide-bottom="true"
+					:visible-columns="workItemVisibleCols"
+				>
+					<template v-if="$q.screen.gt.sm" v-slot:body="props">
+						<q-tr :props="props">
+							<q-td key="id" :props="props">{{
+								props.row._id
+							}}</q-td>
+							<q-td key="name" :props="props">{{
+								props.row.name
+							}}</q-td>
+							<q-td
+								key="description"
+								:props="props"
+								style="
+									white-space: normal;
+									word-break: break-word;
+								"
+								>{{ props.row.description }}</q-td
 							>
-								<a :href="link.url" target="_blank"
-									><q-badge>{{ link.name }}</q-badge></a
+							<q-td key="links" :props="props">
+								<div
+									v-for="(link, index) in props.row.links"
+									:key="index"
 								>
-							</div>
-						</q-td>
-						<q-td key="status" :props="props">{{
-							props.row.status
-						}}</q-td>
-					</q-tr>
-				</template>
-				<template v-if="$q.screen.lt.md" v-slot:item="props">
-					<div class="q-pa-xs col-12">
-						<q-card flat bordered>
-							<q-card-section
-								class="flex justify-between bg-secondary"
-							>
-								<span v-if="isAdmin"
-									>ID: {{ props.row._id }}</span
+									<a :href="link.url" target="_blank"
+										><q-badge>{{ link.name }}</q-badge></a
+									>
+								</div>
+							</q-td>
+							<q-td key="status" :props="props">{{
+								props.row.status
+							}}</q-td>
+						</q-tr>
+					</template>
+					<template v-if="$q.screen.lt.md" v-slot:item="props">
+						<div class="q-pa-xs col-12">
+							<q-card flat bordered>
+								<q-card-section
+									class="flex justify-between bg-secondary"
 								>
-							</q-card-section>
-							<q-card-section>
-								<q-list>
-									<q-item>
-										<q-item-section>
-											<q-item-label caption>{{
-												$t("Name")
-											}}</q-item-label>
-											<div class="readonly-text">
-												{{ props.row.name }}
-											</div>
-										</q-item-section>
-									</q-item>
-									<q-item>
-										<q-item-section>
-											<q-item-label caption>{{
-												$t("Description")
-											}}</q-item-label>
-											<div class="readonly-text">
-												{{ props.row.description }}
-											</div>
-										</q-item-section>
-									</q-item>
-									<q-item>
-										<q-item-section>
-											<q-item-label caption>{{
-												$t("Links")
-											}}</q-item-label>
-											<div
-												v-for="(link, index) in props
-													.row.links"
-												:key="index"
-											>
-												<a
-													:href="link.url"
-													target="_blank"
-													><q-badge>{{
-														link.name
-													}}</q-badge></a
+									<span v-if="isAdmin"
+										>ID: {{ props.row._id }}</span
+									>
+								</q-card-section>
+								<q-card-section>
+									<q-list>
+										<q-item>
+											<q-item-section>
+												<q-item-label caption>{{
+													$t("Name")
+												}}</q-item-label>
+												<div class="readonly-text">
+													{{ props.row.name }}
+												</div>
+											</q-item-section>
+										</q-item>
+										<q-item>
+											<q-item-section>
+												<q-item-label caption>{{
+													$t("Description")
+												}}</q-item-label>
+												<div class="readonly-text">
+													{{ props.row.description }}
+												</div>
+											</q-item-section>
+										</q-item>
+										<q-item>
+											<q-item-section>
+												<q-item-label caption>{{
+													$t("Links")
+												}}</q-item-label>
+												<div
+													v-for="(
+														link, index
+													) in props.row.links"
+													:key="index"
 												>
-											</div>
-										</q-item-section>
-									</q-item>
-									<q-item>
-										<q-item-section>
-											<q-item-label caption>{{
-												$t("Status")
-											}}</q-item-label>
-											<div class="readonly-text">
-												{{ props.row.status }}
-											</div>
-										</q-item-section>
-									</q-item>
-								</q-list>
-							</q-card-section>
-						</q-card>
-					</div>
-				</template>
-			</q-table>
-		</template>
-		<!-- Metting Agreements -->
-		<q-list>
-			<h3 class="text-center">{{ $t("Payment Items") }}</h3>
-			<q-item v-if="work?.paymentItems?.length > 0" class="column">
+													<a
+														:href="link.url"
+														target="_blank"
+														><q-badge>{{
+															link.name
+														}}</q-badge></a
+													>
+												</div>
+											</q-item-section>
+										</q-item>
+										<q-item>
+											<q-item-section>
+												<q-item-label caption>{{
+													$t("Status")
+												}}</q-item-label>
+												<div class="readonly-text">
+													{{ props.row.status }}
+												</div>
+											</q-item-section>
+										</q-item>
+									</q-list>
+								</q-card-section>
+							</q-card>
+						</div>
+					</template>
+				</q-table>
+			</div>
+		</div>
+		<div
+			v-if="work?.paymentItems?.length > 0"
+			class="flex row full-width justify-center q-mb-lg"
+		>
+			<div :class="!isAdmin && this.$q.screen.gt.sm ? 'col-8' : 'col-12'">
+				<h3 class="text-center q-mb-none">{{ $t("Payment Items") }}</h3>
 				<q-table
 					:rows="work.paymentItems"
 					:grid="$q.screen.lt.md"
-					class="q-mt-lg full-width"
+					class="q-mt-lg"
 					:columns="paymentItemCols"
 					row-key="id"
 					:hide-bottom="true"
@@ -213,9 +229,15 @@
 							<q-td key="name" :props="props">{{
 								props.row.name
 							}}</q-td>
-							<q-td key="description" :props="props">{{
-								props.row.description
-							}}</q-td>
+							<q-td
+								key="description"
+								:props="props"
+								style="
+									white-space: normal;
+									word-break: break-word;
+								"
+								>{{ props.row.description }}</q-td
+							>
 							<q-td key="payment" :props="props">{{
 								$c(props.row.payment)
 							}}</q-td>
@@ -273,7 +295,7 @@
 										<q-item>
 											<q-item-section>
 												<q-item-label caption>{{
-													$t("Payment")
+													$t("$ Payment")
 												}}</q-item-label>
 												<div class="readonly-text">
 													{{ $c(props.row.payment) }}
@@ -308,7 +330,11 @@
 						</div>
 					</template>
 				</q-table>
-			</q-item>
+			</div>
+		</div>
+
+		<!-- Metting Agreements -->
+		<q-list>
 			<q-item class="flex-center">
 				<div class="text-h4">
 					{{ $t("Subscription") }}
@@ -653,8 +679,8 @@ export default {
 				{
 					name: "payment",
 					align: "left",
-					label: "Payment",
-					field: (row) => row.payment,
+					label: "$ Payment",
+					field: (row) => this.$c(row.payment),
 					sortable: true,
 				},
 				{
@@ -670,15 +696,8 @@ export default {
 					label: "Pay",
 				},
 			],
-			workItemVisibleCols: ref([
-				"id",
-				"name",
-				"description",
-				"links",
-				"status",
-			]),
+			workItemVisibleCols: ref(["name", "description", "status"]),
 			paymentItemVisibleCols: ref([
-				"id",
 				"name",
 				"description",
 				"payment",
@@ -687,6 +706,13 @@ export default {
 		};
 	},
 	mounted() {
+		if (this.isAdmin) {
+			this.workItemVisibleCols.push("id");
+			this.paymentItemVisibleCols.push("id");
+		}
+		if (this.work?.workItems?.some((x) => x?.links?.length > 0)) {
+			this.workItemVisibleCols.push("links");
+		}
 		this.showCard =
 			!this.work.payment.subscription?.noSub &&
 			!this.work.payment.subscription?.last4Digits &&

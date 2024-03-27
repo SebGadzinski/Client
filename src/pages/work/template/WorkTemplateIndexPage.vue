@@ -117,7 +117,7 @@
 									</q-item-section>
 
 									<q-item-section
-										>${{ props.row.initialPayment
+										>${{ $c(props.row.initialPayment)
 										}}{{ $t(" Initial Payment") }}
 									</q-item-section>
 								</q-item>
@@ -129,7 +129,9 @@
 									</q-item-section>
 
 									<q-item-section
-										>${{ props.row.subscription.payment }}
+										>${{
+											$c(props.row.subscription.payment)
+										}}
 										{{
 											this.$t(
 												"Every " +
@@ -147,7 +149,7 @@
 									</q-item-section>
 
 									<q-item-section
-										>${{ props.row.cancellationPayment
+										>${{ $c(props.row.cancellationPayment)
 										}}{{ $t(" Cancellation") }}
 									</q-item-section>
 								</q-item>
@@ -191,7 +193,7 @@ import { useRoute } from "vue-router";
 import { ref } from "vue";
 
 export default {
-	name: "WorkIndexPage",
+	name: "WorkTemplateIndexPage",
 	data() {
 		return {
 			loading: true,
@@ -254,7 +256,7 @@ export default {
 					field: (row) =>
 						row?.subscription?.payment > 0
 							? this.$c(row?.subscription?.payment)
-							: this.$t("0"),
+							: this.$c(0),
 					sortable: true,
 					sort: (a, b) => this.sortCurrency(a, b),
 				},
