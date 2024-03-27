@@ -244,17 +244,6 @@
 					</q-item-section>
 				</q-item>
 				<q-item clickable v-ripple>
-					<q-item-section>{{ $t("Git Pull Client") }}</q-item-section>
-					<q-item-section>
-						<q-btn
-							color="primary"
-							@click="gitPullClient"
-							class="full-width"
-							:label="$t('Pull')"
-						/>
-					</q-item-section>
-				</q-item>
-				<q-item clickable v-ripple>
 					<q-item-section>{{ $t("Reseed DB") }}</q-item-section>
 					<q-item-section>
 						<q-btn
@@ -669,30 +658,6 @@ export default {
 							}),
 						});
 					});
-			} catch (error) {
-				this.$q.loading.hide();
-				this.$q.dialog({
-					title: this.$t("Error"),
-					message: this.$t("errorInfo", {
-						error: error ? error.toString() : "Unknown Error",
-					}),
-				});
-			}
-		},
-		async gitPullClient() {
-			this.$q.loading.show({
-				spinner: QSpinnerGears,
-				spinnerColor: "white",
-				messageColor: "white",
-				backgroundColor: "#1e5499",
-				message: this.$t("Updating Client"),
-			});
-			try {
-				await DataService.gitPullClient();
-				this.$q.loading.hide();
-				this.$q.dialog({
-					title: this.$t("Update Complete"),
-				});
 			} catch (error) {
 				this.$q.loading.hide();
 				this.$q.dialog({

@@ -11,11 +11,12 @@
 			:columns="columns"
 			row-key="id"
 			:filter="search"
+			:rows-per-page-options="[0]"
 		>
 			<template v-slot:item="props">
 				<div
 					v-if="$q.screen.gt.sm"
-					style="width: 45%"
+					style="width: 48%"
 					class="q-pa-xs q-mb-lg cursor-pointer"
 				>
 					<q-card

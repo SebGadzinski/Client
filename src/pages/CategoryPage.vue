@@ -11,6 +11,7 @@
 			:columns="columns"
 			row-key="id"
 			:filter="search"
+			:rows-per-page-options="[0]"
 		>
 			<template v-slot:item="props">
 				<div
