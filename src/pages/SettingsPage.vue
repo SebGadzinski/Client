@@ -286,6 +286,17 @@
             >
         </q-toolbar>-->
 	</div>
+	<div class="flex justify-center full-width">
+		<q-badge class="text-h6 q-mr-lg q-px-sm q-my-auto">{{
+			this.$t(`freeCost`, { cost: $c(200) })
+		}}</q-badge>
+		<a
+			href="https://www.digitalocean.com/?refcode=3619b84d2ed0&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge"
+			><img
+				src="https://web-platforms.sfo2.cdn.digitaloceanspaces.com/WWW/Badge%201.svg"
+				alt="DigitalOcean Referral Badge"
+		/></a>
+	</div>
 </template>
 
 <script>

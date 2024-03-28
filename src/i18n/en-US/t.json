@@ -737,5 +737,6 @@
 	"Agreement": "Agreement",
 	"Confirm Work": "Confirm Work",
 	"Go To Meeting": "Go To Meeting",
-	"Cancel Meeting": "Cancel Meeting"
+	"Cancel Meeting": "Cancel Meeting",
+	"freeCost": "Free {cost}"
 }

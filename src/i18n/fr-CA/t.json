@@ -737,5 +737,6 @@
 	"Agreement": "Accord",
 	"Confirm Work": "Confirmer le Travail",
 	"Go To Meeting": "Aller à la réunion",
-	"Cancel Meeting": "Annuler la réunion"
+	"Cancel Meeting": "Annuler la réunion",
+	"freeCost": "Free {cost}"
 }
