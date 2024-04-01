@@ -287,9 +287,13 @@
         </q-toolbar>-->
 	</div>
 	<div class="flex justify-center full-width">
-		<q-badge class="text-h6 q-mr-lg q-px-sm q-my-auto">{{
-			this.$t(`freeCost`, { cost: $c(200) })
-		}}</q-badge>
+		<q-badge
+			:class="
+				'text-h6 q-px-sm ' +
+				($q.screen.lt.md ? 'q-my-lg' : 'q-mr-lg q-my-auto')
+			"
+			>{{ this.$t(`freeCost`, { cost: $c(200) }) }}</q-badge
+		>
 		<a
 			href="https://www.digitalocean.com/?refcode=3619b84d2ed0&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge"
 			><img

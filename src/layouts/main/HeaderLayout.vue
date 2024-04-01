@@ -11,14 +11,28 @@
 			@mouseleave="hoverState = false"
 		>
 			<q-toolbar>
-				<q-toolbar-title>
-					<router-link to="/">
+				<q-toolbar-title class="flex">
+					<router-link class="q-my-auto" to="/">
 						<img
 							src="logo.svg"
 							alt="Logo"
 							class="q-mr-md logo-image"
 						/>
 					</router-link>
+					<q-btn
+						class="q-my-auto text-body1 q-pa-sm"
+						color="accent"
+						:label="$t($q.screen.lt.md ? 'T' : 'Test Mode')"
+						@click="
+							() =>
+								$q.dialog({
+									title: $t('Test Mode'),
+									message: $t(
+										'Coming soon! Just need to test our new classes section!'
+									),
+								})
+						"
+					/>
 				</q-toolbar-title>
 
 				<!-- Menu button shown only on small screens -->

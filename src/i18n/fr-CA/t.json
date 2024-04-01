@@ -738,5 +738,7 @@
 	"Confirm Work": "Confirmer le Travail",
 	"Go To Meeting": "Aller à la réunion",
 	"Cancel Meeting": "Annuler la réunion",
-	"freeCost": "Free {cost}"
+	"freeCost": "Free {cost}",
+	"Test Mode": "Mode d'essai",
+	"Coming soon! Just need to test our new classes section!": "À venir! Il ne reste plus qu'à tester notre nouvelle section cours !"
 }
