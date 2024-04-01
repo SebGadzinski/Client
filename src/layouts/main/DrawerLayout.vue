@@ -22,13 +22,6 @@
 							class="q-mr-md logo-image"
 						/>
 					</router-link>
-					<!-- <q-btn
-						v-if="this.$q.screen.gt.sm"
-						to="/"
-						flat
-						class="route-link-container text-h4 q-py-none"
-						label="Gadzy Work"
-					/> -->
 				</q-toolbar>
 			</q-header>
 

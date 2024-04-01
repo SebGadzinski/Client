@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import { useQuasar, QSpinnerGears } from "quasar";
 import { ref } from "vue";
 import dataService from "../../services/data.service";
 import AuthService from "../../services/auth.service";

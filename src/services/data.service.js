@@ -403,8 +403,8 @@ class DataService {
 					throw new Error(customError);
 				}
 			} else {
-				if (result?.data?.message)
-					throw new Error(result?.data?.message);
+				if (!result?.data?.success)
+					throw new Error(result?.data?.message ?? "Unknown");
 			}
 
 			return result.data.data;
