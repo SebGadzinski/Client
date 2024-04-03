@@ -11,7 +11,7 @@
 			:columns="columns"
 			row-key="id"
 			:filter="search"
-			:rows-per-page-options="[0]"
+			:pagination="initialPagination"
 		>
 			<template v-slot:item="props">
 				<div
@@ -76,7 +76,6 @@
 					</q-card>
 				</div>
 			</template>
-			<template v-slot:bottom></template>
 		</q-table>
 	</q-page>
 </template>
@@ -96,12 +95,19 @@ export default {
 			search: "",
 			categorySlug: ref(""),
 			services: [],
+			initialPagination: {
+				sortBy: "name",
+				descending: false,
+				page: 1,
+				rowsPerPage: 15,
+			},
 			columns: [
 				{
 					name: "name",
 					align: "left",
 					label: "Name",
 					field: (row) => row.name,
+					sortable: true,
 				},
 				{
 					name: "slug",
@@ -234,13 +240,17 @@ export default {
 	display: block;
 	margin: 20px auto;
 	cursor: pointer;
-	overflow: hidden; /* Hide overflow to maintain clean edges */
+	overflow: hidden;
+	/* Hide overflow to maintain clean edges */
 }
+
 .media-container {
 	position: relative;
-	width: 100%; /* Full width of the card */
+	width: 100%;
+	/* Full width of the card */
 	/* Adjust the padding-top based on the aspect ratio of your video or to reduce space */
-	padding-top: 56.25%; /* 16:9 Aspect Ratio */
+	padding-top: 56.25%;
+	/* 16:9 Aspect Ratio */
 }
 
 .media-container > img {
@@ -251,6 +261,7 @@ export default {
 	height: 100%;
 	transition: opacity 1s ease-in-out;
 }
+
 .media-container > div {
 	position: absolute;
 	top: 0;
@@ -260,6 +271,7 @@ export default {
 	overflow-y: auto;
 	transition: opacity 1s ease-in-out;
 }
+
 @media (min-width: 768px) {
 	.custom-card {
 		width: 30vw;
