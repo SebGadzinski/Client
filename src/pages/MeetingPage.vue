@@ -420,9 +420,6 @@ export default {
 			const hours = this.getHoursForDate(date);
 			return hours.length > 0;
 		},
-		onHourSelect() {
-			console.log("Updated");
-		},
 	},
 };
 </script>

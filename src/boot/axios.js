@@ -76,7 +76,6 @@ api.interceptors.response.use(
 					}
 
 					// Success, can refresh token
-					console.log(rs.data);
 					const { token, refreshToken, user } = rs.data.data;
 					eventBus.dispatch("auth/refresh", token);
 
