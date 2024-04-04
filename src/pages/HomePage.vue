@@ -144,7 +144,6 @@ export default {
 	},
 	async mounted() {
 		const newCategories = await dataService.getHomePageData();
-		console.log(newCategories);
 		if (newCategories && newCategories.length > 0) {
 			for (let i = 0; i < newCategories.length; i++) {
 				newCategories[i].id = i;
