@@ -391,6 +391,13 @@ class DataService {
 		return await this.call(api.get(`data/work/receipt/${workId}`));
 	}
 
+	async getClassesPageData() {
+		return await this.call(
+			api.get("/data/getClassesPageData"),
+			"Could not get classes page data"
+		);
+	}
+
 	async call(func, customError = null) {
 		try {
 			const result = await func;

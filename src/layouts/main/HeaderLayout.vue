@@ -40,33 +40,41 @@
 					<!-- Menu content -->
 					<q-menu fit>
 						<q-list>
-							<q-item v-if="!user" to="/auth/login">
+							<template v-if="user">
+								<q-item to="/work"
+									><q-item-section>{{
+										$t("Work")
+									}}</q-item-section></q-item
+								>
+								<q-item to="/classes"
+									><q-item-section>{{
+										$t("Classes")
+									}}</q-item-section></q-item
+								>
+								<template v-if="user?.roles?.includes('admin')">
+									<q-item to="/work/template"
+										><q-item-section>{{
+											$t("Templates")
+										}}</q-item-section></q-item
+									>
+									<q-item to="/admin/users"
+										><q-item-section>{{
+											$t("Users")
+										}}</q-item-section></q-item
+									>
+									<q-item to="admin/vmStatusReport"
+										><q-item-section>{{
+											$t("VM Status Report")
+										}}</q-item-section></q-item
+									>
+								</template>
+							</template>
+							<q-item v-else to="/auth/login">
 								<q-item-section>{{
 									$t("Login")
 								}}</q-item-section></q-item
 							>
-							<q-item v-if="user" to="/work"
-								><q-item-section>{{
-									$t("Work")
-								}}</q-item-section></q-item
-							>
-							<template v-if="user?.roles?.includes('admin')">
-								<q-item to="/work/template"
-									><q-item-section>{{
-										$t("Templates")
-									}}</q-item-section></q-item
-								>
-								<q-item to="/admin/users"
-									><q-item-section>{{
-										$t("Users")
-									}}</q-item-section></q-item
-								>
-								<q-item to="admin/vmStatusReport"
-									><q-item-section>{{
-										$t("VM Status Report")
-									}}</q-item-section></q-item
-								>
-							</template>
+
 							<q-item to="/settings"
 								><q-item-section>{{
 									$t("Settings")
@@ -79,7 +87,8 @@
 				<!-- Buttons shown on larger screens -->
 				<div v-if="$q.screen.gt.sm">
 					<template v-if="user">
-						<q-btn to="/work" flat :label="this.$t('Work')"></q-btn>
+						<q-btn to="/work" flat :label="this.$t('Work')" />
+						<q-btn to="/classes" flat :label="this.$t('Classes')" />
 						<template v-if="user.roles.includes('admin')">
 							<q-btn
 								to="/work/template"

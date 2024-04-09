@@ -75,6 +75,10 @@ const layout = {
 			path: "work/pay/confirm/:paymentHistoryId",
 			component: () => import("pages/work/WorkPaymentPage.vue"),
 		},
+		{
+			path: "classes",
+			component: () => import("pages/classes/ClassesIndexPage.vue"),
+		},
 		{ path: "settings", component: () => import("pages/SettingsPage.vue") },
 		{
 			path: "admin/users",
