@@ -9,7 +9,6 @@
 			:loading="loading"
 			class="q-mt-lg"
 			:columns="columns"
-			row-key="id"
 			:filter="search"
 			:pagination="initialPagination"
 		>
@@ -24,14 +23,12 @@
 						<div class="media-container">
 							<img v-lazy="props.row.thumbnailImg" />
 						</div>
-						<q-card-section v-if="props.row?.joinUrl">
+						<q-card-section>
 							<q-btn
 								class="text-h6 full-width"
 								color="accent"
-								:href="`${props.row.joinUrl}`"
-								target="_blank"
+								@click="joinClass(props.row?.workId)"
 								:label="$t(`Join!`)"
-								@click.stop
 							/>
 						</q-card-section>
 						<q-card-section v-if="props.row?.nextClass">
@@ -154,17 +151,17 @@ export default {
 			}
 		}
 		this.loading = false;
-		// this.$nextTick(() => {
-		// 	// Access DOM elements here
-		// 	for (let i = 0; i < this.classes.length; i++) {
-		// 		const tiltElement = document.getElementById(`custom-card-${i}`);
-		// 		VanillaTilt.init(tiltElement, {
-		// 			max: 5,
-		// 			glare: true,
-		// 			"max-glare": 1,
-		// 		});
-		// 	}
-		// });
+		this.$nextTick(() => {
+			// Access DOM elements here
+			for (let i = 0; i < this.classes.length; i++) {
+				const tiltElement = document.getElementById(`custom-card-${i}`);
+				VanillaTilt.init(tiltElement, {
+					max: 5,
+					glare: true,
+					"max-glare": 0.15,
+				});
+			}
+		});
 	},
 	unmounted() {},
 	async updated() {},
@@ -173,6 +170,32 @@ export default {
 		$d(date) {
 			console.log("Attemptign to convert");
 			return DateService.convertISOLocalDisplay(date);
+		},
+		joinClass(workId) {
+			try {
+				this.$q
+					.dialog({
+						title: this.$t("Join Meeting?"),
+						message: this.$t(
+							"Make sure you are in a respectable setting for the area."
+						),
+					})
+					.onOk(async () => {
+						const data = await dataService.joinClass(workId);
+						if (data.link) {
+							window.location = data.link;
+						} else {
+							this.$q.notify({
+								color: "negative",
+								position: "top",
+								message: this.$t("Issue Joining..."),
+								icon: "report_problem",
+							});
+						}
+					});
+			} catch (err) {
+				console.error(err);
+			}
 		},
 	},
 };
