@@ -23,60 +23,147 @@
 						<div class="media-container">
 							<img v-lazy="props.row.thumbnailImg" />
 						</div>
-						<q-card-section>
+						<q-card-section
+							v-if="props.row?.canJoin"
+							class="q-pb-none"
+						>
 							<q-btn
 								class="text-h6 full-width"
 								color="accent"
-								@click="joinClass(props.row?.workId)"
+								@click="
+									joinClass(
+										props.row?.classType,
+										props.row?.workId
+									)
+								"
 								:label="$t(`Join!`)"
 							/>
 						</q-card-section>
-						<q-card-section v-if="props.row?.nextClass">
+						<q-card-section
+							class="text-center q-pb-none"
+							v-else-if="!props.row?.nextClass"
+						>
+							<q-badge
+								class="text-h6 q-px-lg q-my-none"
+								:label="$t('Custom Meetings')"
+								@click="
+									$q.dialog({
+										title: 'Your instructor will send you meeting links',
+									})
+								"
+							/>
+						</q-card-section>
+						<q-card-section>
 							<q-list bordered separator>
-								<q-item v-if="$q.screen.gt.sm">
-									<q-item-section avatar>
-										<q-badge class="text-h6">
-											<q-icon name="timer" />
-											<span class="q-mx-sm">{{
-												$t(`Next Class`)
-											}}</span>
-										</q-badge>
-									</q-item-section>
-									<q-space />
-									<q-item-section class="text-h6" avatar>
-										{{ $d(props.row?.nextClass) }}
-									</q-item-section>
-								</q-item>
-								<q-item v-else class="column">
-									<q-item-section avatar>
-										<q-badge class="text-h6 q-mx-auto">
-											<q-icon name="timer" />
-											<span class="q-mx-sm">{{
-												$t(`Next Class`)
-											}}</span>
-										</q-badge>
-									</q-item-section>
-									<q-space />
-									<q-item-section
-										class="text-h6 q-mx-auto q-mt-sm"
-										avatar
+								<template v-if="$q.screen.gt.sm">
+									<q-item v-if="props.row?.nextClass">
+										<q-item-section avatar>
+											<q-badge class="text-h6">
+												<q-icon name="timer" />
+												<span class="q-mx-sm">{{
+													$t(`Next Class`)
+												}}</span>
+											</q-badge>
+										</q-item-section>
+										<q-space />
+										<q-item-section class="text-h6" avatar>
+											{{ $d(props.row?.nextClass) }}
+										</q-item-section>
+									</q-item>
+									<q-item
+										v-if="
+											props.row?.instructorInfo?.length >
+											0
+										"
 									>
-										{{ $d(props.row?.nextClass) }}
-									</q-item-section>
-								</q-item>
+										<q-item-section avatar>
+											<q-badge class="text-h6 q-mx-auto">
+												<q-icon name="person" />
+												<span class="q-mx-sm">{{
+													props.row.instructorInfo
+														.length > 1
+														? $t(`Instructors`)
+														: $t(`Instructor`)
+												}}</span>
+											</q-badge>
+										</q-item-section>
+										<q-item-section
+											v-for="(instructor, index) in props
+												.row.instructorInfo"
+											:key="index"
+											class="text-h6 q-ml-auto q-mt-sm"
+											avatar
+										>
+											<div class="text-h6">
+												{{ instructor.fullName }}
+											</div>
+											<div class="text-caption">
+												{{ instructor.email }}
+											</div>
+										</q-item-section>
+									</q-item>
+								</template>
+								<template v-else>
+									<q-item
+										v-if="props.row?.nextClass"
+										class="column"
+									>
+										<q-item-section>
+											<q-badge
+												class="text-h6 flex justify-center full-width"
+											>
+												<q-icon name="timer" />
+												<span class="q-mx-sm">{{
+													$t(`Next Class`)
+												}}</span>
+											</q-badge>
+										</q-item-section>
+										<q-space />
+										<q-item-section
+											class="text-h6 q-mx-auto q-mt-sm"
+											avatar
+										>
+											{{ $d(props.row?.nextClass) }}
+										</q-item-section>
+									</q-item>
+									<q-item
+										v-if="
+											props.row?.instructorInfo?.length >
+											0
+										"
+										class="column"
+									>
+										<q-item-section>
+											<q-badge
+												class="text-h6 flex justify-center full-width"
+											>
+												<q-icon name="person" />
+												<span class="q-mx-sm">{{
+													props.row.instructorInfo
+														.length > 1
+														? $t(`Instructors`)
+														: $t(`Instructor`)
+												}}</span>
+											</q-badge>
+										</q-item-section>
+										<q-item-section
+											v-for="(instructor, index) in props
+												.row.instructorInfo"
+											:key="index"
+											class="q-mx-auto q-mt-sm"
+											avatar
+										>
+											<div class="text-h6 q-mx-auto">
+												{{ instructor.fullName }}
+											</div>
+											<div class="text-caption q-mx-auto">
+												{{ instructor.email }}
+											</div>
+										</q-item-section>
+									</q-item>
+								</template>
 							</q-list>
 						</q-card-section>
-						<!-- <q-card-section>
-							<q-badge
-								class="text-h6 text-center"
-								:label="$t('Instructors')"
-							/>
-							<div class="text-h6">
-								{{ $t(props.row.instructors) }}
-							</div>
-						</q-card-section>
-
-						 -->
 					</q-card>
 				</div>
 			</template>
@@ -105,33 +192,15 @@ export default {
 				page: 1,
 				rowsPerPage: 15,
 			},
-			// columns: [
-			// 	{
-			// 		name: "name",
-			// 		align: "left",
-			// 		label: "Name",
-			// 		field: (row) => row.name,
-			// 		sortable: true,
-			// 	},
-			// 	{
-			// 		name: "instructors",
-			// 		align: "left",
-			// 		label: "Instrcutors",
-			// 		field: (row) => row.instructors,
-			// 	},
-			// 	{
-			// 		name: "nextClass",
-			// 		align: "left",
-			// 		label: "Next Class",
-			// 		field: (row) => row.description,
-			// 	},
-			// 	{
-			// 		name: "instructors",
-			// 		align: "left",
-			// 		label: "Instrcutors",
-			// 		field: (row) => row.instructors,
-			// 	},
-			// ],
+			columns: [
+				{
+					name: "name",
+					align: "left",
+					label: "Name",
+					field: (row) => row.name,
+					sortable: true,
+				},
+			],
 			route: useRoute(),
 			$q: useQuasar(),
 			expandVideo: false,
@@ -168,29 +237,36 @@ export default {
 	computed: {},
 	methods: {
 		$d(date) {
-			console.log("Attemptign to convert");
-			return DateService.convertISOLocalDisplay(date);
+			return DateService.convertISOLocalPretty(date);
 		},
-		joinClass(workId) {
+		joinClass(classType, workId) {
 			try {
+				let title = "Join Class?";
+				let body = "Check your email for a password";
+				console.log(classType);
+				if (classType === "Single Session") {
+					title = "Use Single Session?";
+					body = "This will put your work item in 'In Use'. " + body;
+				}
 				this.$q
 					.dialog({
-						title: this.$t("Join Meeting?"),
-						message: this.$t(
-							"Make sure you are in a respectable setting for the area."
-						),
+						title: this.$t(title),
+						message: this.$t(body),
+						ok: {
+							label: this.$t("Join"),
+							color: "accent",
+						},
+						cancel: {
+							label: this.$t("Cancel"),
+							color: "primary",
+						},
 					})
 					.onOk(async () => {
-						const data = await dataService.joinClass(workId);
-						if (data.link) {
-							window.location = data.link;
-						} else {
-							this.$q.notify({
-								color: "negative",
-								position: "top",
-								message: this.$t("Issue Joining..."),
-								icon: "report_problem",
-							});
+						try {
+							const data = await dataService.joinClass(workId);
+							window.open(data.meetingLink, "_blank");
+						} catch (err) {
+							this.$q.dialog({ title: this.$t("Issue Joining") });
 						}
 					});
 			} catch (err) {

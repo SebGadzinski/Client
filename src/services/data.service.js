@@ -399,7 +399,7 @@ class DataService {
 	}
 
 	async joinClass(workId) {
-		return await this.call(api.post(`data/classes/join/${workId}`));
+		return await this.call(api.get(`data/classes/join/${workId}`));
 	}
 
 	async call(func, customError = null) {
