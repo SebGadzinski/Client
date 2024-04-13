@@ -76,8 +76,8 @@ const layout = {
 			component: () => import("pages/work/WorkPaymentPage.vue"),
 		},
 		{
-			path: "classes",
-			component: () => import("pages/classes/ClassesIndexPage.vue"),
+			path: "my-classes",
+			component: () => import("pages/my-classes/MyClassesIndexPage.vue"),
 		},
 		{ path: "settings", component: () => import("pages/SettingsPage.vue") },
 		{

@@ -46,9 +46,9 @@
 										$t("Work")
 									}}</q-item-section></q-item
 								>
-								<q-item to="/classes"
+								<q-item to="/my-classes"
 									><q-item-section>{{
-										$t("Classes")
+										$t("My Classes")
 									}}</q-item-section></q-item
 								>
 								<template v-if="user?.roles?.includes('admin')">
@@ -88,7 +88,11 @@
 				<div v-if="$q.screen.gt.sm">
 					<template v-if="user">
 						<q-btn to="/work" flat :label="this.$t('Work')" />
-						<q-btn to="/classes" flat :label="this.$t('Classes')" />
+						<q-btn
+							to="/my-classes"
+							flat
+							:label="this.$t('My Classes')"
+						/>
 						<template v-if="user.roles.includes('admin')">
 							<q-btn
 								to="/work/template"

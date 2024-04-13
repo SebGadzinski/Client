@@ -180,7 +180,7 @@ import VanillaTilt from "vanilla-tilt";
 import { ref } from "vue";
 
 export default {
-	name: "ClassesIndexPage",
+	name: "MyClassesIndexPage",
 	data() {
 		return {
 			loading: true,
@@ -246,7 +246,9 @@ export default {
 				console.log(classType);
 				if (classType === "Single Session") {
 					title = "Use Single Session?";
-					body = "This will put your work item in 'In Use'. " + body;
+					body =
+						"This will put your work item status to 'In Use'. " +
+						body;
 				}
 				this.$q
 					.dialog({
