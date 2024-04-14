@@ -185,7 +185,7 @@ export default {
 									.focus();
 							})
 							.onDismiss(() => {
-								this.$router.push("/work");
+								this.advance();
 							});
 					} else {
 						this.$q
@@ -196,7 +196,7 @@ export default {
 								),
 							})
 							.onDismiss(() => {
-								this.$router.push("/work");
+								this.advance();
 							});
 					}
 				}
@@ -224,7 +224,7 @@ export default {
 								),
 							})
 							.onDismiss(() => {
-								this.$router.push("/work");
+								this.advance();
 							});
 					}
 				}
@@ -251,6 +251,11 @@ export default {
 				this.$q.loading.hide();
 				this.loading = false;
 			}
+		},
+		advance() {
+			const path =
+				this.work.category !== "Classes" ? "/work" : "/my-classes";
+			this.$router.push(path);
 		},
 	},
 };

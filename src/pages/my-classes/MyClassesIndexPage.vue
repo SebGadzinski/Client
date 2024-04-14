@@ -15,10 +15,45 @@
 			<template v-slot:item="props">
 				<div class="q-pa-xs q-mb-lg cursor-pointer" style="width: 60vh">
 					<q-card :id="`custom-card-${props.row.id}`" flat bordered>
-						<q-card-section>
-							<div class="text-h6 text-center">
-								{{ $t(props.row.name) }}
+						<q-card-section
+							style="
+								height: fit-content;
+								padding: 5px 0px !important;
+							"
+							class="text-center"
+						>
+							<div
+								style="
+									width: 100%;
+									position: relative;
+									height: fit-content;
+								"
+							>
+								<h6
+									class="q-my-none q-mx-auto"
+									style="width: 80%"
+								>
+									{{ $t(props.row.name) }}
+								</h6>
+								<q-btn
+									flat
+									icon="settings"
+									@click="classSettings(props.row.id)"
+									style="
+										position: absolute;
+										right: 0;
+										top: 50%;
+										transform: translateY(-50%);
+									"
+								></q-btn>
 							</div>
+
+							<q-badge
+								v-if="props.row?.classType === 'Single Session'"
+								class="text-caption q-mx-auto"
+								color="primary"
+								:label="$t('Single Session')"
+							/>
 						</q-card-section>
 						<div class="media-container">
 							<img v-lazy="props.row.thumbnailImg" />
@@ -169,6 +204,37 @@
 			</template>
 		</q-table>
 	</q-page>
+	<q-dialog v-model="classCard.visible">
+		<q-card class="text-center">
+			<q-card-section class="row q-pb-none">
+				<div class="text-h6 q-mx-auto">{{ $t(classCard.title) }}</div>
+			</q-card-section>
+			<!-- Remove? -->
+			<q-card-section>
+				<q-btn
+					class="text-h6"
+					color="negative"
+					:label="$t('Drop Class')"
+					@click="dropClass(classCard.workId)"
+				/>
+			</q-card-section>
+		</q-card>
+	</q-dialog>
+	<q-dialog v-model="inCancellation">
+		<q-card class="text-center">
+			<q-card-section class="row q-pb-none">
+				<div class="text-h6 q-mx-auto">{{ $t("Current ") }}</div>
+			</q-card-section>
+			<q-card-section>
+				<q-btn
+					class="text-h6"
+					color="negative"
+					:label="$t('Drop Class')"
+					@click="dropClass(classCard.workId)"
+				/>
+			</q-card-section>
+		</q-card>
+	</q-dialog>
 </template>
 
 <script>
@@ -177,7 +243,6 @@ import DateService from "../../services/date.service";
 import { useQuasar } from "quasar";
 import { useRoute } from "vue-router";
 import VanillaTilt from "vanilla-tilt";
-import { ref } from "vue";
 
 export default {
 	name: "MyClassesIndexPage",
@@ -203,9 +268,11 @@ export default {
 			],
 			route: useRoute(),
 			$q: useQuasar(),
-			expandVideo: false,
-			watchMeImg: null,
-			watchMeLink: null,
+			classCard: {
+				visible: false,
+				title: "",
+				workId: "",
+			},
 		};
 	},
 	async mounted() {
@@ -238,6 +305,30 @@ export default {
 	methods: {
 		$d(date) {
 			return DateService.convertISOLocalPretty(date);
+		},
+		classSettings(rowId) {
+			this.classCard.visible = true;
+			this.classCard.title = this.classes[rowId].name;
+			this.classCard.workId = this.classes[rowId].workId;
+		},
+		async dropClass(workId) {
+			try {
+				await dataService.dropClass(workId);
+				this.$q
+					.dialog({ title: this.$t("Class Dropped") })
+					.onDismiss(() => {
+						location.reload();
+					});
+			} catch (err) {
+				if (
+					err?.response?.data?.message ===
+					"Cancellation Process Required"
+				) {
+					this.$router.push(`work/cancel/${workId}`);
+				} else {
+					this.$q.dialog({ title: this.$t("Issue Joining") });
+				}
+			}
 		},
 		joinClass(classType, workId) {
 			try {

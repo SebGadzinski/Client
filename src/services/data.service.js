@@ -402,6 +402,10 @@ class DataService {
 		return await this.call(api.get(`data/classes/join/${workId}`));
 	}
 
+	async dropClass(workId) {
+		return await this.call(api.post(`data/classes/drop/${workId}`));
+	}
+
 	async call(func, customError = null) {
 		try {
 			const result = await func;
