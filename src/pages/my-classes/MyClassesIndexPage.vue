@@ -311,13 +311,30 @@ export default {
 			this.classCard.title = this.classes[rowId].name;
 			this.classCard.workId = this.classes[rowId].workId;
 		},
-		async dropClass(workId) {
+		dropClass(workId) {
 			try {
-				await dataService.dropClass(workId);
 				this.$q
-					.dialog({ title: this.$t("Class Dropped") })
-					.onDismiss(() => {
-						location.reload();
+					.dialog({
+						title: this.$t("Drop Class?"),
+						message: this.$t(
+							`Drop ${this.classCard.title}? You will have to repurchase to get this back.`
+						),
+						ok: {
+							label: this.$t("Drop"),
+							color: "negative",
+						},
+						cancel: {
+							label: this.$t("Cancel"),
+							color: "primary",
+						},
+					})
+					.onOk(async () => {
+						await dataService.dropClass(workId);
+						this.$q
+							.dialog({ title: this.$t("Class Dropped") })
+							.onDismiss(() => {
+								location.reload();
+							});
 					});
 			} catch (err) {
 				if (

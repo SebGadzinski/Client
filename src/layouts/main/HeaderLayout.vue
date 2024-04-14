@@ -43,7 +43,7 @@
 							<template v-if="user">
 								<q-item to="/work"
 									><q-item-section>{{
-										$t("Work")
+										$t("Work History")
 									}}</q-item-section></q-item
 								>
 								<q-item to="/my-classes"
@@ -87,7 +87,11 @@
 				<!-- Buttons shown on larger screens -->
 				<div v-if="$q.screen.gt.sm">
 					<template v-if="user">
-						<q-btn to="/work" flat :label="this.$t('Work')" />
+						<q-btn
+							to="/work"
+							flat
+							:label="this.$t('Work History')"
+						/>
 						<q-btn
 							to="/my-classes"
 							flat
