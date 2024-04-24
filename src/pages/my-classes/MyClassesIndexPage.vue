@@ -91,6 +91,42 @@
 						<q-card-section>
 							<q-list bordered separator>
 								<template v-if="$q.screen.gt.sm">
+									<q-item v-if="props.row?.canJoin">
+										<q-item-section avatar>
+											<q-badge class="text-h6">
+												<q-icon name="timer" />
+												<span class="q-mx-sm">{{
+													$t(`Zoom`)
+												}}</span>
+											</q-badge>
+										</q-item-section>
+										<q-space />
+										<q-item-section
+											v-if="props.row?.showZoomDetails"
+										>
+											<div class="text-body1">
+												{{ $t("ID: ") }}
+												<a>{{
+													props.row?.meetingId
+												}}</a>
+											</div>
+											<div class="text-body1">
+												{{ $t("PW: ") }}
+												{{ props.row?.meetingPassword }}
+											</div>
+										</q-item-section>
+										<q-item-section class="" v-else>
+											<q-btn
+												color="primary"
+												:label="$t('Show ID & PW')"
+												@click="
+													getZoomDetails(
+														props.row?.id
+													)
+												"
+											/>
+										</q-item-section>
+									</q-item>
 									<q-item v-if="props.row?.nextClass">
 										<q-item-section avatar>
 											<q-badge class="text-h6">
@@ -139,6 +175,51 @@
 									</q-item>
 								</template>
 								<template v-else>
+									<q-item
+										v-if="props.row?.canJoin"
+										class="column"
+									>
+										<q-item-section>
+											<q-badge
+												class="text-h6 flex justify-center full-width"
+											>
+												<q-icon name="info" />
+												<span class="q-mx-sm">{{
+													$t(`Zoom`)
+												}}</span>
+											</q-badge>
+										</q-item-section>
+										<q-space />
+										<q-item-section
+											v-if="props.row?.showZoomDetails"
+											class="q-mx-auto q-mt-sm"
+										>
+											<div class="text-body1">
+												{{ $t("ID: ") }}
+												<a>{{
+													props.row?.meetingId
+												}}</a>
+											</div>
+											<div class="text-body1">
+												{{ $t("PW: ") }}
+												{{ props.row?.meetingPassword }}
+											</div>
+										</q-item-section>
+										<q-item-section
+											class="q-mx-auto q-mt-sm"
+											v-else
+										>
+											<q-btn
+												color="primary"
+												:label="$t('Show ID & PW')"
+												@click="
+													getZoomDetails(
+														props.row?.id
+													)
+												"
+											/>
+										</q-item-section>
+									</q-item>
 									<q-item
 										v-if="props.row?.nextClass"
 										class="column"
@@ -252,8 +333,8 @@ export default {
 			search: "",
 			classes: [],
 			initialPagination: {
-				sortBy: "name",
-				descending: false,
+				sortBy: "canJoin",
+				descending: true,
 				page: 1,
 				rowsPerPage: 15,
 			},
@@ -263,6 +344,13 @@ export default {
 					align: "left",
 					label: "Name",
 					field: (row) => row.name,
+					sortable: true,
+				},
+				{
+					name: "canJoin",
+					align: "left",
+					label: "Can Join",
+					field: (row) => row.canJoin,
 					sortable: true,
 				},
 			],
@@ -278,11 +366,12 @@ export default {
 	async mounted() {
 		this.loading = true;
 		const data = await dataService.getClassesPageData();
-		console.log(data);
 		const newClasses = data?.classes;
 		if (newClasses && newClasses.length > 0) {
 			for (let i = 0; i < newClasses.length; i++) {
 				newClasses[i].id = i;
+				newClasses[i].meetingId = null;
+				newClasses[i].meetingPassword = null;
 				this.classes.push(newClasses[i]);
 			}
 		}
@@ -310,6 +399,21 @@ export default {
 			this.classCard.visible = true;
 			this.classCard.title = this.classes[rowId].name;
 			this.classCard.workId = this.classes[rowId].workId;
+		},
+		async getZoomDetails(rowId) {
+			try {
+				const data = await dataService.joinClass(
+					this.classes[rowId].workId
+				);
+				this.classes[rowId].meetingId = data.meetingId;
+				this.classes[rowId].meetingPassword = data.meetingPassword;
+				this.classes[rowId].showZoomDetails = true;
+			} catch (err) {
+				this.$q.dialog({
+					title: this.$t("Issue Getting Details"),
+					message: err.toString(),
+				});
+			}
 		},
 		dropClass(workId) {
 			try {
@@ -351,7 +455,6 @@ export default {
 			try {
 				let title = "Join Class?";
 				let body = "Check your email for a password";
-				console.log(classType);
 				if (classType === "Single Session") {
 					title = "Use Single Session?";
 					body =
