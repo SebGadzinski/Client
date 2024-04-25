@@ -70,7 +70,7 @@ api.interceptors.response.use(
 					const rs = await api.post("/auth/refresh", {
 						token: TokenService.getLocalRefreshToken(),
 					});
-					if (!rs || !rs.data.success) {
+					if (!rs || !rs?.data?.success) {
 						AuthService.logout();
 						return;
 					}

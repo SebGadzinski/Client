@@ -409,7 +409,7 @@ class DataService {
 	async call(func, customError = null) {
 		try {
 			const result = await func;
-			if (customError) {
+			if (customError && result) {
 				if (result.data.success) {
 					return result.data.data;
 				} else {
@@ -418,8 +418,9 @@ class DataService {
 					throw new Error(customError);
 				}
 			} else {
-				if (!result?.data?.success)
+				if (!result?.data?.success) {
 					throw new Error(result?.data?.message ?? "Unknown");
+				}
 			}
 
 			return result.data.data;

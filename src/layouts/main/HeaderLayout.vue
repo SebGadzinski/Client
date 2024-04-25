@@ -27,9 +27,10 @@
 							() =>
 								$q.dialog({
 									title: $t('Test Mode'),
-									message: $t(
-										'Coming soon! Just need to test our new classes section!'
-									),
+									message:
+										$t('Card') +
+										': 4242 4242 4242 4242. ' +
+										$t('Other data is anything.'),
 								})
 						"
 					/>

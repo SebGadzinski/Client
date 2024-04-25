@@ -36,7 +36,12 @@ export default route(function (/* { store, ssrContext } */) {
 	});
 
 	Router.beforeEach((to, from, next) => {
-		const nonPublicPages = ["/profile", "/confirmation", "/work"];
+		const nonPublicPages = [
+			"/profile",
+			"/confirmation",
+			"/work",
+			"/my-classes",
+		];
 		const adminPages = ["admin", "/profile/user/"];
 		const publicPages = ["/work/pay/confirm", "/work/template/"];
 		const isAdminPage = adminPages.some((x) => to.path.includes(x));
