@@ -94,7 +94,7 @@
 									<q-item v-if="props.row?.canJoin">
 										<q-item-section avatar>
 											<q-badge class="text-h6">
-												<q-icon name="timer" />
+												<q-icon name="videocam" />
 												<span class="q-mx-sm">{{
 													$t(`Zoom`)
 												}}</span>
@@ -183,7 +183,7 @@
 											<q-badge
 												class="text-h6 flex justify-center full-width"
 											>
-												<q-icon name="info" />
+												<q-icon name="videocam" />
 												<span class="q-mx-sm">{{
 													$t(`Zoom`)
 												}}</span>
@@ -333,24 +333,27 @@ export default {
 			search: "",
 			classes: [],
 			initialPagination: {
-				sortBy: "canJoin",
-				descending: true,
+				sortBy: "customSort",
+				descending: false,
 				page: 1,
 				rowsPerPage: 15,
 			},
 			columns: [
 				{
 					name: "name",
-					align: "left",
-					label: "Name",
 					field: (row) => row.name,
-					sortable: true,
 				},
 				{
-					name: "canJoin",
-					align: "left",
-					label: "Can Join",
-					field: (row) => row.canJoin,
+					name: "customSort",
+					field: (row) => {
+						if (row?.canJoin) {
+							return `a_${row.name}`;
+						} else if (row?.nextClass) {
+							return `b_${row.nextClass}`;
+						} else {
+							return `c_${row.name}`;
+						}
+					},
 					sortable: true,
 				},
 			],
@@ -377,8 +380,11 @@ export default {
 		}
 		this.loading = false;
 		this.$nextTick(() => {
-			// Access DOM elements here
 			for (let i = 0; i < this.classes.length; i++) {
+				let name = this.route?.query?.name;
+				if (name) {
+					this.search = name;
+				}
 				const tiltElement = document.getElementById(`custom-card-${i}`);
 				VanillaTilt.init(tiltElement, {
 					max: 5,

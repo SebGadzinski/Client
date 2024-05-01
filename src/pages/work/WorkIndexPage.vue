@@ -192,7 +192,9 @@
 
 									<q-item-section
 										>${{
-											$c(props.row.subscription.payment)
+											$c_format(
+												props.row.subscription.payment
+											)
 										}}
 										{{
 											this.$t(
@@ -310,7 +312,7 @@ export default {
 					name: "initialPayment",
 					align: "left",
 					label: "Initial $",
-					field: (row) => this.$c(row.initialPayment),
+					field: (row) => this.$c_format(row.initialPayment),
 					sortable: true,
 					sort: (a, b) => this.sortCurrency(a, b),
 				},
@@ -330,8 +332,8 @@ export default {
 					label: "Subscription $",
 					field: (row) =>
 						!row?.subscription?.isEnabled
-							? this.$c(0)
-							: this.$c(row?.subscription?.payment),
+							? this.$c_format(0)
+							: this.$c_format(row?.subscription?.payment),
 					sortable: true,
 					sort: (a, b) => this.sortCurrency(a, b),
 				},
@@ -339,7 +341,7 @@ export default {
 					name: "cancellationPayment",
 					align: "left",
 					label: "Cancellation $",
-					field: (row) => this.$c(row.cancellationPayment),
+					field: (row) => this.$c_format(row.cancellationPayment),
 					sortable: true,
 					sort: (a, b) => this.sortCurrency(a, b),
 				},

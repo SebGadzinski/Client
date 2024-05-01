@@ -239,7 +239,7 @@
 								>{{ props.row.description }}</q-td
 							>
 							<q-td key="payment" :props="props">{{
-								$c(props.row.payment)
+								props.row.payment
 							}}</q-td>
 							<q-td key="status" :props="props">{{
 								props.row.status
@@ -298,7 +298,7 @@
 													$t("$ Payment")
 												}}</q-item-label>
 												<div class="readonly-text">
-													{{ $c(props.row.payment) }}
+													{{ props.row.payment }}
 												</div>
 											</q-item-section>
 										</q-item>
@@ -344,7 +344,7 @@
 				<div class="bottom-section-div">
 					<q-item-label caption>{{ $t("$ Payment") }}</q-item-label>
 					<div class="readonly-text">
-						{{ $c(work.payment.subscription.payment) }}
+						{{ $c_format(work.payment.subscription.payment) }}
 					</div>
 				</div>
 				<div class="bottom-section-div">
@@ -476,7 +476,7 @@
 								</q-item-section>
 								<q-item-section>
 									<span class="text-body2">
-										${{ $c(payment.cost) }}
+										${{ $c_format(payment.cost) }}
 									</span>
 								</q-item-section>
 							</q-item>
@@ -486,9 +486,7 @@
 								</q-item-section>
 								<q-item-section>
 									<span class="text-body2">
-										************{{
-											$c(payment.last4Digits)
-										}}
+										************{{ payment.last4Digits }}
 									</span>
 								</q-item-section>
 							</q-item>
@@ -518,7 +516,7 @@
 				<div class="bottom-section-div">
 					<q-item-label caption>{{ $t("$ Payment") }}</q-item-label>
 					<div class="readonly-text">
-						{{ $c(work.payment.initialPayment) }}
+						{{ $c_format(work.payment.initialPayment) }}
 					</div>
 				</div>
 				<div class="bottom-section-div">
@@ -539,7 +537,7 @@
 				<div class="bottom-section-div">
 					<q-item-label caption>{{ $t("$ Payment") }}</q-item-label>
 					<div class="readonly-text">
-						{{ $c(work.payment.cancellationPayment) }}
+						{{ $c_format(work.payment.cancellationPayment) }}
 					</div>
 				</div>
 				<div class="bottom-section-div">
@@ -680,7 +678,7 @@ export default {
 					name: "payment",
 					align: "left",
 					label: "$ Payment",
-					field: (row) => this.$c(row.payment),
+					field: (row) => this.$c_format(row.payment),
 					sortable: true,
 				},
 				{
@@ -845,8 +843,8 @@ export default {
 				message: this.$t("Adding Card To Subscription..."),
 			});
 			// Create a token from the card details
-			let failResult = await this.stripe.createToken(this.card);
-			if (failResult.error) {
+			let result = await this.stripe.createToken(this.card);
+			if (result.error) {
 				// Inform the user if there was an error
 				this.$q.notify({
 					type: "negative",
@@ -857,7 +855,7 @@ export default {
 			}
 
 			// Retrieve the token
-			const cardToken = failResult.token.id;
+			const cardToken = result.token.id;
 
 			try {
 				await dataService.addCardToSubscription(
