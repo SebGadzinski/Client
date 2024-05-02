@@ -483,9 +483,53 @@ export default {
 					.onOk(async () => {
 						try {
 							const data = await dataService.joinClass(workId);
-							window.open(data.meetingLink, "_blank");
+							const newWindow = window.open(
+								data.meetingLink,
+								"_blank"
+							);
+
+							// Check if the new window is blocked and inform the user if so.
+							if (
+								!newWindow ||
+								newWindow.closed ||
+								typeof newWindow.closed === "undefined"
+							) {
+								// Inform the user that the popup was blocked, or provide an alternative way.
+								this.$q.notify({
+									type: "negative",
+									message: this.$t(
+										"Unable to open the link. Please disable your popup blocker and try again."
+									),
+								});
+								this.$q
+									.dialog({
+										title: this.$t("Join Again"),
+										message: this.$t(
+											"Please select ok to rejoin."
+										),
+										ok: {
+											label: this.$t("Ok"),
+											color: "accent",
+										},
+									})
+									.onOk(() => {
+										window
+											.open(data.meetingLink, "_blank")
+											.focus();
+									});
+							} else {
+								this.$q.dialog({
+									title: this.$t("Joined Class"),
+									message: this.$t(
+										"You have joined the class."
+									),
+								});
+							}
 						} catch (err) {
-							this.$q.dialog({ title: this.$t("Issue Joining") });
+							this.$q.dialog({
+								title: this.$t("Issue Joining"),
+								message: err.toString(),
+							});
 						}
 					});
 			} catch (err) {
