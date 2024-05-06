@@ -54,6 +54,15 @@
 								color="primary"
 								:label="$t('Single Session')"
 							/>
+							<q-badge
+								v-if="
+									props.row?.classType === 'Single Session' &&
+									props.row?.workStatus === 'In Use'
+								"
+								class="text-caption q-ml-sm"
+								color="positive"
+								:label="$t('Using')"
+							/>
 						</q-card-section>
 						<div class="media-container">
 							<img v-lazy="props.row.thumbnailImg" />
