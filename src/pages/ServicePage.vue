@@ -29,7 +29,7 @@
 						<div class="col-8">
 							<img class="carousel-image" v-lazy="slide.image" />
 						</div>
-						<div class="col-4 flex flex-center">
+						<div class="col-4 flex flex-center q-px-lg">
 							<h4>{{ $t(slide.text) }}</h4>
 						</div>
 					</div>
