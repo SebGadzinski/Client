@@ -66,6 +66,12 @@ class DataService {
 			"Could not get home page data"
 		);
 	}
+	async getHomePageDataV2() {
+		return await this.call(
+			api.get("/data/getHomePageDataV2"),
+			"Could not get home page data"
+		);
+	}
 
 	async getCategoryPageData(categorySlug) {
 		return await this.call(

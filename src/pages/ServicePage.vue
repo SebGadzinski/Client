@@ -44,7 +44,7 @@
 				</q-carousel-slide>
 			</q-carousel>
 		</div>
-		<div>
+		<div class="details-div">
 			<div
 				v-for="(detail, index) in service.details"
 				:key="index"
@@ -358,6 +358,13 @@ export default {
 
 	.faq-section {
 		width: 80vw;
+	}
+}
+@media (min-width: 801px) {
+	.details-div {
+		margin-left: auto;
+		margin-right: auto;
+		width: 80%;
 	}
 }
 </style>

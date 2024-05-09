@@ -1,13 +1,63 @@
 <template>
-	<q-page :class="$q.screen.gt.sm ? 'table-spacing-around' : ''" padding>
-		<div class="q-px-lg">
-			<q-input v-model="search" placeholder="Search" />
+	<q-page class="table-spacing-around">
+		<div class="q-mt-lg">
+			<q-tabs inline-label v-model="tab" class="text-white">
+				<q-tab
+					:class="tab === 'work' ? 't-yellow' : 't-fade-yellow'"
+					name="work"
+					style="border-radius: 5px"
+					icon="work"
+					:label="$t('Work')"
+				/>
+
+				<q-tab
+					:class="
+						(tab === 'classes' ? 't-yellow' : 't-fade-yellow') +
+						' q-ml-lg'
+					"
+					style="border-radius: 5px"
+					name="classes"
+					icon="run_circle"
+					:label="$t('Classes')"
+				/>
+			</q-tabs>
+		</div>
+		<div class="q-my-lg" v-if="!hasTyped">
+			<div
+				v-if="tab === 'work'"
+				:class="
+					($q.screen.gt.sm ? 'text-h3' : 'text-h6') +
+					' text-center t-yellow'
+				"
+			>
+				{{ $t("Search for work!").toUpperCase() }}
+			</div>
+			<div
+				v-else
+				:class="
+					($q.screen.gt.sm ? 'text-h3' : 'text-h6') +
+					' text-center t-yellow'
+				"
+			>
+				{{ $t("Search for Classes!").toUpperCase() }}
+			</div>
+		</div>
+
+		<div class="search-div q-mx-auto">
+			<input
+				type="text"
+				v-model="search"
+				:placeholder="$t(currentPlaceholder)"
+				class="custom-input"
+				@input="handleInput"
+			/>
 		</div>
 		<q-table
-			:rows="categorys"
+			v-if="search.length > 0"
+			:rows="tab === 'work' ? workCards : classCards"
 			:grid="true"
 			:loading="loading"
-			class="q-mt-lg"
+			:class="$q.screen.gt.sm ? 'q-mt-lg q-px-lg' : ''"
 			:columns="columns"
 			row-key="id"
 			:filter="search"
@@ -15,93 +65,28 @@
 		>
 			<template v-slot:item="props">
 				<div
-					v-if="$q.screen.gt.sm"
-					style="width: 48%"
-					class="q-pa-xs q-mb-lg cursor-pointer"
+					:class="
+						($q.screen.gt.sm ? 'col-3 q-mb-lg' : 'col-12') +
+						' q-pa-xs cursor-pointer'
+					"
 				>
 					<q-card
-						:id="`custom-card-${props.row.id}`"
 						flat
 						bordered
-						@mouseenter="hideImage(props.row.id)"
-						@mouseleave="showImage(props.row.id)"
-						@click="navigateToCategory(props.row.slug)"
+						@click="
+							navigate(
+								props.row.categorySlug,
+								props.row.serviceSlug
+							)
+						"
+						class="select-card"
 					>
 						<div class="media-container">
-							<img
-								:class="`category-picture-${props.row.id}`"
-								v-lazy="props.row.thumbnailImg"
-							/>
-							<div
-								class="q-pa-md"
-								:class="`category-list-${props.row.id} hidden`"
-							>
-								<q-list bordered separator>
-									<q-item
-										clickable
-										v-ripple
-										v-for="(service, dlIndex) in props.row
-											.services"
-										:to="`/${props.row.slug}/${service.slug}`"
-										@click="
-											(event) =>
-												onListItemClick(
-													event,
-													props.row.slug,
-													service.slug
-												)
-										"
-										:key="dlIndex"
-									>
-										<q-item-section>
-											<q-item-label overline>{{
-												$t(service.name)
-											}}</q-item-label>
-											<q-item-label>{{
-												$t(service.description)
-											}}</q-item-label>
-										</q-item-section>
-									</q-item>
-								</q-list>
-							</div>
+							<img v-lazy="props.row.thumbnailImg" class="fit" />
 						</div>
 						<q-card-section>
 							<div class="text-h6 q-mb-xs">
-								{{ $t(props.row.name) }}
-							</div>
-							<div class="row no-wrap items-center">
-								<span class="text-caption text-grey q-ml-sm">{{
-									$t("servicesCount", {
-										count: props.row.services.length,
-									})
-								}}</span>
-							</div>
-						</q-card-section>
-					</q-card>
-				</div>
-				<div v-else class="q-pa-xs col-12 q-mb-lg cursor-pointer">
-					<q-card
-						:id="`custom-card-${props.row.id}`"
-						flat
-						bordered
-						@click="navigateToCategory(props.row.slug)"
-					>
-						<div class="media-container">
-							<img
-								:class="`category-picture-${props.row.id}`"
-								v-lazy="props.row.thumbnailImg"
-							/>
-						</div>
-						<q-card-section>
-							<div class="text-h6 q-mb-xs">
-								{{ $t(props.row.name) }}
-							</div>
-							<div class="row no-wrap items-center">
-								<span class="text-caption text-grey q-ml-sm">{{
-									$t("servicesCount", {
-										count: props.row.services.length,
-									})
-								}}</span>
+								{{ $t(props.row.service) }}
 							</div>
 						</q-card-section>
 					</q-card>
@@ -109,12 +94,19 @@
 			</template>
 			<template v-slot:bottom></template>
 		</q-table>
+		<div class="flex justify-center q-mt-lg" v-else>
+			<q-btn
+				color="accent"
+				class="text-h6"
+				:label="$t('Feel Like Browsing?')"
+				to="/browse"
+			/>
+		</div>
 	</q-page>
 </template>
 <script>
 import dataService from "../services/data.service";
 import { useQuasar } from "quasar";
-import VanillaTilt from "vanilla-tilt";
 
 export default {
 	name: "HomePage",
@@ -123,162 +115,130 @@ export default {
 		return {
 			loading: false,
 			search: "",
+			workCards: [],
+			classCards: [],
+			hasTyped: false,
 			columns: [
 				{
-					name: "name",
-					align: "left",
-					label: "Name",
-					field: (row) => row.name,
+					name: "category",
+					field: (row) => this.$t(row.category),
 				},
 				{
-					name: "slug",
-					align: "left",
-					label: "Slug",
-					field: (row) => row.slug,
+					name: "service",
+					field: (row) => this.$t(row.service),
 				},
 			],
-			categorys: [],
-			players: [],
+			tab: "work",
 			$q: useQuasar(),
+			workPlaceholderTexts: [
+				"Search",
+				"Software Testing",
+				"Brochure Design",
+				"AI Email Systems",
+			],
+			classPlaceholderTexts: [
+				"Search",
+				"Chair Yoga",
+				"Pec Dancing",
+				"Figma",
+			],
+			currentPlaceholderIndex: 0,
+			currentPlaceholder: "Search",
 		};
 	},
 	async mounted() {
-		const newCategories = await dataService.getHomePageData();
-		if (newCategories && newCategories.length > 0) {
-			for (let i = 0; i < newCategories.length; i++) {
-				newCategories[i].id = i;
-				this.categorys.push(newCategories[i]);
-			}
-		}
-		this.loading = false;
-		this.$nextTick(() => {
-			// Access DOM elements here
-			for (let i = 0; i < this.categorys.length; i++) {
-				const tiltElement = document.getElementById(`custom-card-${i}`);
-				VanillaTilt.init(tiltElement, {
-					max: 2,
-					glare: false,
-					"max-glare": 1,
-				});
-			}
-		});
+		this.startPlaceholderRotation();
+		const newCards = await dataService.getHomePageDataV2();
+		this.workCards = newCards.workCards;
+		this.classCards = newCards.classCards;
 	},
 	methods: {
-		onListItemClick(event, categorySlug, serviceSlug) {
-			event.stopPropagation(); // Prevents event from bubbling up
-			this.$router.push(`/${categorySlug}/${serviceSlug}`); // Manually handling the navigation
+		startPlaceholderRotation() {
+			setInterval(() => {
+				const placeholders =
+					this.tab === "work"
+						? this.workPlaceholderTexts
+						: this.classPlaceholderTexts;
+				this.currentPlaceholderIndex =
+					(this.currentPlaceholderIndex + 1) % placeholders.length;
+
+				this.currentPlaceholder =
+					placeholders[this.currentPlaceholderIndex];
+			}, 1500); // Change every 3 seconds
 		},
-		hideImage(index) {
-			if (this.$q.screen.gt.sm) {
-				let list = document.getElementsByClassName(
-					`category-list-${index}`
-				)[0];
-				let picture = document.getElementsByClassName(
-					`category-picture-${index}`
-				)[0];
-
-				list.classList.remove("hidden");
-
-				picture.style["z-index"] = 1;
-				list.style["z-index"] = 2;
-				// Start fading out the picture and fading in the video
-				picture.style.opacity = "0";
-				list.style.opacity = "1";
+		handleInput() {
+			if (!this.hasTyped) {
+				this.hasTyped = true;
 			}
 		},
-		showImage(index) {
-			if (this.$q.screen.gt.sm) {
-				let list = document.getElementsByClassName(
-					`category-list-${index}`
-				)[0];
-				let picture = document.getElementsByClassName(
-					`category-picture-${index}`
-				)[0];
-
-				list.classList.add("hidden");
-
-				picture.style["z-index"] = 2;
-				list.style["z-index"] = 1;
-				// Start fading out the picture and fading in the video
-				picture.style.opacity = "1";
-				list.style.opacity = "0";
-			}
-		},
-		navigateToCategory(category) {
-			this.$router.push(`/${category}`);
-		},
-		killTilt(index) {
-			// Destroy the tilt effect
-			const tiltElement = document.getElementById(`custom-card-${index}`);
-			if (tiltElement?.vanillaTilt) {
-				tiltElement.vanillaTilt.destroy();
-			}
-		},
-		allowTilt(index) {
-			const tiltElement = document.getElementById(`custom-card-${index}`);
-			VanillaTilt.init(tiltElement, {
-				max: 5,
-				glare: false,
-				"max-glare": 1,
-			});
+		navigate(categorySlug, serviceSlug) {
+			this.$router.push(`/${categorySlug}/${serviceSlug}`);
 		},
 	},
 };
 </script>
 <style>
+.q-tab__label {
+	font-size: larger !important;
+}
 .card-container {
 	height: fit-content;
 }
-.media-container iframe {
-	position: absolute !important;
-	top: 50% !important;
-	left: 50% !important;
-	transform: translate(
-		-50%,
-		-50%
-	) !important; /* Translate the iframe back by half of its width and half of its height to center it */
-	width: 100% !important;
-	height: 100% !important;
-}
 </style>
 <style scoped>
-.custom-card {
-	display: block;
-	margin: 20px auto;
-	cursor: pointer;
-	overflow: hidden; /* Hide overflow to maintain clean edges */
+.text-type * {
+	font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif !important;
 }
-.media-container {
-	position: relative;
-	width: 100%; /* Full width of the card */
-	/* Adjust the padding-top based on the aspect ratio of your video or to reduce space */
-	padding-top: 56.25%; /* 16:9 Aspect Ratio */
+.t-yellow {
+	color: #f8a701;
+}
+.t-fade-yellow {
+	color: #664400;
+}
+.custom-input {
+	text-align: center;
+	width: 100%;
+	padding: 10px;
+	font-size: 50px;
+	background-color: transparent;
+	border: none;
+	caret-color: #f8a701;
+	color: #f8a701;
+	border-radius: 5px;
+	border-bottom: 6px solid #494949;
+	outline: none;
+	transition: border-bottom 0.5s ease, caret-color 0.5s ease;
 }
 
-.media-container > img {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	transition: opacity 1s ease-in-out;
+.custom-input:focus {
+	border-bottom: 6px solid #f8a701; /* Color changes when focused */
 }
-.media-container > div {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	overflow-y: auto;
-	transition: opacity 1s ease-in-out;
+
+.select-card:hover {
+	background-color: #f8a701;
 }
 
 @media (min-width: 992px) {
 	.custom-card {
 		width: 1000px;
 	}
+	.media-container {
+		height: 300px;
+	}
+	.search-div {
+		width: 50%;
+	}
 }
 
 @media (max-width: 991px) {
+	.media-container {
+		height: 150px;
+	}
+	.custom-input {
+		font-size: 30px;
+	}
+	.search-div {
+		width: 90%;
+	}
 }
 </style>

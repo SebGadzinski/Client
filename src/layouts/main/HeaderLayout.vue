@@ -20,19 +20,16 @@
 						/>
 					</router-link>
 					<q-btn
-						class="q-my-auto text-body1 q-pa-sm"
-						color="accent"
-						:label="$t($q.screen.lt.md ? 'T' : 'Test Mode')"
-						@click="
-							() =>
-								$q.dialog({
-									title: $t('Test Mode'),
-									message:
-										$t('Card') +
-										': 4242 4242 4242 4242. ' +
-										$t('Other data is anything.'),
-								})
-						"
+						v-if="$q.screen.gt.sm"
+						class="q-mx-sm"
+						flat
+						to="/"
+						:label="this.$t('Home')"
+					/>
+					<q-btn
+						flat
+						:label="$t('Test Info')"
+						@click="testInfo = !testInfo"
 					/>
 				</q-toolbar-title>
 
@@ -132,6 +129,41 @@
 			<router-view />
 		</q-page-container>
 		<div class="extra-space"></div>
+		<q-dialog v-model="testInfo">
+			<q-card class="text-center">
+				<q-card-section class="row q-pb-none">
+					<div class="text-h4 q-mx-auto">
+						{{ $t("Test Info") }}
+					</div>
+				</q-card-section>
+				<q-card-section>
+					<h6 class="q-my-none q-mb-sm" color="accent">
+						{{ $t("What to do?") }}
+					</h6>
+					<div class="text-body1 q-mt-sm">
+						{{
+							$t(
+								"This site offers work in many categories and also offers classes. Please attempt to purchase work or a class, and give feedback on the experience to sebastiangadzinskiwork@gmail.com"
+							)
+						}}
+					</div>
+				</q-card-section>
+				<q-card-section>
+					<h6 class="q-my-none q-mb-sm" color="accent">
+						{{ $t("Card Info") }}
+					</h6>
+					<q-btn
+						class="text-h6"
+						color="accent"
+						:label="$t('4242 4242 4242 4242')"
+						@click="copyTestCard"
+					/>
+					<div class="text-body1 q-my-sm">
+						{{ $t("Any other inputs can be anything.") }}
+					</div>
+				</q-card-section>
+			</q-card>
+		</q-dialog>
 	</q-layout>
 </template>
 
@@ -146,6 +178,7 @@ export default {
 			scrollOpacity: 1,
 			hasScrolled: false,
 			menuOpened: false,
+			testInfo: false,
 		};
 	},
 	mounted() {
@@ -194,6 +227,11 @@ export default {
 		},
 		toggleMenu() {
 			this.menuOpened = !this.menuOpened;
+		},
+		async copyTestCard() {
+			const testCardNumber = "4242 4242 4242 4242";
+			await navigator.clipboard.writeText(testCardNumber);
+			this.$q.notify({ message: "Copied Card", type: "positive" });
 		},
 	},
 };
