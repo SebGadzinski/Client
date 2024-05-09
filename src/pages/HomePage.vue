@@ -1,7 +1,7 @@
 <template>
 	<q-page class="table-spacing-around">
 		<div class="q-mt-lg">
-			<q-tabs inline-label v-model="tab" class="text-white">
+			<q-tabs inline-label v-model="tab" class="tabs-div text-white">
 				<q-tab
 					:class="tab === 'work' ? 't-yellow' : 't-fade-yellow'"
 					name="work"
@@ -11,10 +11,7 @@
 				/>
 
 				<q-tab
-					:class="
-						(tab === 'classes' ? 't-yellow' : 't-fade-yellow') +
-						' q-ml-lg'
-					"
+					:class="tab === 'classes' ? 't-yellow' : 't-fade-yellow'"
 					style="border-radius: 5px"
 					name="classes"
 					icon="run_circle"
@@ -67,7 +64,7 @@
 				<div
 					:class="
 						($q.screen.gt.sm ? 'col-3 q-mb-lg' : 'col-12') +
-						' q-pa-xs cursor-pointer'
+						' q-pa-md cursor-pointer'
 					"
 				>
 					<q-card
@@ -239,6 +236,10 @@ export default {
 	}
 	.search-div {
 		width: 90%;
+	}
+	.tabs-div {
+		width: 90%;
+		margin: auto auto;
 	}
 }
 </style>
