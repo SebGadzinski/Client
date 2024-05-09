@@ -15,16 +15,15 @@
 		>
 			<template v-slot:item="props">
 				<div
-					v-if="$q.screen.gt.sm"
-					style="width: 48%"
-					class="q-pa-xs q-mb-lg cursor-pointer"
+					:class="
+						($q.screen.gt.sm ? 'q-pa-lg col-6' : 'col-12') +
+						' q-mb-lg cursor-pointer'
+					"
 				>
 					<q-card
 						:id="`custom-card-${props.row.id}`"
 						flat
 						bordered
-						@mouseenter="hideImage(props.row.id)"
-						@mouseleave="showImage(props.row.id)"
 						@click="navigateToCategory(props.row.slug)"
 					>
 						<div class="media-container">
@@ -32,38 +31,6 @@
 								:class="`category-picture-${props.row.id}`"
 								v-lazy="props.row.thumbnailImg"
 							/>
-							<div
-								class="q-pa-md"
-								:class="`category-list-${props.row.id} hidden`"
-							>
-								<q-list bordered separator>
-									<q-item
-										clickable
-										v-ripple
-										v-for="(service, dlIndex) in props.row
-											.services"
-										:to="`/${props.row.slug}/${service.slug}`"
-										@click="
-											(event) =>
-												onListItemClick(
-													event,
-													props.row.slug,
-													service.slug
-												)
-										"
-										:key="dlIndex"
-									>
-										<q-item-section>
-											<q-item-label overline>{{
-												$t(service.name)
-											}}</q-item-label>
-											<q-item-label>{{
-												$t(service.description)
-											}}</q-item-label>
-										</q-item-section>
-									</q-item>
-								</q-list>
-							</div>
 						</div>
 						<q-card-section>
 							<div class="text-h6 q-mb-xs">
