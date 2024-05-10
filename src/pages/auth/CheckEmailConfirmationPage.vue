@@ -1,13 +1,10 @@
 <template>
 	<div class="q-pa-md row justify-center items-center full-height">
-		<div class="column items-center">
-			<!-- Spinner -->
+		<div v-if="!isAuthenticated" class="column items-center">
 			<q-spinner color="primary" size="40px" />
-			<!-- Next Call Message -->
 			<div class="q-mt-md text-h6">
-				{{ $t(`Calling In: ${timeLeft}s`) }}
+				{{ $t(`calling_email`, { count: timeLeft }) }}
 			</div>
-			<!-- Confirmation Message -->
 			<div class="q-mt-md text-h5 text-center">
 				{{ $t("Checking Email Status") }}
 			</div>
@@ -16,6 +13,17 @@
 				color="primary"
 				:label="$t('Send Confirmation Email')"
 				@click="sendEmail"
+			/>
+		</div>
+		<div v-else class="column items-center">
+			<div class="q-mt-md text-h5 text-center">
+				{{ $t("You Are Authenticated!") }}
+			</div>
+			<q-btn
+				class="q-mt-lg"
+				color="primary"
+				:label="$t('Continue')"
+				@click="goNext"
 			/>
 		</div>
 	</div>
@@ -37,19 +45,19 @@ export default {
 		return {
 			timeLeft: ref(1),
 			route: useRoute(),
+			isAuthenticated: false,
 			settingsState: useSettingsState(),
 			authState: useAuthState(),
 		};
 	},
 	async mounted() {
 		if (this?.user?.emailConfirmed) {
-			// This may need to be where the user wanted to go getting sent here
 			this.$router.push({ path: "/" });
 			return;
 		}
 		await this.checkStatus();
 		this.timerInterval = setInterval(async () => {
-			if (this.timeLeft == 1) {
+			if (this.timeLeft === 1) {
 				await this.checkStatus();
 				this.timeLeft = 10;
 			}
@@ -83,7 +91,6 @@ export default {
 			}
 		},
 		async checkStatus() {
-			// Make the call to email confirmation endpoint
 			const status = await AuthService.emailConfirmStatus();
 			if (status === "noUser") {
 				this.$q.notify({
@@ -93,43 +100,48 @@ export default {
 				await this.refreshSession();
 				window.location.reload();
 			} else if (status) {
-				this.$q.notify({
-					type: "positive",
-					message: "Your email is confirmed",
-				});
 				await this.refreshSession();
 				clearInterval(this.timerInterval);
-				setTimeout(() => {
-					const redirectPath = this.route?.query["redirectPath"];
-					if (redirectPath) {
-						this.$router.push(redirectPath);
-						return;
-					}
-					const bookMeeting = this.route?.query["book-meeting"];
-					const templateId = this.route?.query?.enroll;
-					if (bookMeeting) {
-						let possibleMeeting =
-							window.localStorage.getItem("book-meeting");
-						if (possibleMeeting) {
-							let meeting = JSON.parse(possibleMeeting);
-							dataService.bookMeeting(meeting);
-						}
-						this.$q
-							.dialog({
-								title: this.$t("Meeting Confirmed"),
-								message: this.$t(
-									"Meeting details sent to email."
-								),
-							})
-							.onDismiss(() => {
-								this.$router.push("/work");
-							});
-					} else if (templateId) {
-						this.$router.push(`/work/template/${templateId}`);
-					} else {
-						this.$router.push("/");
-					}
-				}, 2000);
+				this.isAuthenticated = true;
+				this.$q
+					.dialog({
+						title: this.$t("Email Verified"),
+						message: this.$t(
+							"Your email has been verified, you may now use authenticated routes."
+						),
+					})
+					.onDismiss(() => {
+						this.goNext();
+					});
+			}
+		},
+		goNext() {
+			const redirectPath = this.route?.query["redirectPath"];
+			if (redirectPath) {
+				this.$router.push(redirectPath);
+				return;
+			}
+			const bookMeeting = this.route?.query["book-meeting"];
+			const templateId = this.route?.query?.enroll;
+			if (bookMeeting) {
+				let possibleMeeting =
+					window.localStorage.getItem("book-meeting");
+				if (possibleMeeting) {
+					let meeting = JSON.parse(possibleMeeting);
+					dataService.bookMeeting(meeting);
+				}
+				this.$q
+					.dialog({
+						title: this.$t("Meeting Confirmed"),
+						message: this.$t("Meeting details sent to email."),
+					})
+					.onDismiss(() => {
+						this.$router.push("/work");
+					});
+			} else if (templateId) {
+				this.$router.push(`/work/template/${templateId}`);
+			} else {
+				this.$router.push("/");
 			}
 		},
 		onLanguageClick(langName) {

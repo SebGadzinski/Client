@@ -33,6 +33,7 @@ export default {
 			confirming: true,
 			route: useRoute(),
 			settingsState: useSettingsState(),
+			authState: useAuthState(),
 		};
 	},
 	mounted() {
@@ -40,11 +41,19 @@ export default {
 			const token = this.route?.query?.token;
 			this.confirmEmail(token).then(
 				() => {
-					setTimeout(() => {
-						this.loading = false;
-						this.confirming = false;
-						this.$q.loading.hide();
-					}, 1500);
+					this.loading = false;
+					this.confirming = false;
+					this.$q.loading.hide();
+					this.$q
+						.dialog({
+							title: this.$t("Email Verified"),
+							message: this.$t(
+								"Your email has been verified, you may now use authenticated routes."
+							),
+						})
+						.onDismiss(async () => {
+							await this.refreshSession();
+						});
 				},
 				(error) => {
 					this.loading = false;
@@ -67,7 +76,11 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions(useAuthState, ["confirmEmail", "logout"]),
+		...mapActions(useAuthState, [
+			"confirmEmail",
+			"logout",
+			"refreshSession",
+		]),
 		onLanguageClick(langName) {
 			this.settingsState.setLanguage(langName);
 			import(

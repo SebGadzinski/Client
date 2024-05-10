@@ -42,6 +42,8 @@ api.interceptors.response.use(
 		let nextUrl = "";
 		if (route?.query) {
 			nextUrl = err?.config?.url ? `?${route.query}` : ``;
+		} else {
+			nextUrl = `?redirectPath=${window.location.pathname}`;
 		}
 		if (err.response.status === 499) {
 			window.location = preFix + "ipblocked";
@@ -53,35 +55,21 @@ api.interceptors.response.use(
 		}
 		const originalConfig = err.config;
 		if (
-			(!originalConfig.url.includes("auth") ||
-				originalConfig.url === "/auth/sendEmailConfirmation") &&
-			err.response
+			!originalConfig.url.includes("auth") ||
+			originalConfig.url === "/auth/sendEmailConfirmation" ||
+			(originalConfig.url === "/auth/emailConfirmStatus" && err.response)
 		) {
 			// Access Token was expired
-
 			if (err.response.status === 401 && !originalConfig._retry) {
 				if (originalConfig.url == "/auth/refresh") {
 					AuthService.logout();
 					return;
 				}
 				originalConfig._retry = true;
+				console.log("Original Config:");
 				console.log(originalConfig);
 				try {
-					const rs = await api.post("/auth/refresh", {
-						token: TokenService.getLocalRefreshToken(),
-					});
-					if (!rs || !rs?.data?.success) {
-						AuthService.logout();
-						return;
-					}
-
-					// Success, can refresh token
-					const { token, refreshToken, user } = rs.data.data;
-					eventBus.dispatch("auth/refresh", token);
-
-					TokenService.setUser(user);
-					TokenService.setLocalRefreshToken(refreshToken);
-					TokenService.setLocalToken(token);
+					await AuthService.refreshSession();
 
 					return api(originalConfig);
 				} catch (error) {

@@ -749,5 +749,10 @@
 	"Search": "Rechercher",
 	"Brochure Design": "Conception de la brochure",
 	"Feel Like Browsing?": "Envie de naviguer?",
-	"Search for Classes!": "Recherchez des cours!"
+	"Search for Classes!": "Recherchez des cours!",
+	"Send Confirmation Email": "Envoyer un e-mail de confirmation",
+	"calling_email": "Appel dans {count}s",
+	"Checking Email Status": "Vérification de l'état du courrier électronique",
+	"Email Verified": "Email verifié",
+	"Your email has been verified, you may now use authenticated routes.": "Votre email a été vérifié, vous pouvez désormais utiliser des itinéraires authentifiés."
 }

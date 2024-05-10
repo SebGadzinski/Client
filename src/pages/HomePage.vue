@@ -202,9 +202,13 @@ export default {
 	caret-color: #f8a701;
 	color: #f8a701;
 	border-radius: 5px;
-	border-bottom: 6px solid #494949;
+	border-bottom: 6px solid #664400;
 	outline: none;
 	transition: border-bottom 0.5s ease, caret-color 0.5s ease;
+}
+
+.custom-input:hover {
+	border-bottom: 6px solid #f8a701; /* Color changes when focused */
 }
 
 .custom-input:focus {

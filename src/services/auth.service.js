@@ -92,24 +92,28 @@ class AuthService {
 		if (res?.data?.success) {
 			return;
 		} else {
-			throw new Error(response.data.message);
+			throw new Error(res.data.message);
 		}
 	}
 	async refreshSession() {
-		const rs = await api.post("/auth/refresh", {
-			token: TokenService.getLocalRefreshToken(),
-		});
-		if (!rs || !rs.data.success) {
+		try {
+			const rs = await api.post("/auth/refresh", {
+				token: TokenService.getLocalRefreshToken(),
+			});
+			if (!rs || !rs?.data?.success) {
+				this.logout();
+				return;
+			}
+
+			// Success, can refresh token
+			const { token, refreshToken, user } = rs.data.data;
+
+			TokenService.setUser(user);
+			TokenService.setLocalRefreshToken(refreshToken);
+			TokenService.setLocalToken(token);
+		} catch (err) {
 			this.logout();
-			return;
 		}
-
-		// Success, can refresh token
-		const { token, refreshToken, user } = rs.data.data;
-
-		TokenService.setUser(user);
-		TokenService.setLocalRefreshToken(refreshToken);
-		TokenService.setLocalToken(token);
 	}
 
 	async emailConfirmStatus() {
@@ -143,13 +147,21 @@ class AuthService {
 	 */
 	async logout(reload = true) {
 		TokenService.removeUser();
+		const loginPath =
+			window.location.hostname !== "localhost"
+				? "#/auth/login"
+				: "auth/login";
 		if (Capacitor.getPlatform() != "web") {
 			try {
 				let file = await Preferences.clear();
 			} catch (e) {}
-			if (reload) location.reload();
+			if (reload) {
+				window.location = loginPath;
+			}
 		} else {
-			if (reload) location.reload();
+			if (reload) {
+				window.location = loginPath;
+			}
 		}
 	}
 }

@@ -1,5 +1,5 @@
 <template>
-	<q-page padding class="">
+	<q-page padding>
 		<div v-if="isAdmin" class="flex row flex-center q-my-sm">
 			<q-btn
 				class="col-8 col-md-3 q-mx-sm"
