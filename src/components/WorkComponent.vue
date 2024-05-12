@@ -948,6 +948,8 @@ export default {
 							this.payViaNewPayment(workId, type, paymentItemId);
 						}
 					});
+			} else {
+				this.payViaNewPayment(workId, type, paymentItemId);
 			}
 		},
 		async payViaNewPayment(workId, type, paymentItemId) {
