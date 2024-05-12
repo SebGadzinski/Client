@@ -100,8 +100,9 @@
 					class="q-mt-lg"
 					:columns="workItemCols"
 					row-key="id"
-					:hide-bottom="true"
 					:visible-columns="workItemVisibleCols"
+					:hide-bottom="true"
+					:rows-per-page-options="[0]"
 				>
 					<template v-if="$q.screen.gt.sm" v-slot:body="props">
 						<q-tr :props="props">
@@ -218,8 +219,9 @@
 					class="q-mt-lg"
 					:columns="paymentItemCols"
 					row-key="id"
-					:hide-bottom="true"
 					:visible-columns="paymentItemVisibleCols"
+					:hide-bottom="true"
+					:rows-per-page-options="[0]"
 				>
 					<template v-if="$q.screen.gt.sm" v-slot:body="props">
 						<q-tr :props="props">
@@ -239,7 +241,7 @@
 								>{{ props.row.description }}</q-td
 							>
 							<q-td key="payment" :props="props">{{
-								props.row.payment
+								$c_format(props.row.payment)
 							}}</q-td>
 							<q-td key="status" :props="props">{{
 								props.row.status
@@ -253,7 +255,7 @@
 								:props="props"
 							>
 								<q-btn
-									color="primary"
+									class="siren"
 									:label="$t('Pay')"
 									@click="pay('paymentItem', props.row._id)"
 								/>
@@ -298,7 +300,11 @@
 													$t("$ Payment")
 												}}</q-item-label>
 												<div class="readonly-text">
-													{{ props.row.payment }}
+													{{
+														$c_format(
+															props.row.payment
+														)
+													}}
 												</div>
 											</q-item-section>
 										</q-item>
@@ -318,12 +324,11 @@
 											allowPayment &&
 											props.row.status !== 'Completed'
 										"
-										color="primary"
 										:label="$t('Pay')"
 										@click="
 											pay('paymentItem', props.row._id)
 										"
-										class="full-width"
+										class="full-width siren"
 									/>
 								</q-card-section>
 							</q-card>
@@ -363,7 +368,7 @@
 					<q-item-label caption>{{
 						$t("Date Disabled")
 					}}</q-item-label>
-					<q-badge color="negative">
+					<q-badge class="q-py-sm" color="negative">
 						{{ $d(work.payment.subscription.dateDisabled) }}
 					</q-badge>
 				</div>
@@ -380,7 +385,7 @@
 					<q-item-label caption>{{
 						$t("Date Activated")
 					}}</q-item-label>
-					<q-badge color="positive">
+					<q-badge class="q-py-sm" color="positive">
 						{{ $d(work.payment.subscription.dateActivated) }}
 					</q-badge>
 				</div>
@@ -402,7 +407,7 @@
 				<div class="row justify-center" v-if="showCard">
 					<div class="col-12 text-center">
 						<q-item-label caption>{{
-							$t("Payment Card")
+							$t("Subscription Payment Card")
 						}}</q-item-label>
 					</div>
 					<q-card class="col-12 col-md-3 q-ma-sm q-pa-sm"
@@ -424,7 +429,7 @@
 				<div class="row justify-center q-my-sm" v-else>
 					<div class="col-12 text-center">
 						<q-item-label caption>{{
-							$t("Payment Card")
+							$t("Subscription Payment Card")
 						}}</q-item-label>
 					</div>
 					<q-card>
@@ -558,8 +563,9 @@
 			>
 				<q-item-section>
 					<q-btn
-						:class="$q.screen.lt.md ? 'text-h6' : 'text-h3'"
-						color="primary"
+						:class="
+							($q.screen.lt.md ? 'text-h6' : 'text-h3') + ' siren'
+						"
 						:label="$t('Pay Full')"
 						@click="pay('full')"
 					>
@@ -889,6 +895,62 @@ export default {
 			}
 		},
 		async pay(type, paymentItemId = null) {
+			const workId = this.work._id;
+			const subCard = this.work.payment?.subscription?.last4Digits;
+
+			if (subCard) {
+				this.$q
+					.dialog({
+						title: this.$t("pay_card", { card: subCard }),
+						message: this.$t(
+							"Would you like to pay with the card you set up for subscriptions?"
+						),
+						options: {
+							type: "radio", // Use radio for single selection
+							model: "", // No initial selection
+							items: [
+								{
+									label: this.$t("Use Subscription Card"),
+									value: "sub",
+								},
+								{
+									label: this.$t("Use Different Card"),
+									value: "new",
+								},
+							],
+						},
+					})
+					.onOk(async (decision) => {
+						if (decision === "sub") {
+							this.$q.loading.show({
+								spinner: QSpinnerGears,
+								backgroundColor: "#1e5499",
+								message: this.$t("Processing Payment..."),
+							});
+							const paymentData =
+								await dataService.completePaymentViaSubCard({
+									workId,
+									type,
+									paymentItemId,
+								});
+							this.$q.loading.hide();
+							this.$q
+								.dialog({
+									title: this.$t("Please Complete Payment"),
+									message: this.$t(
+										"Refresh your view after payment is completed"
+									),
+								})
+								.onDismiss(() => {
+									window.location.reload();
+								});
+						} else if (decision === "new") {
+							this.payViaNewPayment(workId, type, paymentItemId);
+						}
+					});
+			}
+		},
+		async payViaNewPayment(workId, type, paymentItemId) {
 			this.$q.loading.show({
 				spinner: QSpinnerGears,
 				backgroundColor: "#1e5499",
@@ -896,7 +958,7 @@ export default {
 			});
 
 			this.paymentIntent = await dataService.generateConfirmationPayment({
-				workId: this.work._id,
+				workId,
 				type,
 				paymentItemId,
 			});

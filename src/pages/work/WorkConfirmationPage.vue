@@ -139,13 +139,70 @@ export default {
 	},
 	methods: {
 		async pay() {
+			// Ask user if they want to pay with Subscription Payment Card
+			const workId = this.route?.params?.workId;
+			const subCard = this.work.payment?.subscription?.last4Digits;
+			if (subCard) {
+				this.$q
+					.dialog({
+						title: this.$t("pay_card", { card: subCard }),
+						message: this.$t(
+							"Would you like to pay with the card you set up for subscriptions?"
+						),
+						options: {
+							type: "radio", // Use radio for single selection
+							model: "", // No initial selection
+							items: [
+								{
+									label: this.$t("Use Subscription Card"),
+									value: "sub",
+								},
+								{
+									label: this.$t("Use Different Card"),
+									value: "new",
+								},
+							],
+						},
+					})
+					.onOk(async (decision) => {
+						if (decision === "sub") {
+							this.$q.loading.show({
+								spinner: QSpinnerGears,
+								backgroundColor: "#1e5499",
+								message: this.$t("Processing Payment..."),
+							});
+							const paymentData =
+								await dataService.completePaymentViaSubCard({
+									workId,
+									type: "confirmation",
+								});
+							this.$q.loading.hide();
+							this.$q
+								.dialog({
+									title: this.$t("Please Complete Payment"),
+									message: this.$t(
+										"Refresh your view after payment is completed"
+									),
+								})
+								.onDismiss(() => {
+									this.advance();
+								});
+						} else if (decision === "new") {
+							this.payViaNewPayment(workId);
+						}
+					});
+			} else {
+				await payViaNewPayment(workId);
+			}
+		},
+		async payViaNewPayment(workId) {
 			this.$q.loading.show({
 				spinner: QSpinnerGears,
 				backgroundColor: "#1e5499",
 				message: this.$t("Getting Payment Ready..."),
 			});
 			this.paymentIntent = await dataService.generateConfirmationPayment({
-				workId: this.route?.params?.workId,
+				workId,
 				type: "confirmation",
 			});
 			this.$nextTick(() => {
@@ -154,7 +211,7 @@ export default {
 						this.paymentIntent.url,
 						"_blank"
 					);
-
+					this.$q.loading.hide();
 					// Check if the new window is blocked and inform the user if so.
 					if (
 						!newWindow ||

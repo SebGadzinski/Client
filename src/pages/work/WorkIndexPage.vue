@@ -42,7 +42,13 @@
 			</template>
 			<template v-if="$q.screen.gt.sm" v-slot:body-cell-actions="props">
 				<q-td :key="props.name">
-					<q-btn-dropdown color="primary">
+					<q-btn-dropdown
+						:class="
+							props.row?.paymentsRequired
+								? 'siren'
+								: 'bg-primary text-white'
+						"
+					>
 						<q-list>
 							<q-item
 								v-if="user?.roles?.includes('admin')"
@@ -60,6 +66,9 @@
 								clickable
 								v-close-popup
 								:to="`/work/${props.row.workId}`"
+								:class="
+									props.row?.paymentsRequired ? 'siren' : ''
+								"
 							>
 								<q-item-section>
 									<q-item-label>{{
@@ -207,7 +216,11 @@
 								</q-item>
 							</q-list>
 							<q-btn
-								color="secondary"
+								:class="
+									props.row?.paymentsRequired
+										? 'siren'
+										: 'bg-secondary text-white'
+								"
 								:label="$t('View')"
 								:to="`/work/${props.row.workId}`"
 								class="text-color full-width"
@@ -412,12 +425,17 @@ export default {
 					name: "Confirm Work",
 					link: `/work/confirmation/${x.workId}`,
 				});
-			} else if (x.status === "Cancellation Set Up") {
+			}
+			if (
+				x.status === "Cancellation Set Up" ||
+				x.status === "Confirmation Required"
+			) {
 				x.actions.push({
 					name: "Cancel Work",
 					link: `/work/cancel/${x.workId}`,
 				});
 			}
+
 			return x;
 		});
 

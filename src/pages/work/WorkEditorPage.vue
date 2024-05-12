@@ -118,8 +118,9 @@
 				class="q-mt-lg"
 				:columns="workItemCols"
 				row-key="workItemId"
-				:hide-bottom="true"
 				:visible-columns="workItemVisibleCols"
+				:hide-bottom="true"
+				:rows-per-page-options="[0]"
 			>
 				<template v-if="$q.screen.gt.sm" v-slot:body="props">
 					<q-tr :props="props">
@@ -347,6 +348,7 @@
 						row-key="paymentItemId"
 						:hide-bottom="true"
 						:visible-columns="paymentItemVisibleCols"
+						:rows-per-page-options="[0]"
 					>
 						<template v-if="$q.screen.gt.sm" v-slot:body="props">
 							<q-tr :props="props">

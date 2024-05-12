@@ -270,13 +270,26 @@ class DataService {
 			type,
 			paymentItemId,
 		};
-		const result = await this.call(api.post("/data/work/pay", body));
+		const result = await this.call(
+			api.post("/data/work/pay/session", body)
+		);
+		return result;
+	}
+	async completePaymentViaSubCard({ workId, type, paymentItemId = null }) {
+		let body = {
+			workId,
+			type,
+			paymentItemId,
+		};
+		const result = await this.call(
+			api.post("/data/work/pay/attached-card", body)
+		);
 		return result;
 	}
 
 	async confirmPaymentIntent(paymentHistoryId) {
 		return await this.call(
-			api.get(`data/work/pay/confirm?id=${paymentHistoryId}`)
+			api.get(`data/work/pay/session/confirm?id=${paymentHistoryId}`)
 		);
 	}
 

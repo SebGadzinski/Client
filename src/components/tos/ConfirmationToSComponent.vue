@@ -1,18 +1,5 @@
 <template>
 	<q-card style="max-width: none">
-		<q-bar class="q-py-lg">
-			<q-space />
-			<q-btn
-				class="q-px-sm"
-				color="primary"
-				:label="$t('I Agree')"
-				v-close-popup
-			>
-				<q-tooltip class="bg-white text-primary">{{
-					$t("I Agree")
-				}}</q-tooltip>
-			</q-btn>
-		</q-bar>
 		<q-card-section class="row items-center">
 			<div class="text-h6">
 				{{ $t("Terms of Service Agreement") }}
@@ -81,6 +68,18 @@
 				{{ $t("tos_conf_agreement", { company }) }}
 			</p>
 		</q-card-section>
+		<div class="flex justify-center">
+			<q-btn
+				:class="
+					($q.screen.gt.sm ? 'text-h3' : 'text-h6') +
+					'text-center q-mb-sm'
+				"
+				style="width: 50%"
+				color="primary"
+				v-close-popup
+				:label="$t('Agree')"
+			/>
+		</div>
 	</q-card>
 </template>
 

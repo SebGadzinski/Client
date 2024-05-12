@@ -742,5 +742,6 @@
 	"Coming soon! Just need to test our new classes section!": "Coming soon! Just need to test our new classes section!",
 	"My Classes": "My Classes",
 	"Work History": "Work History",
-	"calling_email": "Calling in {count}s"
+	"calling_email": "Calling in {count}s",
+	"pay_card": "Pay with card: ...**** {card}"
 }

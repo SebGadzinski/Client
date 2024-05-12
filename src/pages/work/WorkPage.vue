@@ -3,11 +3,7 @@
 		<div>
 			<WorkComponent
 				:work="work"
-				:allowPayment="
-					work.status !== 'Meeting' &&
-					work.status !== 'Completed' &&
-					work.status !== 'Cancelled'
-				"
+				:allowPayment="allowPayment"
 				:allowReceipt="true"
 				:showWorkers="true"
 				:isAdmin="isAdmin"
@@ -35,6 +31,7 @@ export default {
 			$q: useQuasar(),
 			work: {},
 			route: useRoute(),
+			allowPayment: false,
 		};
 	},
 	computed: {
@@ -52,6 +49,14 @@ export default {
 			this.work = await dataService.getWorkViewComponent(
 				this.route?.params?.workId
 			);
+			if (
+				this.work.status !== "Meeting" &&
+				this.work.status !== "Completed" &&
+				this.work.status !== "Cancelled" &&
+				this.work.paymentItems.some((x) => x.status !== "Completed")
+			) {
+				this.allowPayment = true;
+			}
 		} catch (err) {
 			console.error(err);
 			this.$q

@@ -37,7 +37,7 @@
 			</q-card-section>
 
 			<q-card-section>
-				<div class="text-h6">{{ $t("Checkouts") }}</div>
+				<div class="text-h6">{{ $t("Payments") }}</div>
 				<q-list bordered>
 					<div
 						v-for="(checkout, index) in receipt.checkouts"
@@ -90,7 +90,7 @@
 			</q-card-section>
 
 			<q-card-section>
-				<div class="text-h6">{{ $t("Subscriptions") }}</div>
+				<div class="text-h6">{{ $t("Subscription Payments") }}</div>
 				<q-list bordered>
 					<div
 						v-for="(sub, index) in receipt.subs"
