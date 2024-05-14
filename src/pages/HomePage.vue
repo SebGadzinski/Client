@@ -8,6 +8,7 @@
 					style="border-radius: 5px"
 					icon="work"
 					:label="$t('Work')"
+					@click="updateTabInfo"
 				/>
 
 				<q-tab
@@ -16,6 +17,7 @@
 					name="classes"
 					icon="run_circle"
 					:label="$t('Classes')"
+					@click="updateTabInfo"
 				/>
 			</q-tabs>
 		</div>
@@ -150,6 +152,16 @@ export default {
 		this.classCards = newCards.classCards;
 	},
 	methods: {
+		updateTabInfo() {
+			const placeholders =
+				this.tab === "work"
+					? this.workPlaceholderTexts
+					: this.classPlaceholderTexts;
+			this.currentPlaceholderIndex = 0;
+
+			this.currentPlaceholder =
+				placeholders[this.currentPlaceholderIndex];
+		},
 		startPlaceholderRotation() {
 			setInterval(() => {
 				const placeholders =

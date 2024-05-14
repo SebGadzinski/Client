@@ -60,13 +60,7 @@
 		<!-- Contractors (Templates) -->
 		<template v-if="service?.workers?.length > 0">
 			<h3 class="text-center">
-				{{
-					$t(
-						categorySlug === "classes"
-							? "Instructors"
-							: "Contractors"
-					)
-				}}
+				{{ $t(categorySlug === "classes" ? "Instructors" : "Workers") }}
 			</h3>
 			<div class="flex row justify-center">
 				<q-card
@@ -108,6 +102,7 @@
 							</q-item-section>
 							<q-item-section v-if="summary?.badge" side top>
 								<q-badge
+									class="q-py-sm"
 									:color="summary?.badge?.color ?? 'accent'"
 									:label="summary.badge.label"
 								/>
