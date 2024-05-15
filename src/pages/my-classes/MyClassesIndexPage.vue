@@ -36,6 +36,7 @@
 									{{ $t(props.row.name) }}
 								</h6>
 								<q-btn
+									v-if="!props.row?.myClass"
 									flat
 									icon="settings"
 									@click="classSettings(props.row.id)"
@@ -47,7 +48,12 @@
 									"
 								></q-btn>
 							</div>
-
+							<q-badge
+								v-if="props.row?.myClass"
+								class="text-caption q-mx-auto"
+								color="primary"
+								:label="$t('My Class')"
+							/>
 							<q-badge
 								v-if="props.row?.classType === 'Single Session'"
 								class="text-caption q-mx-auto"
@@ -253,8 +259,9 @@
 									</q-item>
 									<q-item
 										v-if="
+											!props.row?.myClass &&
 											props.row?.instructorInfo?.length >
-											0
+												0
 										"
 										class="column"
 									>
@@ -378,6 +385,7 @@ export default {
 	async mounted() {
 		this.loading = true;
 		const data = await dataService.getClassesPageData();
+		console.log(data);
 		const newClasses = data?.classes;
 		if (newClasses && newClasses.length > 0) {
 			for (let i = 0; i < newClasses.length; i++) {
