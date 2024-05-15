@@ -393,9 +393,9 @@
 					<q-item-label caption>{{
 						$t("Next Payment")
 					}}</q-item-label>
-					<span>
+					<q-badge class="q-py-sm" color="secondary">
 						{{ $d(work.payment.subscription.nextPayment) }}
-					</span>
+					</q-badge>
 				</div>
 			</q-item>
 			<template
@@ -450,68 +450,6 @@
 					</q-card>
 				</div>
 			</template>
-			<q-item v-if="paymentHistory?.length > 0">
-				<!-- View Payment History List - Only if viewng mode -->
-				<q-expansion-item
-					style="border: 1px solid"
-					class="col-12 col-md-3 q-mx-auto border card-text-color text-subtitle1 faq-section text-left"
-					expand-icon-class="primary"
-					:default-opened="false"
-					:label="$t('Payment History')"
-				>
-					<q-card
-						v-for="(payment, index) in paymentHistory"
-						:key="index"
-						:class="`card-text-color q-ma-lg glass-effect`"
-					>
-						<q-list bordered>
-							<q-item>
-								<q-item-section avatar>
-									<q-icon name="schedule" />
-								</q-item-section>
-								<q-item-section>
-									<span class="text-body2">
-										{{ $d(payment.date) }}
-									</span>
-								</q-item-section>
-							</q-item>
-							<q-item>
-								<q-item-section avatar>
-									<q-icon name="money" />
-								</q-item-section>
-								<q-item-section>
-									<span class="text-body2">
-										${{ $c_format(payment.cost) }}
-									</span>
-								</q-item-section>
-							</q-item>
-							<q-item>
-								<q-item-section avatar>
-									<q-icon name="credit_card" />
-								</q-item-section>
-								<q-item-section>
-									<span class="text-body2">
-										************{{ payment.last4Digits }}
-									</span>
-								</q-item-section>
-							</q-item>
-						</q-list>
-					</q-card>
-					<div class="row">
-						<q-btn
-							v-if="!this.loadingMoreSubCardHistory"
-							class="col-8 q-mx-auto q-my-sm"
-							color="secondary"
-							@click="getMoreSubPaymentHistory"
-							>{{ $t("Load More") }}</q-btn
-						>
-						<!-- Add Loader -->
-						<div v-else class="col-8 q-mx-auto q-my-sm text-center">
-							<q-spinner color="secondary" />
-						</div>
-					</div>
-				</q-expansion-item>
-			</q-item>
 			<q-item class="flex-center">
 				<div class="text-h4">
 					{{ $t("Confirmation") }}
@@ -760,27 +698,8 @@ export default {
 				});
 			}
 		},
-		async getMoreSubPaymentHistory() {
-			try {
-				if (!this.paymentHistory) return;
-				this.loadingMoreSubCardHistory = true;
-				const moreHistory = await dataService.loadingMoreSubCardHistory(
-					this.work._id,
-					this.work.payment.subscription.paymentHistory.length
-				);
-				this.paymentHistory.push(...moreHistory);
-				this.loadingMoreSubCardHistory = false;
-			} catch (err) {
-				this.loadingMoreSubCardHistory = false;
-				this.$q.notify({
-					type: "negative",
-					message: err.message,
-				});
-				this.$q.loading.hide();
-			}
-		},
 		$d(date) {
-			return DateService.convertISOLocalDisplay(date);
+			return DateService.convertISOLocalDisplayShort(date);
 		},
 		goToMeeting() {
 			if (this.work.meetingLink) {

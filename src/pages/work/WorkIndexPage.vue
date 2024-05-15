@@ -386,12 +386,20 @@ export default {
 	async mounted() {
 		const data = await dataService.getWorkPageData();
 		data.work.sort((a, b) => {
+			// Check for paymentsRequired
+			const paymentsA = a.paymentsRequired ? 0 : 1;
+			const paymentsB = b.paymentsRequired ? 0 : 1;
+
+			if (paymentsA !== paymentsB) {
+				return paymentsA - paymentsB; // Sort by paymentsRequired first
+			}
+
 			// Check for 'Meeting' status
 			const statusA = a.status === "Meeting" ? 0 : 1;
 			const statusB = b.status === "Meeting" ? 0 : 1;
 
 			if (statusA !== statusB) {
-				return statusA - statusB; // Sort by status first
+				return statusA - statusB; // Sort by status second
 			} else {
 				if (a.createdDate > b.createdDate) {
 					return -1;

@@ -9,6 +9,10 @@ class DateService {
 		const localDate = DateTime.fromISO(dateISO).toLocal();
 		return localDate.toFormat("yyyy-LL-dd HH:mm");
 	}
+	convertISOLocalDisplayShort(dateISO) {
+		const localDate = DateTime.fromISO(dateISO).toLocal();
+		return localDate.toFormat("yyyy-LL-dd");
+	}
 	convertISOLocalPretty(dateISO) {
 		const localDate = DateTime.fromISO(dateISO).toLocal();
 		return localDate.toFormat("MMMM dd, HH:mm");
