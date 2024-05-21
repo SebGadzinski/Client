@@ -294,6 +294,31 @@
 										</q-item-section>
 									</q-item>
 								</template>
+								<q-item v-if="props.row?.myClass">
+									<q-item-section>
+										<q-btn
+											v-if="
+												props.row?.students?.length > 0
+											"
+											color="primary"
+											:label="$t('View Students')"
+											@click="viewStudents(props.row.id)"
+										/>
+										<q-btn
+											v-else
+											color="negative"
+											:label="$t('No Students')"
+											@click="
+												$q.dialog({
+													title: $t('No Students'),
+													message: $t(
+														'No zoom meeting will be created until a student enters the class'
+													),
+												})
+											"
+										/>
+									</q-item-section>
+								</q-item>
 							</q-list>
 						</q-card-section>
 					</q-card>
@@ -301,6 +326,31 @@
 			</template>
 		</q-table>
 	</q-page>
+	<q-dialog v-model="studentsCard.visible" position="top">
+		<q-card class="student-card text-center">
+			<q-card-section class="row q-pb-none">
+				<div class="text-h6 q-mx-auto">
+					{{ $t(studentsCard.title) }}
+				</div>
+			</q-card-section>
+			<q-card-section>
+				<div class="q-pb-sm">
+					<q-input
+						v-model="studentsCard.search"
+						placeholder="Search"
+					/>
+				</div>
+				<q-table
+					:rows="studentsCard.students"
+					:columns="studentsCard.columns"
+					row-key="userId"
+					:filter="studentsCard.search"
+					:pagination="studentsCard.initialPagination"
+					bordered
+				/>
+			</q-card-section>
+		</q-card>
+	</q-dialog>
 	<q-dialog v-model="classCard.visible">
 		<q-card class="text-center">
 			<q-card-section class="row q-pb-none">
@@ -320,7 +370,7 @@
 	<q-dialog v-model="inCancellation">
 		<q-card class="text-center">
 			<q-card-section class="row q-pb-none">
-				<div class="text-h6 q-mx-auto">{{ $t("Current ") }}</div>
+				<div class="text-h6 q-mx-auto">{{ $t("Current") }}</div>
 			</q-card-section>
 			<q-card-section>
 				<q-btn
@@ -347,6 +397,7 @@ export default {
 		return {
 			loading: true,
 			search: "",
+			studentSearch: "",
 			classes: [],
 			initialPagination: {
 				sortBy: "customSort",
@@ -379,6 +430,38 @@ export default {
 				visible: false,
 				title: "",
 				workId: "",
+			},
+			studentsCard: {
+				visible: false,
+				title: "",
+				students: [],
+				search: "",
+				columns: [
+					{
+						name: "email",
+						label: this.$t("Email"),
+						field: "email",
+						align: "left",
+					},
+					{
+						name: "workClassType",
+						label: this.$t("Class Type"),
+						field: "workClassType",
+						align: "left",
+					},
+					{
+						name: "workStatus",
+						label: this.$t("Work Status"),
+						field: "workStatus",
+						align: "left",
+					},
+				],
+				initialPagination: {
+					sortBy: "email",
+					descending: false,
+					page: 1,
+					rowsPerPage: 15,
+				},
 			},
 		};
 	},
@@ -415,6 +498,12 @@ export default {
 	async updated() {},
 	computed: {},
 	methods: {
+		viewStudents(rowId) {
+			this.studentsCard.title = this.classes[rowId].name;
+			this.studentsCard.search = "";
+			this.studentsCard.students = this.classes[rowId].students;
+			this.studentsCard.visible = true;
+		},
 		$d(date) {
 			return DateService.convertISOLocalPretty(date);
 		},
@@ -584,10 +673,16 @@ export default {
 		width: 30vw;
 		margin: 20px 20px;
 	}
+	.student-card {
+		width: 50vw;
+	}
 }
 
 @media (max-width: 767px) {
 	.custom-card {
+		width: 90vw;
+	}
+	.student-card {
 		width: 90vw;
 	}
 }
