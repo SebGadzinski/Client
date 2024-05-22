@@ -1,7 +1,4 @@
 import { api } from "../boot/axios";
-import { Preferences } from "@capacitor/preferences";
-import { Capacitor } from "@capacitor/core";
-import { i18n } from "../boot/i18n";
 
 class DataService {
 	/**
@@ -62,46 +59,38 @@ class DataService {
 
 	async getHomePageData() {
 		return await this.call(
-			api.get("/data/getHomePageData"),
-			"Could not get home page data"
-		);
-	}
-	async getHomePageDataV2() {
-		return await this.call(
-			api.get("/data/getHomePageDataV2"),
+			api.get("/data/home"),
 			"Could not get home page data"
 		);
 	}
 
+	async getBrowsePageData() {
+		return await this.call(
+			api.get("/browse"),
+			"Could not get browse page data"
+		);
+	}
 	async getCategoryPageData(categorySlug) {
 		return await this.call(
-			api.post("/data/getCategoryPageData", { categorySlug }),
+			api.get(`/browse/${categorySlug}`),
 			"Could not get category page data"
 		);
 	}
-
 	async getServicePageData(categorySlug, serviceSlug) {
 		return await this.call(
-			api.post("/data/getServicePageData", { categorySlug, serviceSlug }),
+			api.get(`/browse/${categorySlug}/${serviceSlug}`),
 			"Could not get service page data"
 		);
 	}
 
 	async getMeetingPageData(categorySlug, serviceSlug) {
 		return await this.call(
-			api.post("/data/getMeetingPageData", {
+			api.post("/meeting", {
 				categorySlug,
 				serviceSlug,
 				date: new Date(),
 			}),
 			"Could not get meeting page data"
-		);
-	}
-
-	async findUnavailableDurations(date) {
-		return await this.call(
-			api.post("/data/meeting/findUnavailableDurations", { date }),
-			"Could not find unavailable durations"
 		);
 	}
 
@@ -113,7 +102,7 @@ class DataService {
 		bookingMessage,
 	}) {
 		try {
-			return await api.post("/data/meeting/book", {
+			return await api.post("/meeting/book", {
 				categorySlug,
 				serviceSlug,
 				templateId,

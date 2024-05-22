@@ -83,7 +83,7 @@ export default {
 		};
 	},
 	async mounted() {
-		const newCategories = await dataService.getHomePageData();
+		const newCategories = await dataService.getBrowsePageData();
 		if (newCategories && newCategories.length > 0) {
 			for (let i = 0; i < newCategories.length; i++) {
 				newCategories[i].id = i;
