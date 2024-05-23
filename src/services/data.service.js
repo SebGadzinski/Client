@@ -121,46 +121,47 @@ class DataService {
 
 	async getWorkPageData() {
 		return await this.call(
-			api.get("/data/getWorkPageData"),
+			api.get("/work"),
 			"Could not get work page data"
 		);
 	}
 
 	async getWorkConfirmationPageData(workId) {
 		return await this.call(
-			api.post("/data/getWorkConfirmationPageData", { workId }),
+			api.get(`/work/confirm/${workId}`),
 			"Could not get work confirmation page data"
 		);
 	}
 
 	async getWorkCancelPageData(workId) {
 		return await this.call(
-			api.post("/data/getWorkCancelPageData", { workId }),
+			api.get(`/work/cancel/${workId}`),
 			"Could not get work cancel page data"
 		);
 	}
 
 	async confirmWork(workId) {
-		return await this.call(api.post(`/data/work/confirm/${workId}`));
+		return await this.call(api.post(`work/confirm/${workId}`));
 	}
 
 	async cancelWork(workId) {
-		return await this.call(api.post(`/data/work/cancel/${workId}`));
+		return await this.call(api.post(`/work/cancel/${workId}`));
 	}
 
 	async getWorkViewComponent(workId) {
-		return await this.call(api.get(`/data/work/${workId}`));
+		return await this.call(api.get(`/work/${workId}`));
 	}
 
 	async getWorkEditorPageData(workId, isNew = false) {
+		const req = isNew ? `/work/create` : `/work/edit/${workId}`;
 		return await this.call(
-			api.post("/data/getWorkEditorPageData", { workId, isNew }),
+			api.get(req),
 			"Could not get work editor page data"
 		);
 	}
 
 	async upsertWork(work) {
-		return await this.call(api.post("/data/work/upsert", work));
+		return await this.call(api.post("/work/upsert", work));
 	}
 
 	async getUserPageData() {
@@ -259,9 +260,7 @@ class DataService {
 			type,
 			paymentItemId,
 		};
-		const result = await this.call(
-			api.post("/data/work/pay/session", body)
-		);
+		const result = await this.call(api.post("/work/pay/session", body));
 		return result;
 	}
 	async completePaymentViaSubCard({ workId, type, paymentItemId = null }) {
@@ -271,29 +270,20 @@ class DataService {
 			paymentItemId,
 		};
 		const result = await this.call(
-			api.post("/data/work/pay/attached-card", body)
+			api.post("/work/pay/attached-card", body)
 		);
 		return result;
 	}
 
 	async confirmPaymentIntent(paymentHistoryId) {
 		return await this.call(
-			api.get(`data/work/pay/session/confirm?id=${paymentHistoryId}`)
-		);
-	}
-
-	async loadingMoreSubCardHistory(workId, paymentHistoryIndex) {
-		return await this.call(
-			api.post(`data/work/sub/paymentHistory`, {
-				workId,
-				paymentHistoryIndex,
-			})
+			api.get(`/work/pay/session/confirm?id=${paymentHistoryId}`)
 		);
 	}
 
 	async addCardToSubscription(workId, cardToken) {
 		return await this.call(
-			api.post(`data/work/sub/paymentMethod/add`, { workId, cardToken })
+			api.post(`/work/sub/paymentMethod/add`, { workId, cardToken })
 		);
 	}
 
@@ -318,37 +308,33 @@ class DataService {
 			"Could not reset Stats"
 		);
 	}
-
-	async getWorkTemplates(query) {
-		return await this.call(api.post(`data/work/template/find`, query));
-	}
-	async saveWorkTemplate(data) {
-		return await this.call(api.post(`data/work/template/save`, data));
-	}
 	async getWorkTemplateEditorPageData({ workTemplateId, isNew = false }) {
+		const req = isNew
+			? `/work/template/create`
+			: `/work/template/edit/${workTemplateId}`;
 		return await this.call(
-			api.post("/data/getWorkTemplateEditorPageData", {
-				workTemplateId,
-				isNew,
-			}),
+			api.get(req),
 			"Could not get work editor page data"
 		);
 	}
 	async getWorkTemplatePageData() {
 		return await this.call(
-			api.get("/data/getWorkTemplatePageData"),
+			api.get("/work/template"),
 			"Could not get work template page data"
 		);
 	}
+	async saveWorkTemplate(data) {
+		return await this.call(api.post(`work/template/upsert`, data));
+	}
 	async getWorkTemplateComponent(workTemplateId) {
 		return await this.call(
-			api.post("/data/work/template", { id: workTemplateId }),
+			api.post("/work/template", { id: workTemplateId }),
 			"Could not get work template component"
 		);
 	}
 	async deleteWorkTemplate(id) {
 		return await this.call(
-			api.delete(`/data/work/template/delete/${id}`),
+			api.delete(`/work/template/delete/${id}`),
 			"Could not delete template"
 		);
 	}
@@ -384,7 +370,7 @@ class DataService {
 	}
 	async deleteCard(workId) {
 		return await this.call(
-			api.delete(`/data/work/sub/paymentMethod/delete/${workId}`)
+			api.delete(`/work/sub/paymentMethod/delete/${workId}`)
 		);
 	}
 	async getAcceptingWorkState() {
@@ -396,7 +382,7 @@ class DataService {
 		);
 	}
 	async generatePaymentReceipt(workId) {
-		return await this.call(api.get(`data/work/receipt/${workId}`));
+		return await this.call(api.get(`/work/receipt/${workId}`));
 	}
 
 	async getClassesPageData() {
