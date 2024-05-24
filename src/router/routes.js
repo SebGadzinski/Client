@@ -22,7 +22,7 @@ const layout = {
 		},
 		{ path: "profile", component: () => import("pages/ProfilePage.vue") },
 		{
-			path: "profile/user/:userId",
+			path: "profile/:userId",
 			component: () => import("pages/ProfilePage.vue"),
 		},
 		{

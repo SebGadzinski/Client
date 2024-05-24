@@ -123,7 +123,11 @@ export default {
 							message: this.$t("Content has been updated."),
 						})
 						.onDismiss(() => {
-							this.$router.push("/settings");
+							if (this.route?.params?.userId) {
+								this.$router.push("/admin/users");
+							} else {
+								this.$router.push("/settings");
+							}
 						});
 				}
 			} catch (err) {

@@ -59,7 +59,7 @@ class DataService {
 
 	async getHomePageData() {
 		return await this.call(
-			api.get("/data/home"),
+			api.get("/home"),
 			"Could not get home page data"
 		);
 	}
@@ -234,24 +234,17 @@ class DataService {
 	}
 
 	async getProfile(userId) {
-		let body = {
-			onError: {
-				route: {
-					query: `redirectPath=/profile`,
-				},
-			},
-		};
+		let req = `/user/profile`;
 		if (userId) {
-			body.userId = userId;
+			req += `/${userId}`;
 		}
-		return await this.call(
-			api.post(`/data/getProfile`, body),
-			"Could not get profile"
-		);
+		return await this.call(api.get(req), "Could not get profile");
 	}
 
 	async saveProfile(userId, user) {
-		return await this.call(api.post("/data/saveProfile", { userId, user }));
+		return await this.call(
+			api.post("/user/profile/save", { userId, user })
+		);
 	}
 
 	async generateConfirmationPayment({ workId, type, paymentItemId = null }) {
