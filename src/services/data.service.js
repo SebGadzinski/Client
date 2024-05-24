@@ -340,7 +340,7 @@ class DataService {
 	}
 	async enrollmentStatus(templateId) {
 		return await this.call(
-			api.post(`/data/work/class/enroll/status/${templateId}`, {
+			api.post(`/classes/enroll/status/${templateId}`, {
 				onError: {
 					route: {
 						query: `redirectPath=/work/template/${templateId}`,
@@ -351,7 +351,7 @@ class DataService {
 	}
 	async enrollInClass(templateId) {
 		return await this.call(
-			api.post(`/data/work/class/enroll/${templateId}`),
+			api.post(`/classes/enroll/${templateId}`),
 			{
 				onError: {
 					route: {
@@ -364,7 +364,7 @@ class DataService {
 	}
 	async useSingleSession(workId) {
 		return await this.call(
-			api.post(`/data/work/class/use/single-session/${workId}`),
+			api.post(`/classes/use/single-session/${workId}`),
 			"Could not use session."
 		);
 	}
@@ -387,17 +387,17 @@ class DataService {
 
 	async getClassesPageData() {
 		return await this.call(
-			api.get("/data/getClassesPageData"),
+			api.get("/classes"),
 			"Could not get classes page data"
 		);
 	}
 
 	async joinClass(workId) {
-		return await this.call(api.get(`data/classes/join/${workId}`));
+		return await this.call(api.get(`classes/join/${workId}`));
 	}
 
 	async dropClass(workId) {
-		return await this.call(api.post(`data/classes/drop/${workId}`));
+		return await this.call(api.post(`classes/drop/${workId}`));
 	}
 
 	async call(func, customError = null) {

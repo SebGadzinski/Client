@@ -529,6 +529,7 @@ export default {
 		},
 		dropClass(workId) {
 			try {
+				this.classCard.visible = false;
 				this.$q
 					.dialog({
 						title: this.$t("Drop Class?"),
