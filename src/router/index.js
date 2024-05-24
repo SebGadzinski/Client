@@ -42,7 +42,7 @@ export default route(function (/* { store, ssrContext } */) {
 			"/work",
 			"/my-classes",
 		];
-		const adminPages = ["admin", "/profile/user/"];
+		const adminPages = ["admin", "/profile/"];
 		const publicPages = ["/work/pay/confirm", "/work/template/"];
 		const isAdminPage = adminPages.some((x) => to.path.includes(x));
 		const authRequired =
@@ -63,7 +63,7 @@ export default route(function (/* { store, ssrContext } */) {
 			next("/");
 		} else {
 			if (authRequired && !user?.token) {
-				next("/auth/login");
+				next(`/auth/login?redirectPath=${window.location.pathname}`);
 			} else {
 				next();
 			}

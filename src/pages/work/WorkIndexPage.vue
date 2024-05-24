@@ -44,7 +44,8 @@
 				<q-td :key="props.name">
 					<q-btn-dropdown
 						:class="
-							props.row?.paymentsRequired
+							props.row?.paymentsRequired ||
+							props.row?.actions?.some((x) => x.siren)
 								? 'siren'
 								: 'bg-primary text-white'
 						"
@@ -111,6 +112,7 @@
 								:to="`${action.link}`"
 								clickable
 								v-close-popup
+								:class="action.siren ? 'siren' : ''"
 							>
 								<q-item-section>
 									<q-item-label>{{
@@ -242,10 +244,13 @@
 							<q-btn
 								v-for="(action, index) in props.row.actions"
 								:key="index"
-								color="secondary"
 								:label="$t(action.name)"
 								:to="action.link"
-								class="text-color full-width"
+								:class="
+									action.siren
+										? 'siren full-width'
+										: 'bg-secondary text-white full-width'
+								"
 							/>
 							<q-btn
 								v-for="(action, index) in props.row.oActions"
@@ -386,6 +391,14 @@ export default {
 	async mounted() {
 		const data = await dataService.getWorkPageData();
 		data.work.sort((a, b) => {
+			// Check for 'Confirmation Required' status
+			const confirmationA = a.status === "Confirmation Required" ? 0 : 1;
+			const confirmationB = b.status === "Confirmation Required" ? 0 : 1;
+
+			if (confirmationA !== confirmationB) {
+				return confirmationA - confirmationB; // Sort by 'Confirmation Required' second
+			}
+
 			// Check for paymentsRequired
 			const paymentsA = a.paymentsRequired ? 0 : 1;
 			const paymentsB = b.paymentsRequired ? 0 : 1;
@@ -399,15 +412,16 @@ export default {
 			const statusB = b.status === "Meeting" ? 0 : 1;
 
 			if (statusA !== statusB) {
-				return statusA - statusB; // Sort by status second
+				return statusA - statusB; // Sort by 'Meeting' third
+			}
+
+			// Sort by createdDate
+			if (a.createdDate > b.createdDate) {
+				return -1;
+			} else if (a.createdDate < b.createdDate) {
+				return 1;
 			} else {
-				if (a.createdDate > b.createdDate) {
-					return -1;
-				} else if (a.createdDate < b.createdDate) {
-					return 1;
-				} else {
-					return 0;
-				}
+				return 0;
 			}
 		});
 
@@ -430,6 +444,7 @@ export default {
 				x.oActions.push({ name: "Go To Class", link: x?.classLink });
 			} else if (x.status === "Confirmation Required") {
 				x.actions.push({
+					siren: true,
 					name: "Confirm Work",
 					link: `/work/confirmation/${x.workId}`,
 				});

@@ -61,7 +61,10 @@ api.interceptors.response.use(
 			// Access Token was expired
 			if (err.response.status === 401 && !originalConfig._retry) {
 				if (originalConfig.url == "/auth/refresh") {
-					AuthService.logout();
+					AuthService.logout(
+						true,
+						`?redirectPath=${window.location.pathname}`
+					);
 					return;
 				}
 				originalConfig._retry = true;

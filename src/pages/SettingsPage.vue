@@ -294,10 +294,10 @@
 		>
 			<q-badge
 				:class="
-					'text-h6 q-px-sm ' +
+					'siren text-h6 q-px-sm ' +
 					($q.screen.lt.md ? 'q-my-lg' : 'q-mr-lg')
 				"
-				>{{ this.$t(`freeCost`, { cost: $c(200) }) }}</q-badge
+				>{{ this.$t(`freeCost`, { cost: "$200" }) }}</q-badge
 			>
 		</div>
 		<a
@@ -489,20 +489,8 @@ export default {
 					let file = await Preferences.clear();
 				} catch (e) {}
 			}
-			this.logout().then(
-				() => {
-					this.$router.push("/");
-				},
-				(error) => {
-					this.loading = false;
-					this.message =
-						(error.response &&
-							error.response.data &&
-							error.response.data.message) ||
-						error.message ||
-						error.toString();
-				}
-			);
+			await this.logout();
+			this.$router.push("/");
 		},
 		async handleRefreshSession() {
 			try {

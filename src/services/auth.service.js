@@ -101,7 +101,7 @@ class AuthService {
 				token: TokenService.getLocalRefreshToken(),
 			});
 			if (!rs || !rs?.data?.success) {
-				this.logout();
+				await this.logout();
 				return;
 			}
 
@@ -112,7 +112,7 @@ class AuthService {
 			TokenService.setLocalRefreshToken(refreshToken);
 			TokenService.setLocalToken(token);
 		} catch (err) {
-			this.logout();
+			await this.logout();
 		}
 	}
 
@@ -145,12 +145,12 @@ class AuthService {
 	/**
 	 * Logs user out and removes token
 	 */
-	async logout(reload = true) {
+	async logout(reload = true, query = "") {
 		TokenService.removeUser();
 		const loginPath =
-			window.location.hostname !== "localhost"
+			(window.location.hostname !== "localhost"
 				? "#/auth/login"
-				: "auth/login";
+				: "auth/login") + (query ?? "");
 		if (Capacitor.getPlatform() != "web") {
 			try {
 				let file = await Preferences.clear();

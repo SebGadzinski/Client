@@ -75,6 +75,12 @@ export default {
 								});
 								return;
 							}
+							const redirectPath =
+								this.route?.query["redirectPath"];
+							if (redirectPath) {
+								this.$router.push(redirectPath);
+								return;
+							}
 							const bookMeeting =
 								this.route?.query["book-meeting"];
 							const templateId = this.route?.query?.enroll;
