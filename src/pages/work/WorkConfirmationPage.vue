@@ -192,7 +192,7 @@ export default {
 						}
 					});
 			} else {
-				await payViaNewPayment(workId);
+				await this.payViaNewPayment(workId);
 			}
 		},
 		async payViaNewPayment(workId) {

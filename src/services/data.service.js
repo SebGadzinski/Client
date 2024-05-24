@@ -1,7 +1,4 @@
 import { api } from "../boot/axios";
-import { Preferences } from "@capacitor/preferences";
-import { Capacitor } from "@capacitor/core";
-import { i18n } from "../boot/i18n";
 
 class DataService {
 	/**
@@ -62,46 +59,38 @@ class DataService {
 
 	async getHomePageData() {
 		return await this.call(
-			api.get("/data/getHomePageData"),
-			"Could not get home page data"
-		);
-	}
-	async getHomePageDataV2() {
-		return await this.call(
-			api.get("/data/getHomePageDataV2"),
+			api.get("/home"),
 			"Could not get home page data"
 		);
 	}
 
+	async getBrowsePageData() {
+		return await this.call(
+			api.get("/browse"),
+			"Could not get browse page data"
+		);
+	}
 	async getCategoryPageData(categorySlug) {
 		return await this.call(
-			api.post("/data/getCategoryPageData", { categorySlug }),
+			api.get(`/browse/${categorySlug}`),
 			"Could not get category page data"
 		);
 	}
-
 	async getServicePageData(categorySlug, serviceSlug) {
 		return await this.call(
-			api.post("/data/getServicePageData", { categorySlug, serviceSlug }),
+			api.get(`/browse/${categorySlug}/${serviceSlug}`),
 			"Could not get service page data"
 		);
 	}
 
 	async getMeetingPageData(categorySlug, serviceSlug) {
 		return await this.call(
-			api.post("/data/getMeetingPageData", {
+			api.post("/meeting", {
 				categorySlug,
 				serviceSlug,
 				date: new Date(),
 			}),
 			"Could not get meeting page data"
-		);
-	}
-
-	async findUnavailableDurations(date) {
-		return await this.call(
-			api.post("/data/meeting/findUnavailableDurations", { date }),
-			"Could not find unavailable durations"
 		);
 	}
 
@@ -113,7 +102,7 @@ class DataService {
 		bookingMessage,
 	}) {
 		try {
-			return await api.post("/data/meeting/book", {
+			return await api.post("/meeting/book", {
 				categorySlug,
 				serviceSlug,
 				templateId,
@@ -132,58 +121,59 @@ class DataService {
 
 	async getWorkPageData() {
 		return await this.call(
-			api.get("/data/getWorkPageData"),
+			api.get("/work"),
 			"Could not get work page data"
 		);
 	}
 
 	async getWorkConfirmationPageData(workId) {
 		return await this.call(
-			api.post("/data/getWorkConfirmationPageData", { workId }),
+			api.get(`/work/confirm/${workId}`),
 			"Could not get work confirmation page data"
 		);
 	}
 
 	async getWorkCancelPageData(workId) {
 		return await this.call(
-			api.post("/data/getWorkCancelPageData", { workId }),
+			api.get(`/work/cancel/${workId}`),
 			"Could not get work cancel page data"
 		);
 	}
 
 	async confirmWork(workId) {
-		return await this.call(api.post(`/data/work/confirm/${workId}`));
+		return await this.call(api.post(`work/confirm/${workId}`));
 	}
 
 	async cancelWork(workId) {
-		return await this.call(api.post(`/data/work/cancel/${workId}`));
+		return await this.call(api.post(`/work/cancel/${workId}`));
 	}
 
 	async getWorkViewComponent(workId) {
-		return await this.call(api.get(`/data/work/${workId}`));
+		return await this.call(api.get(`/work/${workId}`));
 	}
 
 	async getWorkEditorPageData(workId, isNew = false) {
+		const req = isNew ? `/work/create` : `/work/edit/${workId}`;
 		return await this.call(
-			api.post("/data/getWorkEditorPageData", { workId, isNew }),
+			api.get(req),
 			"Could not get work editor page data"
 		);
 	}
 
 	async upsertWork(work) {
-		return await this.call(api.post("/data/work/upsert", work));
+		return await this.call(api.post("/work/upsert", work));
 	}
 
 	async getUserPageData() {
 		return await this.call(
-			api.get("/data/admin/getUserPageData"),
-			"Could not get work data"
+			api.get("/admin/users"),
+			"Could not get users data"
 		);
 	}
 
 	async getStatusReports() {
 		return await this.call(
-			api.get("/data/admin/getVMStatusReport"),
+			api.get("/admin/vm"),
 			"Could not get vm status data"
 		);
 	}
@@ -194,7 +184,7 @@ class DataService {
 
 		try {
 			let response = await api.post(
-				"data/admin/vm/downloadVMStatusReport",
+				"admin/vm/downloadVMStatusReport",
 				formData,
 				{
 					headers: {
@@ -244,24 +234,17 @@ class DataService {
 	}
 
 	async getProfile(userId) {
-		let body = {
-			onError: {
-				route: {
-					query: `redirectPath=/profile`,
-				},
-			},
-		};
+		let req = `/user/profile`;
 		if (userId) {
-			body.userId = userId;
+			req += `/${userId}`;
 		}
-		return await this.call(
-			api.post(`/data/getProfile`, body),
-			"Could not get profile"
-		);
+		return await this.call(api.get(req), "Could not get profile");
 	}
 
 	async saveProfile(userId, user) {
-		return await this.call(api.post("/data/saveProfile", { userId, user }));
+		return await this.call(
+			api.post("/user/profile/save", { userId, user })
+		);
 	}
 
 	async generateConfirmationPayment({ workId, type, paymentItemId = null }) {
@@ -270,9 +253,7 @@ class DataService {
 			type,
 			paymentItemId,
 		};
-		const result = await this.call(
-			api.post("/data/work/pay/session", body)
-		);
+		const result = await this.call(api.post("/work/pay/session", body));
 		return result;
 	}
 	async completePaymentViaSubCard({ workId, type, paymentItemId = null }) {
@@ -282,29 +263,20 @@ class DataService {
 			paymentItemId,
 		};
 		const result = await this.call(
-			api.post("/data/work/pay/attached-card", body)
+			api.post("/work/pay/attached-card", body)
 		);
 		return result;
 	}
 
 	async confirmPaymentIntent(paymentHistoryId) {
 		return await this.call(
-			api.get(`data/work/pay/session/confirm?id=${paymentHistoryId}`)
-		);
-	}
-
-	async loadingMoreSubCardHistory(workId, paymentHistoryIndex) {
-		return await this.call(
-			api.post(`data/work/sub/paymentHistory`, {
-				workId,
-				paymentHistoryIndex,
-			})
+			api.get(`/work/pay/session/confirm?id=${paymentHistoryId}`)
 		);
 	}
 
 	async addCardToSubscription(workId, cardToken) {
 		return await this.call(
-			api.post(`data/work/sub/paymentMethod/add`, { workId, cardToken })
+			api.post(`/work/sub/paymentMethod/add`, { workId, cardToken })
 		);
 	}
 
@@ -325,47 +297,43 @@ class DataService {
 
 	async resetStats() {
 		return await this.call(
-			api.post("/data/resetStats"),
+			api.post("/admin/resetStats"),
 			"Could not reset Stats"
 		);
 	}
-
-	async getWorkTemplates(query) {
-		return await this.call(api.post(`data/work/template/find`, query));
-	}
-	async saveWorkTemplate(data) {
-		return await this.call(api.post(`data/work/template/save`, data));
-	}
 	async getWorkTemplateEditorPageData({ workTemplateId, isNew = false }) {
+		const req = isNew
+			? `/work/template/create`
+			: `/work/template/edit/${workTemplateId}`;
 		return await this.call(
-			api.post("/data/getWorkTemplateEditorPageData", {
-				workTemplateId,
-				isNew,
-			}),
+			api.get(req),
 			"Could not get work editor page data"
 		);
 	}
 	async getWorkTemplatePageData() {
 		return await this.call(
-			api.get("/data/getWorkTemplatePageData"),
+			api.get("/work/template"),
 			"Could not get work template page data"
 		);
 	}
+	async saveWorkTemplate(data) {
+		return await this.call(api.post(`work/template/upsert`, data));
+	}
 	async getWorkTemplateComponent(workTemplateId) {
 		return await this.call(
-			api.post("/data/work/template", { id: workTemplateId }),
+			api.post("/work/template", { id: workTemplateId }),
 			"Could not get work template component"
 		);
 	}
 	async deleteWorkTemplate(id) {
 		return await this.call(
-			api.delete(`/data/work/template/delete/${id}`),
+			api.delete(`/work/template/delete/${id}`),
 			"Could not delete template"
 		);
 	}
 	async enrollmentStatus(templateId) {
 		return await this.call(
-			api.post(`/data/work/class/enroll/status/${templateId}`, {
+			api.post(`/classes/enroll/status/${templateId}`, {
 				onError: {
 					route: {
 						query: `redirectPath=/work/template/${templateId}`,
@@ -376,7 +344,7 @@ class DataService {
 	}
 	async enrollInClass(templateId) {
 		return await this.call(
-			api.post(`/data/work/class/enroll/${templateId}`),
+			api.post(`/classes/enroll/${templateId}`),
 			{
 				onError: {
 					route: {
@@ -389,40 +357,40 @@ class DataService {
 	}
 	async useSingleSession(workId) {
 		return await this.call(
-			api.post(`/data/work/class/use/single-session/${workId}`),
+			api.post(`/classes/use/single-session/${workId}`),
 			"Could not use session."
 		);
 	}
 	async deleteCard(workId) {
 		return await this.call(
-			api.delete(`/data/work/sub/paymentMethod/delete/${workId}`)
+			api.delete(`/work/sub/paymentMethod/delete/${workId}`)
 		);
 	}
 	async getAcceptingWorkState() {
-		return await this.call(api.get(`/data/admin/acceptingWorkState`));
+		return await this.call(api.get(`/admin/acceptingWorkState`));
 	}
 	async saveAcceptingWorkState(state) {
 		return await this.call(
-			api.post(`/data/admin/acceptingWorkState/save`, { state })
+			api.post(`/admin/acceptingWorkState/save`, { state })
 		);
 	}
 	async generatePaymentReceipt(workId) {
-		return await this.call(api.get(`data/work/receipt/${workId}`));
+		return await this.call(api.get(`/work/receipt/${workId}`));
 	}
 
 	async getClassesPageData() {
 		return await this.call(
-			api.get("/data/getClassesPageData"),
+			api.get("/classes"),
 			"Could not get classes page data"
 		);
 	}
 
 	async joinClass(workId) {
-		return await this.call(api.get(`data/classes/join/${workId}`));
+		return await this.call(api.get(`classes/join/${workId}`));
 	}
 
 	async dropClass(workId) {
-		return await this.call(api.post(`data/classes/drop/${workId}`));
+		return await this.call(api.post(`classes/drop/${workId}`));
 	}
 
 	async call(func, customError = null) {

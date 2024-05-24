@@ -147,7 +147,7 @@ export default {
 	},
 	async mounted() {
 		this.startPlaceholderRotation();
-		const newCards = await dataService.getHomePageDataV2();
+		const newCards = await dataService.getHomePageData();
 		this.workCards = newCards.workCards;
 		this.classCards = newCards.classCards;
 	},

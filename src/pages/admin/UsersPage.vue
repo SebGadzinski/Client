@@ -50,7 +50,7 @@
 							<q-item
 								clickable
 								v-close-popup
-								:to="`/profile/user/${props.row._id}`"
+								:to="`/profile/${props.row._id}`"
 							>
 								<q-item-section>
 									<q-item-label>{{
