@@ -166,14 +166,14 @@ class DataService {
 
 	async getUserPageData() {
 		return await this.call(
-			api.get("/data/admin/getUserPageData"),
-			"Could not get work data"
+			api.get("/admin/users"),
+			"Could not get users data"
 		);
 	}
 
 	async getStatusReports() {
 		return await this.call(
-			api.get("/data/admin/getVMStatusReport"),
+			api.get("/admin/vm"),
 			"Could not get vm status data"
 		);
 	}
@@ -184,7 +184,7 @@ class DataService {
 
 		try {
 			let response = await api.post(
-				"data/admin/vm/downloadVMStatusReport",
+				"admin/vm/downloadVMStatusReport",
 				formData,
 				{
 					headers: {
@@ -304,7 +304,7 @@ class DataService {
 
 	async resetStats() {
 		return await this.call(
-			api.post("/data/resetStats"),
+			api.post("/admin/resetStats"),
 			"Could not reset Stats"
 		);
 	}
@@ -374,11 +374,11 @@ class DataService {
 		);
 	}
 	async getAcceptingWorkState() {
-		return await this.call(api.get(`/data/admin/acceptingWorkState`));
+		return await this.call(api.get(`/admin/acceptingWorkState`));
 	}
 	async saveAcceptingWorkState(state) {
 		return await this.call(
-			api.post(`/data/admin/acceptingWorkState/save`, { state })
+			api.post(`/admin/acceptingWorkState/save`, { state })
 		);
 	}
 	async generatePaymentReceipt(workId) {
