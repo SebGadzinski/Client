@@ -54,7 +54,7 @@ api.interceptors.response.use(
 		}
 		const originalConfig = err.config;
 		if (
-			!originalConfig.url.includes("auth") ||
+			!originalConfig.url.includes("auth/") ||
 			originalConfig.url === "/auth/sendEmailConfirmation" ||
 			(originalConfig.url === "/auth/emailConfirmStatus" && err.response)
 		) {
