@@ -63,7 +63,7 @@ export default route(function (/* { store, ssrContext } */) {
 			next("/");
 		} else {
 			if (authRequired && !user?.token) {
-				next(`/auth/login?redirectPath=${to.path}`);
+				next(`/auth/login?redirectPath=${to.path}&fromRouter=true`);
 			} else {
 				next();
 			}

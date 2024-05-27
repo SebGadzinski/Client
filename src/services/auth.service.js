@@ -102,7 +102,7 @@ class AuthService {
 		if (!rs || !rs?.data?.success) {
 			await this.logout(
 				true,
-				`?redirectPath=${window.location.pathname}`
+				`?redirectPath=${window.location.pathname}&fromRefresh=true`
 			);
 			return false;
 		}
