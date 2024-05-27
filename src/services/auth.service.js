@@ -96,9 +96,14 @@ class AuthService {
 		}
 	}
 	async refreshSession() {
-		const rs = await api.post("/auth/refresh", {
-			token: TokenService.getLocalRefreshToken(),
-		});
+		let rs = null;
+		try {
+			rs = await api.post("/auth/refresh", {
+				token: TokenService.getLocalRefreshToken(),
+			});
+		} catch (err) {
+			return false;
+		}
 		if (!rs || !rs?.data?.success) {
 			await this.logout(
 				true,
