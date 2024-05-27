@@ -151,21 +151,24 @@ class AuthService {
 	 * Logs user out and removes token
 	 */
 	async logout(reload = true, query = "") {
-		TokenService.removeUser();
-		const loginPath =
-			(window.location.hostname !== "localhost"
-				? "#/auth/login"
-				: "auth/login") + (query ?? "");
-		if (Capacitor.getPlatform() != "web") {
-			try {
-				let file = await Preferences.clear();
-			} catch (e) {}
-			if (reload) {
-				window.location = loginPath;
-			}
-		} else {
-			if (reload) {
-				window.location = loginPath;
+		const user = localStorage.getItem("user");
+		if (user) {
+			TokenService.removeUser();
+			const loginPath =
+				(window.location.hostname !== "localhost"
+					? "#/auth/login"
+					: "auth/login") + (query ?? "");
+			if (Capacitor.getPlatform() != "web") {
+				try {
+					let file = await Preferences.clear();
+				} catch (e) {}
+				if (reload) {
+					window.location = loginPath;
+				}
+			} else {
+				if (reload) {
+					window.location = loginPath;
+				}
 			}
 		}
 	}
