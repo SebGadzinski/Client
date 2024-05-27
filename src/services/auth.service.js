@@ -96,24 +96,24 @@ class AuthService {
 		}
 	}
 	async refreshSession() {
-		try {
-			const rs = await api.post("/auth/refresh", {
-				token: TokenService.getLocalRefreshToken(),
-			});
-			if (!rs || !rs?.data?.success) {
-				await this.logout();
-				return;
-			}
-
-			// Success, can refresh token
-			const { token, refreshToken, user } = rs.data.data;
-
-			TokenService.setUser(user);
-			TokenService.setLocalRefreshToken(refreshToken);
-			TokenService.setLocalToken(token);
-		} catch (err) {
-			await this.logout();
+		const rs = await api.post("/auth/refresh", {
+			token: TokenService.getLocalRefreshToken(),
+		});
+		if (!rs || !rs?.data?.success) {
+			await this.logout(
+				true,
+				`?redirectPath=${window.location.pathname}`
+			);
+			return false;
 		}
+
+		// Success, can refresh token
+		const { token, refreshToken, user } = rs.data.data;
+
+		TokenService.setUser(user);
+		TokenService.setLocalRefreshToken(refreshToken);
+		TokenService.setLocalToken(token);
+		return true;
 	}
 
 	async emailConfirmStatus() {

@@ -60,20 +60,13 @@ api.interceptors.response.use(
 		) {
 			// Access Token was expired
 			if (err.response.status === 401 && !originalConfig._retry) {
-				if (originalConfig.url == "/auth/refresh") {
-					AuthService.logout(
-						true,
-						`?redirectPath=${window.location.pathname}`
-					);
-					return;
-				}
 				originalConfig._retry = true;
-				console.log("Original Config:");
 				console.log(originalConfig);
 				try {
-					await AuthService.refreshSession();
-
-					return api(originalConfig);
+					const refreshSuccess = await AuthService.refreshSession();
+					if (refreshSuccess) {
+						return api(originalConfig);
+					}
 				} catch (error) {
 					console.log(error);
 					return Promise.reject(error);
