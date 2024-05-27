@@ -65,7 +65,7 @@
 			<template v-slot:item="props">
 				<div
 					:class="
-						($q.screen.gt.sm ? 'col-3 q-mb-lg' : 'col-12') +
+						($q.screen.gt.sm ? 'col-4 q-mb-lg' : 'col-12') +
 						' q-pa-md cursor-pointer'
 					"
 				>
@@ -231,7 +231,7 @@ export default {
 	background-color: #f8a701;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 601px) {
 	.custom-card {
 		width: 1000px;
 	}
@@ -243,7 +243,7 @@ export default {
 	}
 }
 
-@media (max-width: 991px) {
+@media (max-width: 600px) {
 	.media-container {
 		height: 150px;
 	}
