@@ -58,7 +58,6 @@
 			:loading="loading"
 			:class="$q.screen.gt.sm ? 'q-mt-lg q-px-lg' : ''"
 			:columns="columns"
-			row-key="id"
 			:filter="search"
 			:rows-per-page-options="[0]"
 		>
@@ -100,6 +99,65 @@
 				:label="$t('Feel Like Browsing?')"
 				to="/browse"
 			/>
+			<div class="full-width">
+				<q-table
+					:rows="
+						tab === 'work'
+							? getWorkFeaturedRows()
+							: getClassFeaturedRows()
+					"
+					:grid="true"
+					:loading="loading"
+					:class="$q.screen.gt.sm ? 'q-mt-lg q-px-lg' : ''"
+					:rows-per-page-options="[0]"
+				>
+					<template v-slot:item="props">
+						<div
+							:class="
+								($q.screen.gt.sm
+									? 'col-3 q-mb-lg q-pa-md'
+									: 'col-12 q-pa-sm') + '  cursor-pointer'
+							"
+						>
+							<q-card
+								flat
+								bordered
+								@click="
+									navigate(
+										props.row.categorySlug,
+										props.row.serviceSlug
+									)
+								"
+								class="select-card"
+							>
+								<div
+									v-if="$q.screen.gt.sm"
+									class="feature-media-container"
+								>
+									<img
+										v-lazy="props.row.thumbnailImg"
+										class="fit"
+										style="max-width: 100%"
+									/>
+								</div>
+								<q-card-section>
+									<div
+										:class="
+											($q.screen.gt.sm
+												? 'text-h6'
+												: 'text-body1 text-center ') +
+											''
+										"
+									>
+										{{ $t(props.row.service) }}
+									</div>
+								</q-card-section>
+							</q-card>
+						</div>
+					</template>
+					<template v-slot:bottom></template>
+				</q-table>
+			</div>
 		</div>
 	</q-page>
 </template>
@@ -115,7 +173,9 @@ export default {
 			loading: false,
 			search: "",
 			workCards: [],
+			workFeaturedCards: [],
 			classCards: [],
+			classFeaturedCards: [],
 			hasTyped: false,
 			columns: [
 				{
@@ -149,7 +209,13 @@ export default {
 		this.startPlaceholderRotation();
 		const newCards = await dataService.getHomePageData();
 		this.workCards = newCards.workCards;
+		this.workFeaturedCards = newCards.workCards
+			.filter((x) => x.featured)
+			.sort((a, b) => a.service.localeCompare(b.service));
 		this.classCards = newCards.classCards;
+		this.classFeaturedCards = newCards.classCards
+			.filter((x) => x.featured)
+			.sort((a, b) => a.service.localeCompare(b.service));
 	},
 	methods: {
 		updateTabInfo() {
@@ -182,6 +248,16 @@ export default {
 		},
 		navigate(categorySlug, serviceSlug) {
 			this.$router.push(`/${categorySlug}/${serviceSlug}`);
+		},
+		getWorkFeaturedRows() {
+			if (this.$q.screen.lt.md) {
+				return this.workFeaturedCards.slice(0, 3);
+			} else return this.workFeaturedCards;
+		},
+		getClassFeaturedRows() {
+			if (this.$q.screen.lt.md) {
+				return this.classFeaturedCards.slice(0, 3);
+			} else return this.classFeaturedCards;
 		},
 	},
 };
@@ -235,6 +311,12 @@ export default {
 	.custom-card {
 		width: 1000px;
 	}
+	.feature-media-container {
+		width: 100%; /* Ensure the container takes full width of the parent */
+		height: 250px; /* Set a fixed height as needed */
+		overflow: hidden; /* Hide overflow to ensure uniform image display */
+	}
+
 	.media-container {
 		height: 300px;
 	}
@@ -244,6 +326,11 @@ export default {
 }
 
 @media (max-width: 600px) {
+	.feature-media-container {
+		width: 100%; /* Ensure the container takes full width of the parent */
+		height: 50; /* Set a fixed height as needed */
+		overflow: hidden; /* Hide overflow to ensure uniform image display */
+	}
 	.media-container {
 		height: 150px;
 	}
@@ -257,5 +344,12 @@ export default {
 		width: 90%;
 		margin: auto auto;
 	}
+}
+.feature-media-container img.fit {
+	width: 100%;
+	height: 100%;
+	object-fit: cover; /* Ensure the image covers the container while maintaining its aspect ratio */
+}
+.card-description {
 }
 </style>
