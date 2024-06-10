@@ -130,7 +130,11 @@ export const useAuthState = defineStore("Auth", {
 		},
 
 		async refreshSession() {
-			await AuthService.refreshSession();
+			const loggedOut = await AuthService.refreshSession();
+			if (loggedOut) {
+				this.user = null;
+				this.status.loggedIn = false;
+			}
 		},
 	},
 });
