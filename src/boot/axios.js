@@ -1,8 +1,8 @@
 import { boot } from "quasar/wrappers";
 import axios from "axios";
 import TokenService from "../services/token.service";
-import useAuthState from "../stores/auth.state";
 import eventBus from "../services/EventBus";
+import AuthService from 'src/services/auth.service';
 
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
@@ -63,8 +63,7 @@ api.interceptors.response.use(
 				originalConfig._retry = true;
 				console.log(originalConfig);
 				try {
-					const authStore = useAuthState();
-					const refreshSuccess = await authStore.refreshSession();
+					const refreshSuccess = await AuthService.refreshSession();
 					if (refreshSuccess) {
 						return api(originalConfig);
 					}
