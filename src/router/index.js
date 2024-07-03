@@ -17,6 +17,10 @@ import routes from "./routes";
  */
 
 export default route(function (/* { store, ssrContext } */) {
+	console.log("SERVER: " + process.env.SERVER);
+	console.log("VUE_ROUTER_MODE: " + process.env.VUE_ROUTER_MODE);
+	console.log("MODE: " + process.env.MODE);
+	console.log("VUE_ROUTER_MODE: " + process.env.VUE_ROUTER_BASE);
 	const createHistory = process.env.SERVER
 		? createMemoryHistory
 		: process.env.VUE_ROUTER_MODE === "history"
