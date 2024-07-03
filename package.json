@@ -13,8 +13,10 @@
 		"build-ios": "npm version patch && quasar build -m capacitor -T ios --ide",
 		"bump-android": "npm version patch && quasar dev -m capacitor -T android",
 		"dev": "npx quasar dev",
+		"prod": "npx quasar prod",
 		"build-android": "npm version patch && quasar build -m capacitor -T android --ide",
-		"build-www": "quasar build -m capacitor -T android --skip-pkg",
+		"build-www": "quasar build -m spa",
+		"build-www-capacitor": "quasar build -m capacitor -T android --skip-pkg",
 		"capgo": "npm run capgo --prefix ./src-capacitor",
 		"push-dev": "npm version patch && quasar build -m capacitor -T android  --skip-pkg && npm run capgo-dev --prefix ./src-capacitor",
 		"push-release": "npm version patch && quasar build -m capacitor -T android --skip-pkg && npm run capgo-release --prefix ./src-capacitor"
