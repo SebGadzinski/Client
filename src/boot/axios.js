@@ -2,7 +2,7 @@ import { boot } from "quasar/wrappers";
 import axios from "axios";
 import TokenService from "../services/token.service";
 import eventBus from "../services/EventBus";
-import AuthService from 'src/services/auth.service';
+import AuthService from "src/services/auth.service";
 
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
@@ -34,9 +34,6 @@ api.interceptors.response.use(
 	},
 	async (err) => {
 		console.log(err);
-
-		const domain = window.location.hostname;
-		const preFix = domain !== "localhost" ? "#/" : "";
 		const { route } = err?.response?.data?.onError ?? {};
 		let nextUrl = "";
 		if (route?.query) {
@@ -45,11 +42,11 @@ api.interceptors.response.use(
 			nextUrl = `?redirectPath=${window.location.pathname}`;
 		}
 		if (err.response.status === 499) {
-			window.location = preFix + "ipblocked";
+			window.location = "ipblocked";
 			return;
 		}
 		if (err.response.status === 477) {
-			window.location = preFix + "auth/check-confirm/email" + nextUrl;
+			window.location = "auth/check-confirm/email" + nextUrl;
 			return;
 		}
 		const originalConfig = err.config;

@@ -154,10 +154,7 @@ class AuthService {
 		const user = localStorage.getItem("user");
 		if (user) {
 			TokenService.removeUser();
-			const loginPath =
-				(window.location.hostname !== "localhost"
-					? "#/auth/login"
-					: "auth/login") + (query ?? "");
+			const loginPath = "auth/login" + (query ?? "");
 			if (Capacitor.getPlatform() != "web") {
 				try {
 					let file = await Preferences.clear();
