@@ -64,8 +64,9 @@
 			<template v-slot:item="props">
 				<div
 					:class="
-						($q.screen.gt.sm ? 'col-4 q-mb-lg' : 'col-12') +
-						' q-pa-md cursor-pointer'
+						($q.screen.gt.sm
+							? 'col-4 q-mb-lg q-pa-md'
+							: 'q-pa-sm col-12') + ' cursor-pointer'
 					"
 				>
 					<q-card
@@ -79,11 +80,11 @@
 						"
 						class="select-card"
 					>
-						<div class="media-container">
+						<div v-if="$q.screen.gt.sm" class="media-container">
 							<img v-lazy="props.row.thumbnailImg" class="fit" />
 						</div>
 						<q-card-section>
-							<div class="text-h6 q-mb-xs">
+							<div class="text-h6" style="margin-bottom: 0px">
 								{{ $t(props.row.service) }}
 							</div>
 						</q-card-section>
