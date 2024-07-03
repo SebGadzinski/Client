@@ -21,11 +21,11 @@
 				/>
 			</q-tabs>
 		</div>
-		<div class="q-my-lg" v-if="!hasTyped">
+		<div class="q-mt-sm" v-if="!hasTyped">
 			<div
 				v-if="tab === 'work'"
 				:class="
-					($q.screen.gt.sm ? 'text-h3' : 'text-h6') +
+					($q.screen.gt.sm ? 'text-h4' : 'text-h6') +
 					' text-center t-yellow'
 				"
 			>
@@ -34,7 +34,7 @@
 			<div
 				v-else
 				:class="
-					($q.screen.gt.sm ? 'text-h3' : 'text-h6') +
+					($q.screen.gt.sm ? 'text-h4' : 'text-h6') +
 					' text-center t-yellow'
 				"
 			>
@@ -99,6 +99,15 @@
 				:label="$t('Feel Like Browsing?')"
 				to="/browse"
 			/>
+			<div v-if="$q.screen.lt.md">
+				<h6
+					class="text-h6 text-center"
+					style="margin: 20px auto 5px auto"
+				>
+					{{ $t("Featured Services") }}
+				</h6>
+				<q-separator />
+			</div>
 			<div class="full-width">
 				<q-table
 					:rows="
@@ -108,7 +117,7 @@
 					"
 					:grid="true"
 					:loading="loading"
-					:class="$q.screen.gt.sm ? 'q-mt-lg q-px-lg' : ''"
+					:class="$q.screen.gt.sm ? 'q-mt-sm q-px-lg' : ''"
 					:rows-per-page-options="[0]"
 				>
 					<template v-slot:item="props">
@@ -130,10 +139,7 @@
 								"
 								class="select-card"
 							>
-								<div
-									v-if="$q.screen.gt.sm"
-									class="feature-media-container"
-								>
+								<div class="feature-media-container">
 									<img
 										v-lazy="props.row.thumbnailImg"
 										class="fit"
@@ -143,10 +149,9 @@
 								<q-card-section>
 									<div
 										:class="
-											($q.screen.gt.sm
+											$q.screen.gt.sm
 												? 'text-h6'
-												: 'text-body1 text-center ') +
-											''
+												: 'text-body1 text-center '
 										"
 									>
 										{{ $t(props.row.service) }}
@@ -250,14 +255,10 @@ export default {
 			this.$router.push(`/${categorySlug}/${serviceSlug}`);
 		},
 		getWorkFeaturedRows() {
-			if (this.$q.screen.lt.md) {
-				return this.workFeaturedCards.slice(0, 3);
-			} else return this.workFeaturedCards;
+			return this.workFeaturedCards;
 		},
 		getClassFeaturedRows() {
-			if (this.$q.screen.lt.md) {
-				return this.classFeaturedCards.slice(0, 3);
-			} else return this.classFeaturedCards;
+			return this.classFeaturedCards;
 		},
 	},
 };
@@ -284,7 +285,7 @@ export default {
 	text-align: center;
 	width: 100%;
 	padding: 10px;
-	font-size: 50px;
+	font-size: 40px;
 	background-color: transparent;
 	border: none;
 	caret-color: #f8a701;

@@ -755,5 +755,6 @@
 	"Checking Email Status": "Vérification de l'état du courrier électronique",
 	"Email Verified": "Email verifié",
 	"Your email has been verified, you may now use authenticated routes.": "Votre email a été vérifié, vous pouvez désormais utiliser des itinéraires authentifiés.",
-	"pay_card": "Pay with card: ...**** {card}"
+	"pay_card": "Pay with card: ...**** {card}",
+	"Featured Services": "Services en vedette"
 }
