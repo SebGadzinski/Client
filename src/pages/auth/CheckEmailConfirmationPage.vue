@@ -97,10 +97,10 @@ export default {
 					type: "accent",
 					message: "Refreshing Session...",
 				});
-				await this.refreshSession();
+				await AuthService.refreshSession();
 				window.location.reload();
 			} else if (status) {
-				await this.refreshSession();
+				await AuthService.refreshSession();
 				clearInterval(this.timerInterval);
 				this.isAuthenticated = true;
 				this.$q
