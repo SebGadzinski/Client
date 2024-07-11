@@ -19,18 +19,9 @@
 							class="q-mr-md logo-image"
 						/>
 					</router-link>
-					<q-btn
-						v-if="$q.screen.gt.sm"
-						class="q-mx-sm"
-						flat
-						to="/"
-						:label="this.$t('Home')"
-					/>
-					<q-btn
-						flat
-						:label="$t('Test Info')"
-						@click="testInfo = !testInfo"
-					/>
+					<q-btn flat @click="testInfo = !testInfo">
+						<q-icon name="info" @click="toggleCard" />
+					</q-btn>
 				</q-toolbar-title>
 
 				<!-- Menu button shown only on small screens -->
@@ -84,6 +75,13 @@
 
 				<!-- Buttons shown on larger screens -->
 				<div v-if="$q.screen.gt.sm">
+					<q-btn
+						v-if="$q.screen.gt.sm"
+						class="q-mx-sm"
+						flat
+						to="/"
+						:label="this.$t('Home')"
+					/>
 					<template v-if="user">
 						<q-btn
 							to="/work"
@@ -133,7 +131,7 @@
 			<q-card class="text-center">
 				<q-card-section class="row q-pb-none">
 					<div class="text-h4 q-mx-auto">
-						{{ $t("Test Info") }}
+						{{ $t("Info") }}
 					</div>
 				</q-card-section>
 				<q-card-section>
