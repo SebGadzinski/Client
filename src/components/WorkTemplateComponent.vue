@@ -439,6 +439,20 @@
 					>
 					</q-btn>
 				</q-item-section>
+				<q-item-section
+					v-else-if="
+						template.category === 'Software' &&
+						template.service === 'Client Server Generator'
+					"
+				>
+					<q-btn
+						class="text-h3"
+						color="primary"
+						:label="$t('Purchase')"
+						@click="purchase(template._id)"
+					>
+					</q-btn>
+				</q-item-section>
 				<q-item-section v-else>
 					<q-btn
 						:class="$q.screen.gt.sm ? 'text-h3' : 'text-h6'"
@@ -604,6 +618,45 @@ export default {
 						this.$router.push(`/work/confirmation/${work._id}`);
 						this.$q.loading.hide();
 					});
+			} catch (err) {
+				if (err.message === "Sign Up Required") {
+					this.$router.push(`/auth/login?enroll=${templateId}`);
+				}
+				this.$q.notify({
+					type: "negative",
+					message: err.message,
+				});
+				this.$q.loading.hide();
+			}
+		},
+		async purchase(templateId) {
+			try {
+				this.$q.dialog({
+					title: this.$t("Restrictive Access"),
+					message: this.$t(
+						"Will be released to public soon, currently refining with workshops at schools."
+					),
+				});
+				// this.$q
+				// 	.dialog({
+				// 		title: this.$t("Confirm Puchase?"),
+				// 		message: this.$t(
+				// 			"You will be lead to a confirmation page."
+				// 		),
+				// 		ok: {
+				// 			label: this.$t("Yes"),
+				// 			color: "accent",
+				// 		},
+				// 		cancel: true,
+				// 	})
+				// 	.onOk(async () => {
+				// 		const work = await dataService.purchaseTemplate(
+				// 			templateId
+				// 		);
+
+				// 		this.$router.push(`/work/confirmation/${work._id}`);
+				// 		this.$q.loading.hide();
+				// 	});
 			} catch (err) {
 				if (err.message === "Sign Up Required") {
 					this.$router.push(`/auth/login?enroll=${templateId}`);
