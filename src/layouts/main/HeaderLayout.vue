@@ -19,7 +19,11 @@
 							class="q-mr-md logo-image"
 						/>
 					</router-link>
-					<q-btn flat @click="testInfo = !testInfo">
+					<q-btn
+						id="store-info-btn"
+						flat
+						@click="testInfo = !testInfo"
+					>
 						<q-icon name="info" @click="toggleCard" />
 					</q-btn>
 				</q-toolbar-title>
@@ -148,7 +152,7 @@
 				</q-card-section>
 				<q-card-section>
 					<h6 class="q-my-none q-mb-sm" color="accent">
-						{{ $t("Card Info") }}
+						{{ $t("Free Card Info") }}
 					</h6>
 					<q-btn
 						class="text-h6"
@@ -157,7 +161,7 @@
 						@click="copyTestCard"
 					/>
 					<div class="text-body1 q-my-sm">
-						{{ $t("Any other inputs can be anything.") }}
+						{{ $t("Click to copy!") }}
 					</div>
 				</q-card-section>
 			</q-card>

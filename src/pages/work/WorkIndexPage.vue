@@ -1,273 +1,300 @@
 <template>
-	<q-page padding>
-		<div v-if="isAdmin" class="flex row flex-center q-my-sm">
-			<q-btn
-				class="col-8 col-md-3 q-mx-sm"
-				:label="$t('Create Work')"
-				color="primary"
-				to="/work/edit?isNew=true"
-			/>
-		</div>
-		<div class="q-px-lg">
-			<q-input v-model="search" placeholder="Search" />
-		</div>
-		<q-table
-			:rows="works"
-			:grid="$q.screen.lt.md"
-			:loading="loading"
-			class="q-mt-lg"
-			:columns="columns"
-			row-key="id"
-			:filter="search"
-			:visible-columns="visibleColumns"
-			:pagination="{ rowsPerPage: $q.screen.lt.md ? 5 : 10 }"
-		>
-			<template v-if="$q.screen.gt.sm" v-slot:top>
-				<q-space />
-
-				<q-select
-					v-model="visibleColumns"
-					multiple
-					outlined
-					dense
-					options-dense
-					:display-value="$q.lang.table.columns"
-					emit-value
-					map-options
-					:options="columns"
-					option-value="name"
-					options-cover
-					style="min-width: 150px"
+	<template v-if="works.length > 0 || loading">
+		<q-page padding>
+			<div v-if="isAdmin" class="flex row flex-center q-my-sm">
+				<q-btn
+					class="col-8 col-md-3 q-mx-sm"
+					:label="$t('Create Work')"
+					color="primary"
+					to="/work/edit?isNew=true"
 				/>
-			</template>
-			<template v-if="$q.screen.gt.sm" v-slot:body-cell-actions="props">
-				<q-td :key="props.name">
-					<q-btn-dropdown
-						:class="
-							props.row?.paymentsRequired ||
-							props.row?.actions?.some((x) => x.siren)
-								? 'siren'
-								: 'bg-primary text-white'
-						"
-					>
-						<q-list>
-							<q-item
-								v-if="user?.roles?.includes('admin')"
-								clickable
-								v-close-popup
-								:to="`/work/edit/${props.row.workId}`"
-							>
-								<q-item-section>
-									<q-item-label>{{
-										$t("Edit")
-									}}</q-item-label>
-								</q-item-section>
-							</q-item>
-							<q-item
-								clickable
-								v-close-popup
-								:to="`/work/${props.row.workId}`"
-								:class="
-									props.row?.paymentsRequired ? 'siren' : ''
-								"
-							>
-								<q-item-section>
-									<q-item-label>{{
-										$t("View")
-									}}</q-item-label>
-								</q-item-section>
-							</q-item>
-							<q-item
-								clickable
-								v-if="props.row.status !== 'Meeting'"
-								v-close-popup
-								@click="() => printReceipt(props.row.workId)"
-							>
-								<q-item-section>
-									<q-item-label>{{
-										$t("Print Receipt")
-									}}</q-item-label>
-								</q-item-section>
-							</q-item>
-							<q-item
-								v-if="
-									props?.row.status === 'Subscribed' &&
-									props?.row?.classType ===
-										'Single Session' &&
-									props?.row?.useSingleSession
-								"
-								clickable
-								v-close-popup
-								@click="useSingleSession"
-							>
-								<q-item-section>
-									<q-item-label>{{
-										$t("Use Single Session")
-									}}</q-item-label>
-								</q-item-section>
-							</q-item>
-							<q-item
-								v-for="(action, index) in props.row.actions"
-								:key="index"
-								:to="`${action.link}`"
-								clickable
-								v-close-popup
-								:class="action.siren ? 'siren' : ''"
-							>
-								<q-item-section>
-									<q-item-label>{{
-										$t(action.name)
-									}}</q-item-label>
-								</q-item-section>
-							</q-item>
-							<a
-								v-for="(action, index) in props.row.oActions"
-								:key="index"
-								:href="`${action.link}`"
-								target="_blank"
-								@click.stop
-								class="no-link-style"
-							>
-								<q-item clickable v-close-popup>
+			</div>
+			<div class="q-px-lg">
+				<q-input v-model="search" placeholder="Search" />
+			</div>
+			<q-table
+				:rows="works"
+				:grid="$q.screen.lt.md"
+				:loading="loading"
+				class="q-mt-lg"
+				:columns="columns"
+				row-key="id"
+				:filter="search"
+				:visible-columns="visibleColumns"
+				:pagination="{ rowsPerPage: $q.screen.lt.md ? 5 : 10 }"
+			>
+				<template v-if="$q.screen.gt.sm" v-slot:top>
+					<q-space />
+
+					<q-select
+						v-model="visibleColumns"
+						multiple
+						outlined
+						dense
+						options-dense
+						:display-value="$q.lang.table.columns"
+						emit-value
+						map-options
+						:options="columns"
+						option-value="name"
+						options-cover
+						style="min-width: 150px"
+					/>
+				</template>
+				<template
+					v-if="$q.screen.gt.sm"
+					v-slot:body-cell-actions="props"
+				>
+					<q-td :key="props.name">
+						<q-btn-dropdown
+							:class="
+								props.row?.paymentsRequired ||
+								props.row?.actions?.some((x) => x.siren)
+									? 'siren'
+									: 'bg-primary text-white'
+							"
+						>
+							<q-list>
+								<q-item
+									v-if="user?.roles?.includes('admin')"
+									clickable
+									v-close-popup
+									:to="`/work/edit/${props.row.workId}`"
+								>
+									<q-item-section>
+										<q-item-label>{{
+											$t("Edit")
+										}}</q-item-label>
+									</q-item-section>
+								</q-item>
+								<q-item
+									clickable
+									v-close-popup
+									:to="`/work/${props.row.workId}`"
+									:class="
+										props.row?.paymentsRequired
+											? 'siren'
+											: ''
+									"
+								>
+									<q-item-section>
+										<q-item-label>{{
+											$t("View")
+										}}</q-item-label>
+									</q-item-section>
+								</q-item>
+								<q-item
+									clickable
+									v-if="props.row.status !== 'Meeting'"
+									v-close-popup
+									@click="
+										() => printReceipt(props.row.workId)
+									"
+								>
+									<q-item-section>
+										<q-item-label>{{
+											$t("Print Receipt")
+										}}</q-item-label>
+									</q-item-section>
+								</q-item>
+								<q-item
+									v-if="
+										props?.row.status === 'Subscribed' &&
+										props?.row?.classType ===
+											'Single Session' &&
+										props?.row?.useSingleSession
+									"
+									clickable
+									v-close-popup
+									@click="useSingleSession"
+								>
+									<q-item-section>
+										<q-item-label>{{
+											$t("Use Single Session")
+										}}</q-item-label>
+									</q-item-section>
+								</q-item>
+								<q-item
+									v-for="(action, index) in props.row.actions"
+									:key="index"
+									:to="`${action.link}`"
+									clickable
+									v-close-popup
+									:class="action.siren ? 'siren' : ''"
+								>
 									<q-item-section>
 										<q-item-label>{{
 											$t(action.name)
 										}}</q-item-label>
 									</q-item-section>
 								</q-item>
-							</a>
-						</q-list>
-					</q-btn-dropdown>
-				</q-td>
-			</template>
-			<template v-if="$q.screen.lt.md" v-slot:item="props">
-				<div class="q-pa-xs col-12">
-					<q-card flat bordered>
-						<q-card-section
-							class="flex justify-between bg-secondary"
-						>
-							<span v-if="isAdmin"
-								>ID:{{ props.row.workId }}</span
-							>
-							<q-badge
-								color="negative"
-								v-if="
-									['Payments Failed'].includes(
-										props.row.status
-									)
-								"
-								>{{ $t(props.row.status) }}</q-badge
-							>
-							<q-badge
-								color="accent"
-								v-else-if="
-									['Cancelled'].includes(props.row.status)
-								"
-								>{{ $t(props.row.status) }}</q-badge
-							>
-							<q-badge v-else>{{ $t(props.row.status) }}</q-badge>
-						</q-card-section>
-						<q-card-section>
-							<q-list bordered separator>
-								<q-item v-if="this.isAdmin">
-									<q-item-section avatar>
-										<q-icon name="inbox" />
-									</q-item-section>
-
-									<q-item-section>{{
-										props.row.email
-									}}</q-item-section>
-								</q-item>
-								<q-item>
-									<q-item-section avatar>
-										<q-icon name="work" />
-									</q-item-section>
-
-									<q-item-section>
-										<div>
-											<q-badge>{{
-												$t(props.row.category)
-											}}</q-badge>
-											<q-badge color="black">{{
-												$t(props.row.service)
-											}}</q-badge>
-										</div>
-									</q-item-section>
-								</q-item>
-								<q-item
-									v-if="props.row.subscription?.isEnabled"
+								<a
+									v-for="(action, index) in props.row
+										.oActions"
+									:key="index"
+									:href="`${action.link}`"
+									target="_blank"
+									@click.stop
+									class="no-link-style"
 								>
-									<q-item-section avatar>
-										<q-icon name="payments" />
-									</q-item-section>
-
-									<q-item-section
-										>${{
-											$c_format(
-												props.row.subscription.payment
-											)
-										}}
-										{{
-											this.$t(
-												"Every " +
-													props.row.subscription
-														.interval
-											)
-										}}
-									</q-item-section>
-								</q-item>
+									<q-item clickable v-close-popup>
+										<q-item-section>
+											<q-item-label>{{
+												$t(action.name)
+											}}</q-item-label>
+										</q-item-section>
+									</q-item>
+								</a>
 							</q-list>
-							<q-btn
-								:class="
-									props.row?.paymentsRequired
-										? 'siren'
-										: 'bg-secondary text-white'
-								"
-								:label="$t('View')"
-								:to="`/work/${props.row.workId}`"
-								class="text-color full-width"
-							/>
-							<q-btn
-								v-if="props.row.status !== 'Meeting'"
-								color="secondary"
-								:label="$t('Print Receipt')"
-								@click="() => printReceipt(props.row.workId)"
-								class="text-color full-width"
-							/>
-							<q-btn
-								v-if="user?.roles?.includes('admin')"
-								color="secondary"
-								:label="$t('Edit')"
-								:to="`/work/edit/${props.row.workId}`"
-								class="text-color full-width"
-							/>
-							<q-btn
-								v-for="(action, index) in props.row.actions"
-								:key="index"
-								:label="$t(action.name)"
-								:to="action.link"
-								:class="
-									action.siren
-										? 'siren full-width'
-										: 'bg-secondary text-white full-width'
-								"
-							/>
-							<q-btn
-								v-for="(action, index) in props.row.oActions"
-								:key="index"
-								color="secondary"
-								:label="$t(action.name)"
-								:href="`${action.link}`"
-								target="_blank"
-								@click.stop
-								class="no-link-style text-color full-width"
-							/>
-						</q-card-section>
-					</q-card>
-				</div>
-			</template>
-		</q-table>
-	</q-page>
+						</q-btn-dropdown>
+					</q-td>
+				</template>
+				<template v-if="$q.screen.lt.md" v-slot:item="props">
+					<div class="q-pa-xs col-12">
+						<q-card flat bordered>
+							<q-card-section
+								class="flex justify-between bg-secondary"
+							>
+								<span v-if="isAdmin"
+									>ID:{{ props.row.workId }}</span
+								>
+								<q-badge
+									color="negative"
+									v-if="
+										['Payments Failed'].includes(
+											props.row.status
+										)
+									"
+									>{{ $t(props.row.status) }}</q-badge
+								>
+								<q-badge
+									color="accent"
+									v-else-if="
+										['Cancelled'].includes(props.row.status)
+									"
+									>{{ $t(props.row.status) }}</q-badge
+								>
+								<q-badge v-else>{{
+									$t(props.row.status)
+								}}</q-badge>
+							</q-card-section>
+							<q-card-section>
+								<q-list bordered separator>
+									<q-item v-if="this.isAdmin">
+										<q-item-section avatar>
+											<q-icon name="inbox" />
+										</q-item-section>
+
+										<q-item-section>{{
+											props.row.email
+										}}</q-item-section>
+									</q-item>
+									<q-item>
+										<q-item-section avatar>
+											<q-icon name="work" />
+										</q-item-section>
+
+										<q-item-section>
+											<div>
+												<q-badge>{{
+													$t(props.row.category)
+												}}</q-badge>
+												<q-badge color="black">{{
+													$t(props.row.service)
+												}}</q-badge>
+											</div>
+										</q-item-section>
+									</q-item>
+									<q-item
+										v-if="props.row.subscription?.isEnabled"
+									>
+										<q-item-section avatar>
+											<q-icon name="payments" />
+										</q-item-section>
+
+										<q-item-section
+											>${{
+												$c_format(
+													props.row.subscription
+														.payment
+												)
+											}}
+											{{
+												this.$t(
+													"Every " +
+														props.row.subscription
+															.interval
+												)
+											}}
+										</q-item-section>
+									</q-item>
+								</q-list>
+								<q-btn
+									:class="
+										props.row?.paymentsRequired
+											? 'siren'
+											: 'bg-secondary text-white'
+									"
+									:label="$t('View')"
+									:to="`/work/${props.row.workId}`"
+									class="text-color full-width"
+								/>
+								<q-btn
+									v-if="props.row.status !== 'Meeting'"
+									color="secondary"
+									:label="$t('Print Receipt')"
+									@click="
+										() => printReceipt(props.row.workId)
+									"
+									class="text-color full-width"
+								/>
+								<q-btn
+									v-if="user?.roles?.includes('admin')"
+									color="secondary"
+									:label="$t('Edit')"
+									:to="`/work/edit/${props.row.workId}`"
+									class="text-color full-width"
+								/>
+								<q-btn
+									v-for="(action, index) in props.row.actions"
+									:key="index"
+									:label="$t(action.name)"
+									:to="action.link"
+									:class="
+										action.siren
+											? 'siren full-width'
+											: 'bg-secondary text-white full-width'
+									"
+								/>
+								<q-btn
+									v-for="(action, index) in props.row
+										.oActions"
+									:key="index"
+									color="secondary"
+									:label="$t(action.name)"
+									:href="`${action.link}`"
+									target="_blank"
+									@click.stop
+									class="no-link-style text-color full-width"
+								/>
+							</q-card-section>
+						</q-card>
+					</div>
+				</template>
+			</q-table>
+		</q-page>
+	</template>
+	<template v-else>
+		<q-page class="flex flex-center column">
+			<div class="text-h4">{{ $t("No Work!") }}</div>
+			<q-btn
+				to="/browse"
+				:label="$t(`Browse Work`)"
+				color="primary"
+				class="text-h6 q-my-lg"
+			/>
+		</q-page>
+	</template>
 </template>
 
 <script>
