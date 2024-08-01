@@ -71,6 +71,18 @@
 					/>
 				</q-item-section>
 			</q-item>
+			<!-- Reset Password -->
+			<q-item v-if="user" clickable v-ripple>
+				<q-item-section>{{ $t("Reset Password") }}</q-item-section>
+				<q-item-section>
+					<q-btn
+						color="primary"
+						to="/auth/forgotPassword"
+						class="full-width"
+						:label="$t('Reset')"
+					></q-btn>
+				</q-item-section>
+			</q-item>
 			<!-- LOGOUT -->
 			<q-item v-if="user" clickable v-ripple>
 				<q-item-section>{{ $t("Logout") }}</q-item-section>
@@ -95,7 +107,6 @@
 					/>
 				</q-item-section>
 			</q-item>
-
 			<q-separator />
 
 			<!-- SET Language -->

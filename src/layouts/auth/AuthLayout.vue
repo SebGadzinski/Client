@@ -16,7 +16,7 @@
 				>
 				<q-btn
 					v-else-if="
-						title === 'Sign Up' || title === 'Forgot Password'
+						title === 'Sign Up' || title === 'Change Password'
 					"
 					color="white"
 					text-color="primary"
@@ -91,6 +91,7 @@
 
 <script>
 import { mapState } from "pinia";
+import { useAuthState } from "src/stores/auth.state";
 import { useSettingsState } from "src/stores/settings.state";
 import { query } from "vue-gtag";
 import { useRoute } from "vue-router";
@@ -103,6 +104,9 @@ export default {
 			route: useRoute(),
 		};
 	},
+	computed: {
+		...mapState(useAuthState, ["status"]),
+	},
 	created() {
 		// Set the default language
 		let langName = this.language;
@@ -114,7 +118,7 @@ export default {
 			this.$q.lang.set(lang.default);
 		});
 		this.$i18n.locale = langName;
-		if (this.title !== "Reset Password" && this.loggedIn) {
+		if (this.title !== "Reset Password" && this.status?.loggedIn) {
 			this.$router.push("/");
 		}
 	},

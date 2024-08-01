@@ -361,6 +361,19 @@ class DataService {
 			"Could not use session."
 		);
 	}
+	async purchaseTemplate(templateId) {
+		return await this.call(
+			api.post(`/work/purchase/${templateId}`),
+			{
+				onError: {
+					route: {
+						query: `purchase=${templateId}`,
+					},
+				},
+			},
+			"Could not purchase."
+		);
+	}
 	async deleteCard(workId) {
 		return await this.call(
 			api.delete(`/work/sub/paymentMethod/delete/${workId}`)

@@ -313,8 +313,21 @@ export default {
 			}
 		},
 		advance() {
-			const path =
+			let path =
 				this.work.category !== "Classes" ? "/work" : "/my-classes";
+
+			if (
+				this.work.category === "Software" &&
+				this.work.service === "Client Server Generator"
+			) {
+				window.location.href =
+					(process.env.NODE_ENV === "development"
+						? `http://localhost:8091`
+						: `https://cs-generator.gadzy-work.com`) +
+					`/auth/login?from-gadzy=${this.user.email}`;
+				return;
+			}
+
 			this.$router.push(path);
 		},
 	},

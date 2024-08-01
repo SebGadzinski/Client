@@ -143,7 +143,7 @@ const routes = [
 			{
 				path: "forgotPassword",
 				component: () => import("pages/auth/ForgotPasswordPage.vue"),
-				meta: { title: "Forgot Password" },
+				meta: { title: "Change Password" },
 			},
 			{
 				path: "resetPassword",

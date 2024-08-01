@@ -47,9 +47,6 @@ export default {
 			settingsState: useSettingsState(),
 		};
 	},
-	computed: {
-		...mapState(useAuthState, ["loggedIn"]),
-	},
 	methods: {
 		...mapActions(useAuthState, ["login"]),
 		handleLogin() {
@@ -83,7 +80,9 @@ export default {
 							}
 							const bookMeeting =
 								this.route?.query["book-meeting"];
-							const templateId = this.route?.query?.enroll;
+							const templateId =
+								this.route?.query?.enroll ??
+								this.route?.query?.purchase;
 
 							if (bookMeeting) {
 								let possibleMeeting =
