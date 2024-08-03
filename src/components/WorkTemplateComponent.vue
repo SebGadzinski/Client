@@ -630,43 +630,39 @@ export default {
 			}
 		},
 		async purchase(templateId) {
-			try {
-				// this.$q.dialog({
-				// 	title: this.$t("Restrictive Access"),
-				// 	message: this.$t(
-				// 		"Will be released to public soon, currently refining with workshops at schools."
-				// 	),
-				// });
-				this.$q
-					.dialog({
-						title: this.$t("Confirm Puchase?"),
-						message: this.$t(
-							"You will be lead to a confirmation page."
-						),
-						ok: {
-							label: this.$t("Yes"),
-							color: "accent",
-						},
-						cancel: true,
-					})
-					.onOk(async () => {
+			this.$q
+				.dialog({
+					title: this.$t("Confirm Puchase?"),
+					message: this.$t(
+						"You will be lead to a confirmation page."
+					),
+					ok: {
+						label: this.$t("Yes"),
+						color: "accent",
+					},
+					cancel: true,
+				})
+				.onOk(async () => {
+					try {
 						const work = await dataService.purchaseTemplate(
 							templateId
 						);
 
 						this.$router.push(`/work/confirmation/${work._id}`);
 						this.$q.loading.hide();
-					});
-			} catch (err) {
-				if (err.message === "Sign Up Required") {
-					this.$router.push(`/auth/login?purchase=${templateId}`);
-				}
-				this.$q.notify({
-					type: "negative",
-					message: err.message,
+					} catch (err) {
+						if (err.message === "Sign Up Required") {
+							this.$router.push(
+								`/auth/login?purchase=${templateId}`
+							);
+						}
+						this.$q.notify({
+							type: "negative",
+							message: err.message,
+						});
+						this.$q.loading.hide();
+					}
 				});
-				this.$q.loading.hide();
-			}
 		},
 	},
 };

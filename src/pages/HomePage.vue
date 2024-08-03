@@ -100,7 +100,7 @@
 				:label="$t('Feel Like Browsing?')"
 				to="/browse"
 			/>
-			<div v-if="$q.screen.lt.md">
+			<div v-if="$q.screen.lt.md" class="full-width">
 				<h6
 					class="text-h6 text-center"
 					style="margin: 20px auto 5px auto"

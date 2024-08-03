@@ -344,14 +344,13 @@ class DataService {
 	}
 	async enrollInClass(templateId) {
 		return await this.call(
-			api.post(`/classes/enroll/${templateId}`),
-			{
+			api.post(`/classes/enroll/${templateId}`, {
 				onError: {
 					route: {
 						query: `enroll=${templateId}`,
 					},
 				},
-			},
+			}),
 			"Could not enroll."
 		);
 	}
@@ -363,15 +362,13 @@ class DataService {
 	}
 	async purchaseTemplate(templateId) {
 		return await this.call(
-			api.post(`/work/purchase/${templateId}`),
-			{
+			api.post(`/work/purchase/${templateId}`, {
 				onError: {
 					route: {
 						query: `purchase=${templateId}`,
 					},
 				},
-			},
-			"Could not purchase."
+			})
 		);
 	}
 	async deleteCard(workId) {
@@ -409,6 +406,7 @@ class DataService {
 	async call(func, customError = null) {
 		try {
 			const result = await func;
+
 			if (customError && result) {
 				if (result.data.success) {
 					return result.data.data;
