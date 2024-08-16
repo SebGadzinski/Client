@@ -395,6 +395,10 @@ class DataService {
 		);
 	}
 
+	async getZoomInfo(slug) {
+		return await this.call(api.get(`classes/zoom-info/${slug}`));
+	}
+
 	async joinClass(workId) {
 		return await this.call(api.get(`classes/join/${workId}`));
 	}

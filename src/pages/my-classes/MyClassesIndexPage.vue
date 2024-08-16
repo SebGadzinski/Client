@@ -95,7 +95,9 @@
 									@click="
 										joinClass(
 											props.row?.classType,
-											props.row?.workId
+											props.row?.workId,
+											props.row?.myClass,
+											props.row?.id
 										)
 									"
 									:label="$t(`Join!`)"
@@ -153,7 +155,8 @@
 													:label="$t('Show ID & PW')"
 													@click="
 														getZoomDetails(
-															props.row?.id
+															props.row?.id,
+															props.row?.myClass
 														)
 													"
 												/>
@@ -257,7 +260,8 @@
 													:label="$t('Show ID & PW')"
 													@click="
 														getZoomDetails(
-															props.row?.id
+															props.row?.id,
+															props.row.myClass
 														)
 													"
 												/>
@@ -562,11 +566,11 @@ export default {
 			this.classCard.title = this.classes[rowId].name;
 			this.classCard.workId = this.classes[rowId].workId;
 		},
-		async getZoomDetails(rowId) {
+		async getZoomDetails(rowId, myClass) {
 			try {
-				const data = await dataService.joinClass(
-					this.classes[rowId].workId
-				);
+				const data = await (myClass
+					? dataService.getZoomInfo(this.classes[rowId].serviceSlug)
+					: dataService.joinClass(this.classes[rowId].workId));
 				this.classes[rowId].meetingId = data.meetingId;
 				this.classes[rowId].meetingPassword = data.meetingPassword;
 				this.classes[rowId].showZoomDetails = true;
@@ -614,10 +618,10 @@ export default {
 				}
 			}
 		},
-		joinClass(classType, workId) {
+		async joinClass(classType, workId, myClass, rowId) {
 			try {
 				let title = "Join Class?";
-				let body = "Check your email for a password";
+				let body = "If password needed, check your email.";
 				if (classType === "Single Session") {
 					title = "Use Single Session?";
 					body =
@@ -639,7 +643,11 @@ export default {
 					})
 					.onOk(async () => {
 						try {
-							const data = await dataService.joinClass(workId);
+							const data = await (myClass
+								? dataService.getZoomInfo(
+										this.classes[rowId].serviceSlug
+								  )
+								: dataService.joinClass(workId));
 							const newWindow = window.open(
 								data.meetingLink,
 								"_blank"
