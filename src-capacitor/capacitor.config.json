@@ -8,5 +8,8 @@
     "CapacitorUpdater": {
       "autoUpdateUrl": "http://localhost:5000/api/app/getLatestVersion"
     }
+  },
+  "server": {
+    "url": "http://192.168.101.116:8080"
   }
 }
