@@ -230,11 +230,6 @@ export default {
 		toggleMenu() {
 			this.menuOpened = !this.menuOpened;
 		},
-		async copyTestCard() {
-			const testCardNumber = "4242 4242 4242 4242";
-			await navigator.clipboard.writeText(testCardNumber);
-			this.$q.notify({ message: "Copied Card", type: "positive" });
-		},
 	},
 };
 </script>

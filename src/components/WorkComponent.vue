@@ -18,6 +18,26 @@
 			</q-item>
 		</q-list>
 
+		<div
+			class="full-width flex justify-center"
+			v-if="work.category === 'Classes'"
+		>
+			<div class="text-center">
+				<h6 class="q-my-none q-mb-sm" color="accent">
+					{{ $t("Free Card Info") }}
+				</h6>
+				<q-btn
+					class="text-h6"
+					color="accent"
+					:label="$t('4242 4242 4242 4242')"
+					@click="copyTestCard"
+				/>
+				<div class="text-body1 q-my-sm">
+					{{ $t("Click to copy!") }}
+				</div>
+			</div>
+		</div>
+
 		<!-- Meta Data -->
 		<div class="form-class full-width">
 			<h3 class="text-center">{{ $t("Meta Data") }}</h3>
@@ -938,6 +958,11 @@ export default {
 					}
 				}
 			});
+		},
+		async copyTestCard() {
+			const testCardNumber = "4242 4242 4242 4242";
+			await navigator.clipboard.writeText(testCardNumber);
+			this.$q.notify({ message: "Copied Card", type: "positive" });
 		},
 		printReceipt() {
 			try {
