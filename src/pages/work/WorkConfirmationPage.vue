@@ -106,9 +106,6 @@ export default {
 		};
 	},
 	async mounted() {
-		const btn = document.getElementById("store-info-btn");
-		if (btn) btn.click();
-
 		try {
 			this.isAdmin = this.user?.roles?.includes("admin");
 			this.loading = true;

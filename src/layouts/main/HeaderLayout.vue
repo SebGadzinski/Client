@@ -145,12 +145,12 @@
 					<div class="text-body1 q-mt-sm">
 						{{
 							$t(
-								"This site offers work in many categories and also offers classes. Please attempt to purchase work or a class, and give feedback on the experience to sebastiangadzinskiwork@gmail.com"
+								"This site offers work in many categories and also offers classes. Please purchase work or a class, and give feedback on the experience to sebastiangadzinskiwork@gmail.com"
 							)
 						}}
 					</div>
 				</q-card-section>
-				<q-card-section>
+				<!-- <q-card-section>
 					<h6 class="q-my-none q-mb-sm" color="accent">
 						{{ $t("Free Card Info") }}
 					</h6>
@@ -163,7 +163,7 @@
 					<div class="text-body1 q-my-sm">
 						{{ $t("Click to copy!") }}
 					</div>
-				</q-card-section>
+				</q-card-section> -->
 			</q-card>
 		</q-dialog>
 	</q-layout>
