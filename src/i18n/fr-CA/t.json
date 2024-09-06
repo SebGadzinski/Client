@@ -756,5 +756,6 @@
 	"Email Verified": "Email verifié",
 	"Your email has been verified, you may now use authenticated routes.": "Votre email a été vérifié, vous pouvez désormais utiliser des itinéraires authentifiés.",
 	"pay_card": "Pay with card: ...**** {card}",
-	"Featured Services": "Services en vedette"
+	"Featured Services": "Services en vedette",
+	"no_refund_csg": "Tous les achats de crédits pour le Client Server Generator sont définitifs et non remboursables. Aucun remboursement ne sera accordé pour les crédits une fois achetés."
 }

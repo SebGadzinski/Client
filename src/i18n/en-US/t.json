@@ -743,5 +743,6 @@
 	"My Classes": "My Classes",
 	"Work History": "Work History",
 	"calling_email": "Calling in {count}s",
-	"pay_card": "Pay with card: ...**** {card}"
+	"pay_card": "Pay with card: ...**** {card}",
+	"no_refund_csg": "All purchases of credits for the Client Server Generator are final and non-refundable. No refunds will be issued for credits once purchased."
 }

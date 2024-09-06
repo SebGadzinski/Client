@@ -37,6 +37,7 @@
 			<h4>{{ $t("Cancellation and Refund Policy") }}</h4>
 			<p>
 				{{ $t("tos_conf_cancel", { company }) }}
+				{{ $t("no_refund_csg") }}
 			</p>
 
 			<h4>{{ $t("Intellectual Property Rights") }}</h4>
