@@ -199,7 +199,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="flex justify-center text-center">
+		<!-- <div class="flex justify-center text-center">
 			<div v-if="categorySlug === 'classes'" class="full-width">
 				<h3 class="q-mb-none">{{ $t("Book Meeting") }}</h3>
 				<h6 class="q-mt-none">
@@ -215,6 +215,33 @@
 				:to="`/${categorySlug}/${serviceSlug}/meeting`"
 				>{{ $t("Set Up Meeting") }}</q-btn
 			>
+		</div> -->
+		<div class="flex justify-center text-center q-px-lg">
+			<div class="full-width">
+				<h3>{{ $t("Email") }}</h3>
+				<p class="text-body1">
+					{{
+						$t(
+							"Please email me with some insight of what you may want!"
+						)
+					}}
+				</p>
+			</div>
+			<q-btn
+				:label="$t('Copy Email')"
+				color="primary"
+				class="text-h6"
+				@click="copyEmail"
+			>
+				<q-tooltip
+					v-if="alreadyCopied"
+					anchor="bottom middle"
+					self="top middle"
+					:offset="[0, 8]"
+				>
+					{{ $t("Copied") }}
+				</q-tooltip>
+			</q-btn>
 		</div>
 		<div
 			class="flex justify-center text-center"
@@ -258,12 +285,14 @@ export default {
 			loading: true,
 			categorySlug: "",
 			serviceSlug: "",
+			email: "sebastiangadzinskiwork@gmail.com",
 			route: useRoute(),
 			$q: useQuasar(),
 			slide: ref(0),
 			autoplay: ref(true),
 			service: {},
 			meetingTimes: [],
+			alreadyCopied: false,
 		};
 	},
 	async mounted() {
@@ -313,7 +342,17 @@ export default {
 	},
 	unmounted() {},
 	async updated() {},
-	methods: {},
+	methods: {
+		async copyEmail() {
+			await navigator.clipboard.writeText(this.email);
+			this.alreadyCopied = true;
+			this.$q.notify({
+				message: "Email copied to clipboard!",
+				color: "positive",
+				icon: "content_copy",
+			});
+		},
+	},
 };
 </script>
 
