@@ -27,7 +27,7 @@
 						:class="{ 'reverse-row': index % 2 === 0 }"
 					>
 						<div class="col-8">
-							<img class="carousel-image" v-lazy="slide.image" />
+							<img class="carousel-image" :src="slide.image" />
 						</div>
 						<div class="col-4 flex flex-center q-px-lg">
 							<h4>{{ $t(slide.text) }}</h4>
@@ -73,7 +73,7 @@
 					<div class="q-mt-sm q-mx-auto">
 						<img
 							class="fit rounded-borders"
-							v-lazy="worker.thumbnailImg"
+							:src="worker.thumbnailImg"
 						/>
 					</div>
 					<!-- Video -->

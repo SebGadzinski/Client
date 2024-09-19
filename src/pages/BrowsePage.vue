@@ -29,7 +29,7 @@
 						<div class="media-container">
 							<img
 								:class="`category-picture-${props.row.id}`"
-								v-lazy="props.row.thumbnailImg"
+								:src="props.row.thumbnailImg"
 							/>
 						</div>
 						<q-card-section>

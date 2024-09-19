@@ -83,7 +83,7 @@
 								/>
 							</q-card-section>
 							<div class="media-container">
-								<img v-lazy="props.row.thumbnailImg" />
+								<img :src="props.row.thumbnailImg" />
 							</div>
 							<q-card-section
 								v-if="props.row?.canJoin"

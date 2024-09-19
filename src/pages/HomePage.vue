@@ -81,7 +81,7 @@
 						class="select-card"
 					>
 						<div v-if="$q.screen.gt.sm" class="media-container">
-							<img v-lazy="props.row.thumbnailImg" class="fit" />
+							<img :src="props.row.thumbnailImg" class="fit" />
 						</div>
 						<q-card-section>
 							<div class="text-h6" style="margin-bottom: 0px">
@@ -142,7 +142,7 @@
 							>
 								<div class="feature-media-container">
 									<img
-										v-lazy="props.row.thumbnailImg"
+										:src="props.row.thumbnailImg"
 										class="fit"
 										style="max-width: 100%"
 									/>

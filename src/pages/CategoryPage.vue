@@ -29,7 +29,7 @@
 						<div class="media-container">
 							<img
 								:class="`service-picture-${props.row.id}`"
-								v-lazy="props.row.thumbnailImg"
+								:src="props.row.thumbnailImg"
 							/>
 							<div
 								class="q-pa-md"
@@ -57,7 +57,7 @@
 						<div class="media-container">
 							<img
 								:class="`service-picture-${props.row.id}`"
-								v-lazy="props.row.thumbnailImg"
+								:src="props.row.thumbnailImg"
 							/>
 							<div
 								class="q-pa-md"
