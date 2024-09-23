@@ -33,6 +33,28 @@
 					<!-- Menu content -->
 					<q-menu fit>
 						<q-list>
+							<template v-if="!user?.roles?.includes('admin')">
+								<q-item to="/software"
+									><q-item-section>{{
+										$t("Software")
+									}}</q-item-section></q-item
+								>
+								<q-item to="/design"
+									><q-item-section>{{
+										$t("Design")
+									}}</q-item-section></q-item
+								>
+								<q-item to="/photography"
+									><q-item-section>{{
+										$t("Photography")
+									}}</q-item-section></q-item
+								>
+								<q-item to="/videography"
+									><q-item-section>{{
+										$t("Videography")
+									}}</q-item-section></q-item
+								>
+							</template>
 							<template v-if="user">
 								<q-item to="/work"
 									><q-item-section>{{
@@ -80,11 +102,34 @@
 				<!-- Buttons shown on larger screens -->
 				<div v-if="$q.screen.gt.sm">
 					<q-btn
-						v-if="$q.screen.gt.sm"
 						class="q-mx-sm"
 						flat
 						to="/"
 						:label="this.$t('Home')"
+					/>
+					<q-btn
+						class="q-mx-sm"
+						flat
+						to="/software"
+						:label="this.$t('Software')"
+					/>
+					<q-btn
+						class="q-mx-sm"
+						flat
+						to="/design"
+						:label="this.$t('Design')"
+					/>
+					<q-btn
+						class="q-mx-sm"
+						flat
+						to="/photography"
+						:label="this.$t('Photography')"
+					/>
+					<q-btn
+						class="q-mx-sm"
+						flat
+						to="/videography"
+						:label="this.$t('Videography')"
 					/>
 					<template v-if="user">
 						<q-btn
@@ -128,7 +173,7 @@
 		</q-header>
 
 		<q-page-container class="q-mx-sm">
-			<router-view />
+			<router-view :key="$route.fullPath" />
 		</q-page-container>
 		<div class="extra-space"></div>
 		<q-dialog v-model="testInfo">
