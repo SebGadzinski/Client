@@ -141,7 +141,7 @@
 						</template>
 						<q-route-tab to="/settings" icon="settings">
 						</q-route-tab>
-						<template v-if="user.roles.includes('admin')">
+						<template v-if="user?.roles?.includes('admin')">
 							<q-btn-dropdown
 								icon="admin_panel_settings"
 								color="primary"
