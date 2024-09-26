@@ -11,7 +11,7 @@
 			@mouseleave="hoverState = false"
 		>
 			<q-toolbar>
-				<q-toolbar-title class="flex">
+				<q-toolbar-title class="flex" style="min-width: 150px">
 					<router-link class="q-my-auto" to="/">
 						<img
 							src="logo.svg"
@@ -100,74 +100,61 @@
 				</q-btn>
 
 				<!-- Buttons shown on larger screens -->
-				<div v-if="$q.screen.gt.sm">
-					<q-btn
-						class="q-mx-sm"
-						flat
-						to="/"
-						:label="this.$t('Home')"
-					/>
-					<q-btn
-						class="q-mx-sm"
-						flat
-						to="/software"
-						:label="this.$t('Software')"
-					/>
-					<q-btn
-						class="q-mx-sm"
-						flat
-						to="/design"
-						:label="this.$t('Design')"
-					/>
-					<q-btn
-						class="q-mx-sm"
-						flat
-						to="/photography"
-						:label="this.$t('Photography')"
-					/>
-					<q-btn
-						class="q-mx-sm"
-						flat
-						to="/videography"
-						:label="this.$t('Videography')"
-					/>
-					<template v-if="user">
-						<q-btn
-							to="/work"
-							flat
-							:label="this.$t('Work History')"
+				<div
+					id="route-tabs"
+					v-if="$q.screen.gt.sm"
+					class="flex flex-center"
+				>
+					<q-tabs
+						align="center"
+						class="text-white bg-primary"
+						indicator-color="yellow"
+					>
+						<q-route-tab to="/home" :label="$t('Home')" />
+						<q-route-tab to="/software" :label="$t('Software')" />
+						<q-route-tab to="/design" :label="$t('Design')" />
+						<q-route-tab
+							to="/photography"
+							:label="$t('Photography')"
 						/>
-						<q-btn
-							to="/my-classes"
-							flat
-							:label="this.$t('My Classes')"
+						<q-route-tab
+							to="/videography"
+							:label="$t('Videography')"
 						/>
-						<template v-if="user.roles.includes('admin')">
-							<q-btn
-								to="/work/template"
-								flat
-								:label="this.$t('Templates')"
-							></q-btn>
-							<q-btn
-								to="/admin/users"
-								flat
-								:label="this.$t('Users')"
-							></q-btn>
-							<q-btn
-								to="/admin/vmStatusReport"
-								flat
-								:label="this.$t('VM Status Report')"
-							></q-btn>
+
+						<template v-if="user">
+							<q-route-tab
+								to="/work"
+								:label="$t('Work History')"
+							/>
+							<q-route-tab
+								to="/my-classes"
+								:label="$t('My Classes')"
+							/>
+							<template v-if="user.roles.includes('admin')">
+								<q-route-tab
+									to="/work/template"
+									:label="$t('Templates')"
+								/>
+								<q-route-tab
+									to="/admin/users"
+									:label="$t('Users')"
+								/>
+								<q-route-tab
+									to="/admin/vmStatusReport"
+									:label="$t('VM Status Report')"
+								/>
+							</template>
 						</template>
-					</template>
-					<template v-else>
-						<q-btn
-							flat
-							:label="this.$t('Login')"
-							to="/auth/login"
-						></q-btn>
-					</template>
-					<q-btn flat icon="settings" to="/settings"></q-btn>
+
+						<template v-else>
+							<q-route-tab
+								to="/auth/login"
+								:label="$t('Login')"
+							/>
+						</template>
+						<q-route-tab to="/settings" icon="settings" />
+					</q-tabs>
 				</div>
 			</q-toolbar>
 		</q-header>

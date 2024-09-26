@@ -1,5 +1,5 @@
 <template>
-	<q-page class="table-spacing-around">
+	<q-page id="home-page" class="table-spacing-around">
 		<div class="q-mt-lg">
 			<q-tabs inline-label v-model="tab" class="tabs-div text-white">
 				<q-tab
@@ -265,7 +265,7 @@ export default {
 };
 </script>
 <style>
-.q-tab__label {
+.tabs-div .q-tab__label {
 	font-size: larger !important;
 }
 .card-container {

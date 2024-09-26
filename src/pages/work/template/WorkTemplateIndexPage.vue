@@ -201,7 +201,7 @@ export default {
 			$q: useQuasar(),
 			authState: useAuthState(),
 			search: "",
-			works: [],
+			templates: [],
 			columns: [
 				{
 					name: "id",
@@ -296,14 +296,12 @@ export default {
 	async mounted() {
 		const templates = await dataService.getWorkTemplatePageData();
 		const isAdmin = this.user.roles.includes("admin");
-
 		templates.map((x) => {
 			x.createdDate = DateService.convertISOLocalDisplay(x.createdAt);
 			x.actions = [];
 			// idk why would ever need these
 			return x;
 		});
-
 		//Get Filtering Info
 		// - Add Accept meeting button if any have status new,should lead to WorkEditor
 		let anySubscriptions = false;
@@ -317,7 +315,6 @@ export default {
 			this.visibleColumns.push("paymentInterval");
 			this.visibleColumns.push("cost");
 		}
-
 		this.templates = templates;
 		this.$nextTick(() => {
 			let id = this.route?.query?.id;
