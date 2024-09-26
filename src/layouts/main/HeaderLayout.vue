@@ -131,20 +131,6 @@
 								to="/my-classes"
 								:label="$t('My Classes')"
 							/>
-							<template v-if="user.roles.includes('admin')">
-								<q-route-tab
-									to="/work/template"
-									:label="$t('Templates')"
-								/>
-								<q-route-tab
-									to="/admin/users"
-									:label="$t('Users')"
-								/>
-								<q-route-tab
-									to="/admin/vmStatusReport"
-									:label="$t('VM Status Report')"
-								/>
-							</template>
 						</template>
 
 						<template v-else>
@@ -153,7 +139,42 @@
 								:label="$t('Login')"
 							/>
 						</template>
-						<q-route-tab to="/settings" icon="settings" />
+						<q-route-tab to="/settings" icon="settings">
+						</q-route-tab>
+						<template v-if="user.roles.includes('admin')">
+							<q-btn-dropdown
+								icon="admin_panel_settings"
+								color="primary"
+								no-caps
+								class="q-mx-sm"
+							>
+								<q-list>
+									<q-item to="/work/template" clickable>
+										<q-item-section>
+											<q-icon name="description" />
+											<span>{{ $t("Templates") }}</span>
+										</q-item-section>
+									</q-item>
+									<q-item to="/admin/users" clickable>
+										<q-item-section>
+											<q-icon name="group" />
+											<span>{{ $t("Users") }}</span>
+										</q-item-section>
+									</q-item>
+									<q-item
+										to="/admin/vmStatusReport"
+										clickable
+									>
+										<q-item-section>
+											<q-icon name="assessment" />
+											<span>{{
+												$t("VM Status Report")
+											}}</span>
+										</q-item-section>
+									</q-item>
+								</q-list>
+							</q-btn-dropdown>
+						</template>
 					</q-tabs>
 				</div>
 			</q-toolbar>
