@@ -88,12 +88,9 @@
 							"
 						>
 							<template v-slot:header>
-								<div class="flex">
-									<q-checkbox v-model="props.selected" />
-									<span class="q-my-auto truncate-name">
-										{{ props.row.email }}</span
-									>
-								</div>
+								<span class="q-my-auto truncate-name">
+									{{ props.row.email }}</span
+								>
 								<q-space />
 							</template>
 							<q-list bordered separator>
