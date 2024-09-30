@@ -79,7 +79,6 @@
 				<div class="q-pa-xs col-12">
 					<q-card flat bordered>
 						<q-expansion-item
-							:label="props.row.email"
 							:expand-separator="true"
 							expand-icon="arrow_downward"
 							:header-class="
@@ -88,6 +87,15 @@
 									: 'bg-negative text-white'
 							"
 						>
+							<template v-slot:header>
+								<div class="flex">
+									<q-checkbox v-model="props.selected" />
+									<span class="q-my-auto truncate-name">
+										{{ props.row.email }}</span
+									>
+								</div>
+								<q-space />
+							</template>
 							<q-list bordered separator>
 								<q-item>
 									<q-item-section>

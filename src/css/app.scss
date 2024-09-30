@@ -23,3 +23,13 @@
 .q-tabs__content {
 	flex-wrap: wrap !important;
 }
+
+.truncate-name {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 90%;
+	/* Adjust the width as per your layout */
+	display: inline-block;
+	vertical-align: middle;
+}
