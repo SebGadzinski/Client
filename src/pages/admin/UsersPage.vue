@@ -12,7 +12,7 @@
 			row-key="is"
 			:filter="search"
 			:visible-columns="visibleColumns"
-			:pagination="{ rowsPerPage: $q.screen.lt.md ? 5 : 10 }"
+			:pagination="{ rowsPerPage: $q.screen.lt.md ? 7 : 10 }"
 		>
 			<template v-if="$q.screen.gt.sm" v-slot:top>
 				<q-space />
@@ -78,17 +78,16 @@
 			<template v-if="$q.screen.lt.md" v-slot:item="props">
 				<div class="q-pa-xs col-12">
 					<q-card flat bordered>
-						<q-card-section
-							class="flex justify-between bg-secondary"
+						<q-expansion-item
+							:label="props.row.email"
+							:expand-separator="true"
+							expand-icon="arrow_downward"
+							:header-class="
+								props.row.emailConfirmed
+									? 'bg-primary text-white'
+									: 'bg-negative text-white'
+							"
 						>
-							<span v-if="props.row.emailConfirmed">{{
-								props.row.email
-							}}</span>
-							<q-badge v-else color="red">{{
-								props.row.email
-							}}</q-badge>
-						</q-card-section>
-						<q-card-section>
 							<q-list bordered separator>
 								<q-item>
 									<q-item-section>
@@ -169,7 +168,7 @@
 								:to="action.link"
 								class="full-width"
 							/>
-						</q-card-section>
+						</q-expansion-item>
 					</q-card>
 				</div>
 			</template>
