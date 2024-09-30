@@ -1,5 +1,5 @@
 <template>
-	<q-layout>
+	<q-layout class="auth-layout">
 		<q-header elevated class="bg-primary text-white">
 			<q-toolbar>
 				<q-toolbar-title>
@@ -172,16 +172,16 @@ export default {
 </script>
 
 <style>
-.form-class {
+.auth-layout .form-class {
 	width: 300px;
 }
 
 /* Media query for screens smaller than 768px (typically phones) */
 @media (max-width: 1000px) {
-	.form-class {
+	.auth-layout .form-class {
 		width: 100%;
 	}
-	.q-field__inner.relative-position.col.self-stretch {
+	.auth-layout .q-field__inner.relative-position.col.self-stretch {
 		width: 300px;
 	}
 }
