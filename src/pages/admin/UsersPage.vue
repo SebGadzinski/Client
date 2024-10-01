@@ -81,6 +81,7 @@
 						<q-expansion-item
 							:expand-separator="true"
 							expand-icon="arrow_downward"
+							expand-icon-class="text-white"
 							:header-class="
 								props.row.emailConfirmed
 									? 'bg-primary text-white'
@@ -165,14 +166,16 @@
 									</q-item-section>
 								</q-item>
 							</q-list>
-							<q-btn
-								v-for="(action, index) in props.row.actions"
-								:key="index"
-								color="secondary text-black"
-								:label="$t(action.name)"
-								:to="action.link"
-								class="full-width"
-							/>
+							<div class="flex q-px-sm q-mt-sm">
+								<q-btn
+									v-for="(action, index) in props.row.actions"
+									:key="index"
+									color="secondary text-black"
+									:label="$t(action.name)"
+									:to="action.link"
+									class="full-width"
+								/>
+							</div>
 						</q-expansion-item>
 					</q-card>
 				</div>
