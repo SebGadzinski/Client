@@ -89,10 +89,11 @@
 							"
 						>
 							<template v-slot:header>
-								<span class="q-my-auto truncate-name">
-									{{ props.row.email }}</span
-								>
-								<q-space />
+								<div class="truncate-div">
+									<span class="q-my-auto truncate-name">
+										{{ props.row.email }}</span
+									>
+								</div>
 							</template>
 							<q-list bordered separator>
 								<q-item>
