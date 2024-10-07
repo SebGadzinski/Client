@@ -7,13 +7,15 @@
 				v-model="slide"
 				arrows
 				navigation
-				:navigation-position="$q.screen.lt.md ? 'top' : 'bottom'"
+				:navigation-position="$q.screen.lt.md ? 'none' : 'bottom'"
 				:autoplay="autoplay"
 				transition-prev="slide-right"
 				transition-next="slide-left"
 				@mouseleave="autoplay = true"
 				class="carousel-div"
-				:height="$q.screen.lt.md ? '400px' : ''"
+				:height="
+					$q.screen.lt.md ? 'calc(100vw * 9 / 16)' : 'fit-content'
+				"
 			>
 				<q-carousel-slide
 					v-for="(slide, index) in service.slides"
@@ -34,12 +36,12 @@
 						</div>
 					</div>
 					<div
-						class="absolute-bottom custom-caption"
+						class="absolute-top custom-caption"
 						v-if="$q.screen.lt.md"
 					>
-						<div class="text-h4 text-center">
+						<q-badge class="text-body1 text-center">
 							{{ $t(slide.text) }}
-						</div>
+						</q-badge>
 					</div>
 				</q-carousel-slide>
 			</q-carousel>
@@ -67,7 +69,11 @@
 					v-for="(worker, index) in service.workers"
 					:key="index"
 					class="q-mt-sm q-px-sm q-mx-sm text-center"
-					:style="this.$q.screen.gt.sm ? { width: '25rem' } : {}"
+					:style="
+						this.$q.screen.gt.sm
+							? { width: '25rem' }
+							: { width: '90%' }
+					"
 				>
 					<!-- Thumbnail -->
 					<div class="q-mt-sm q-mx-auto">
@@ -359,7 +365,6 @@ export default {
 <style scoped>
 .carousel-div {
 	width: 100%;
-	height: fit-content;
 }
 .carousel-image {
 	width: 100%;
