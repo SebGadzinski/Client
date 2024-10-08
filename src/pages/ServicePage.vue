@@ -238,16 +238,7 @@
 				color="primary"
 				class="text-h6"
 				@click="copyEmail"
-			>
-				<q-tooltip
-					v-if="alreadyCopied"
-					anchor="bottom middle"
-					self="top middle"
-					:offset="[0, 8]"
-				>
-					{{ $t("Copied") }}
-				</q-tooltip>
-			</q-btn>
+			/>
 		</div>
 		<div
 			class="flex justify-center text-center"
@@ -298,7 +289,6 @@ export default {
 			autoplay: ref(true),
 			service: {},
 			meetingTimes: [],
-			alreadyCopied: false,
 		};
 	},
 	async mounted() {
@@ -351,7 +341,6 @@ export default {
 	methods: {
 		async copyEmail() {
 			await navigator.clipboard.writeText(this.email);
-			this.alreadyCopied = true;
 			this.$q.notify({
 				message: "Email copied to clipboard!",
 				color: "positive",

@@ -426,7 +426,7 @@
 					"
 				>
 					<q-btn
-						class="text-h3"
+						:class="$q.screen.gt.sm ? 'text-h3' : 'text-h6'"
 						color="primary"
 						:label="
 							$t(
@@ -446,14 +446,14 @@
 					"
 				>
 					<q-btn
-						class="text-h3"
+						:class="$q.screen.gt.sm ? 'text-h3' : 'text-h6'"
 						color="primary"
 						:label="$t('Purchase')"
 						@click="purchase(template._id)"
 					>
 					</q-btn>
 				</q-item-section>
-				<q-item-section v-else>
+				<!-- <q-item-section v-else>
 					<q-btn
 						:class="$q.screen.gt.sm ? 'text-h3' : 'text-h6'"
 						color="primary"
@@ -461,6 +461,23 @@
 						:to="`/${template.categorySlug}/${template.serviceSlug}/meeting?template=${template.name}&templateId=${template._id}`"
 					>
 					</q-btn>
+				</q-item-section> -->
+				<q-item-section class="flex flex-center full-width" v-else>
+					<div class="text-center">
+						<p class="text-body1 email-p">
+							{{ $t("template-email") }}
+						</p>
+						<q-btn
+							:label="$t('Copy Email')"
+							color="primary"
+							:class="
+								$q.screen.gt.sm
+									? 'text-h3'
+									: 'text-h6 full-width'
+							"
+							@click="copyEmail"
+						/>
+					</div>
 				</q-item-section>
 			</q-item>
 		</q-list>
@@ -484,6 +501,7 @@ export default {
 		return {
 			loading: false,
 			$q: useQuasar(),
+			email: "sebastiangadzinskiwork@gmail.com",
 			workItemCols: [
 				{
 					name: "id",
@@ -588,6 +606,14 @@ export default {
 		}
 	},
 	methods: {
+		async copyEmail() {
+			await navigator.clipboard.writeText(this.email);
+			this.$q.notify({
+				message: "Email copied to clipboard!",
+				color: "positive",
+				icon: "content_copy",
+			});
+		},
 		$d(date) {
 			return DateService.convertISOLocalDisplay(date);
 		},
@@ -672,5 +698,15 @@ export default {
 .bottom-section-div {
 	width: fit-content;
 	margin: 5px;
+}
+.email-p {
+	width: 60%;
+	margin: auto;
+	padding-bottom: 20px;
+}
+@media (max-width: 1000px) {
+	.email-p {
+		width: 100%;
+	}
 }
 </style>

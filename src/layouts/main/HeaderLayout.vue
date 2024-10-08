@@ -54,6 +54,11 @@
 										$t("Videography")
 									}}</q-item-section></q-item
 								>
+								<q-item to="/classes"
+									><q-item-section>{{
+										$t("Classes")
+									}}</q-item-section></q-item
+								>
 							</template>
 							<template v-if="user">
 								<q-item to="/work"
@@ -121,6 +126,7 @@
 							to="/videography"
 							:label="$t('Videography')"
 						/>
+						<q-route-tab to="/classes" :label="$t('Classes')" />
 
 						<template v-if="user">
 							<q-route-tab
