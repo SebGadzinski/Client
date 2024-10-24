@@ -80,10 +80,10 @@ const layout = {
 			path: "work/pay/confirm/:paymentHistoryId",
 			component: () => import("pages/work/WorkPaymentPage.vue"),
 		},
-		{
-			path: "my-classes",
-			component: () => import("pages/my-classes/MyClassesIndexPage.vue"),
-		},
+		// {
+		// 	path: "my-classes",
+		// 	component: () => import("pages/my-classes/MyClassesIndexPage.vue"),
+		// },
 		{ path: "settings", component: () => import("pages/SettingsPage.vue") },
 		{
 			path: "admin/users",

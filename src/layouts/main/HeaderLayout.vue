@@ -49,16 +49,16 @@
 										$t("Photography")
 									}}</q-item-section></q-item
 								>
-								<q-item to="/videography"
+								<!-- <q-item to="/videography"
 									><q-item-section>{{
 										$t("Videography")
 									}}</q-item-section></q-item
-								>
-								<q-item to="/classes"
+								> -->
+								<!-- <q-item to="/classes"
 									><q-item-section>{{
 										$t("Classes")
 									}}</q-item-section></q-item
-								>
+								> -->
 							</template>
 							<template v-if="user">
 								<q-item to="/work"
@@ -66,11 +66,11 @@
 										$t("Work History")
 									}}</q-item-section></q-item
 								>
-								<q-item to="/my-classes"
+								<!-- <q-item to="/my-classes"
 									><q-item-section>{{
 										$t("My Classes")
 									}}</q-item-section></q-item
-								>
+								> -->
 								<template v-if="user?.roles?.includes('admin')">
 									<q-item to="/work/template"
 										><q-item-section>{{
@@ -122,21 +122,21 @@
 							to="/photography"
 							:label="$t('Photography')"
 						/>
-						<q-route-tab
+						<!-- <q-route-tab
 							to="/videography"
 							:label="$t('Videography')"
 						/>
-						<q-route-tab to="/classes" :label="$t('Classes')" />
+						<q-route-tab to="/classes" :label="$t('Classes')" /> -->
 
 						<template v-if="user">
 							<q-route-tab
 								to="/work"
 								:label="$t('Work History')"
 							/>
-							<q-route-tab
+							<!-- <q-route-tab
 								to="/my-classes"
 								:label="$t('My Classes')"
-							/>
+							/> -->
 						</template>
 
 						<template v-else>
@@ -204,7 +204,7 @@
 					<div class="text-body1 q-mt-sm">
 						{{
 							$t(
-								"This site offers work in many categories and also offers classes. Please purchase work or a class, and give feedback on the experience to sebastiangadzinskiwork@gmail.com"
+								"This is a work management application. If you are interested in something like this send a message to sebastiangadzinskiwork@gmail.com."
 							)
 						}}
 					</div>

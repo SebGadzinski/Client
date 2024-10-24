@@ -1,6 +1,6 @@
 <template>
 	<q-page id="home-page" class="table-spacing-around">
-		<div class="q-mt-lg">
+		<!-- <div class="q-mt-lg">
 			<q-tabs inline-label v-model="tab" class="tabs-div text-white">
 				<q-tab
 					:class="tab === 'work' ? 't-yellow' : 't-fade-yellow'"
@@ -40,9 +40,9 @@
 			>
 				{{ $t("Search for Classes!").toUpperCase() }}
 			</div>
-		</div>
+		</div> -->
 
-		<div class="search-div q-mx-auto">
+		<div class="search-div q-mx-auto q-mt-lg">
 			<input
 				type="text"
 				v-model="search"

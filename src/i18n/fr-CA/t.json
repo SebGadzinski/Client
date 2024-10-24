@@ -758,5 +758,6 @@
 	"pay_card": "Pay with card: ...**** {card}",
 	"Featured Services": "Services en vedette",
 	"no_refund_csg": "Tous les achats de crédits pour le Client Server Generator sont définitifs et non remboursables. Aucun remboursement ne sera accordé pour les crédits une fois achetés.",
-	"template-email": "Il s'agit simplement d'un modèle pour vous donner un exemple de ce que sera une partie du travail. Il peut être modifié, veuillez m'envoyer un e-mail si c'est ce que vous recherchez."
+	"template-email": "Il s'agit simplement d'un modèle pour vous donner un exemple de ce que sera une partie du travail. Il peut être modifié, veuillez m'envoyer un e-mail si c'est ce que vous recherchez.",
+	"This is a work management application. If you are interested in something like this send a message to sebastiangadzinskiwork@gmail.com.": "Il s'agit d'une application de gestion de travail. Si vous êtes intéressé par ce type de service, envoyez un message à sebastiangadzinskiwork@gmail.com."
 }
