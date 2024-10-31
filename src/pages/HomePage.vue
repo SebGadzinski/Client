@@ -5,10 +5,10 @@
 			<q-space />
 			<div class="container">
 				<div v-if="$q.screen.lt.md" class="phone">
-					<img class="fit" src="/home/mobile-app.png" />
+					<img class="fit" src="/home-pics/mobile-app.png" />
 				</div>
 				<div class="phones" v-else>
-					<img class="phones-img" src="/home/mobile-apps.png" />
+					<img class="phones-img" src="/home-pics/mobile-apps.png" />
 				</div>
 				<div
 					class="picture-header"
@@ -35,10 +35,10 @@
 			<div class="container" style="display: flex; flex: 0.9">
 				<div style="margin: auto">
 					<div v-if="$q.screen.lt.md" class="laptop">
-						<img class="fit" src="/home/web-app.png" />
+						<img class="fit" src="/home-pics/web-app.png" />
 					</div>
 					<div class="phones" v-else>
-						<img class="phones-img" src="/home/web-apps.png" />
+						<img class="phones-img" src="/home-pics/web-apps.png" />
 					</div>
 					<div
 						class="picture-header"
