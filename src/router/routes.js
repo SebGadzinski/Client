@@ -14,7 +14,11 @@ const layout = {
 	meta,
 	children: [
 		{ path: "", redirect: "/home" },
-		{ path: "home", component: () => import("pages/HomePage.vue"), meta },
+		{
+			path: "home",
+			component: () => import("src/pages/HomePage.vue"),
+			meta,
+		},
 		{
 			path: "browse",
 			component: () => import("pages/BrowsePage.vue"),

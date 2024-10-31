@@ -745,5 +745,7 @@
 	"calling_email": "Calling in {count}s",
 	"pay_card": "Pay with card: ...**** {card}",
 	"no_refund_csg": "All purchases of credits for the Client Server Generator are final and non-refundable. No refunds will be issued for credits once purchased.",
-	"template-email": "This is just a template to give you a example of what some of the work will be. This can be altered, please email me if this is what you are looking for."
+	"template-email": "This is just a template to give you a example of what some of the work will be. This can be altered, please email me if this is what you are looking for.",
+	"design-info": "We use tools like Figma to design and prototype our software work. We work with Vista Print and other printing companies to make our package designs.",
+	"software-info": "We offer many software services that have packages that can be customed to your work needed."
 }

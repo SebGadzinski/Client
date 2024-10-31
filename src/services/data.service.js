@@ -64,6 +64,13 @@ class DataService {
 		);
 	}
 
+	async getSearchPageData() {
+		return await this.call(
+			api.get("/home/search"),
+			"Could not get search page data"
+		);
+	}
+
 	async getBrowsePageData() {
 		return await this.call(
 			api.get("/browse"),

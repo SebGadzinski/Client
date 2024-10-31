@@ -33,33 +33,31 @@
 					<!-- Menu content -->
 					<q-menu fit>
 						<q-list>
-							<template v-if="!user?.roles?.includes('admin')">
-								<q-item to="/software"
-									><q-item-section>{{
-										$t("Software")
-									}}</q-item-section></q-item
-								>
-								<q-item to="/design"
-									><q-item-section>{{
-										$t("Design")
-									}}</q-item-section></q-item
-								>
-								<q-item to="/photography"
-									><q-item-section>{{
-										$t("Photography")
-									}}</q-item-section></q-item
-								>
-								<!-- <q-item to="/videography"
+							<q-item to="/software"
+								><q-item-section>{{
+									$t("Software")
+								}}</q-item-section></q-item
+							>
+							<q-item to="/design"
+								><q-item-section>{{
+									$t("Design")
+								}}</q-item-section></q-item
+							>
+							<q-item to="/photography"
+								><q-item-section>{{
+									$t("Photography")
+								}}</q-item-section></q-item
+							>
+							<!-- <q-item to="/videography"
 									><q-item-section>{{
 										$t("Videography")
 									}}</q-item-section></q-item
 								> -->
-								<!-- <q-item to="/classes"
+							<!-- <q-item to="/classes"
 									><q-item-section>{{
 										$t("Classes")
 									}}</q-item-section></q-item
 								> -->
-							</template>
 							<template v-if="user">
 								<q-item to="/work"
 									><q-item-section>{{
@@ -112,8 +110,8 @@
 				>
 					<q-tabs
 						align="center"
-						class="text-white bg-primary"
-						indicator-color="yellow"
+						class="tabs-text"
+						indicator-color="accent"
 					>
 						<q-route-tab to="/home" :label="$t('Home')" />
 						<q-route-tab to="/software" :label="$t('Software')" />
@@ -150,7 +148,6 @@
 						<template v-if="user?.roles?.includes('admin')">
 							<q-btn-dropdown
 								icon="admin_panel_settings"
-								color="primary"
 								no-caps
 								class="q-mx-sm"
 							>
@@ -300,6 +297,7 @@ export default {
 	padding: 20px;
 	position: fixed;
 	backdrop-filter: blur(10px);
+	background: linear-gradient(to right, var(--q-primary), var(--q-secondary));
 }
 .header-transparent {
 	background: var(
@@ -308,15 +306,24 @@ export default {
 	transition: background-color 2s;
 	box-shadow: none;
 }
+.tabs-text {
+	transition: background 2s ease;
+	color: white;
+}
+.header-transparent #store-info-btn {
+	color: var(--q-primary) !important;
+}
+.header-transparent .tabs-text {
+	background: linear-gradient(to right, var(--q-primary), var(--q-secondary));
+}
+
+.transparent {
+	background: transparent;
+	background-color: transparent;
+}
 
 .fast.header-transparent {
 	transition: background-color 0.2s !important;
-}
-
-.header-transparent:hover {
-	background: var(
-		--q-color-primary
-	) !important; /* Uses Quasar primary color variable */
 }
 .q-toolbar__links {
 	display: flex;
