@@ -13,8 +13,9 @@ const layout = {
 	component: () => import(`layouts/main/${mainLayouts.header}.vue`),
 	meta,
 	children: [
+		{ path: "", redirect: "/home" },
 		{
-			path: "",
+			path: "home",
 			component: () => import("src/pages/HomePage.vue"),
 			meta,
 		},
