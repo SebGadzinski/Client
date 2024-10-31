@@ -607,12 +607,29 @@ export default {
 	},
 	methods: {
 		async copyEmail() {
-			await navigator.clipboard.writeText(this.email);
-			this.$q.notify({
-				message: "Email copied to clipboard!",
-				color: "positive",
-				icon: "content_copy",
-			});
+			try {
+				// Attempt to copy using Clipboard API
+				await navigator.clipboard.writeText(this.email);
+				this.$q.notify({
+					message: "Email copied to clipboard!",
+					color: "positive",
+					icon: "content_copy",
+				});
+			} catch (error) {
+				// Fallback for Safari (iOS)
+				const tempTextArea = document.createElement("textarea");
+				tempTextArea.value = this.email;
+				document.body.appendChild(tempTextArea);
+				tempTextArea.select();
+				document.execCommand("copy");
+				this.$q.notify({
+					message: "Email copied to clipboard!",
+					color: "positive",
+					icon: "content_copy",
+				});
+
+				document.body.removeChild(tempTextArea);
+			}
 		},
 		$d(date) {
 			return DateService.convertISOLocalDisplay(date);

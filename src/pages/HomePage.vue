@@ -2,7 +2,8 @@
 	<div class="home-page">
 		<!-- Phone Section -->
 		<section class="phone-section" id="phone-section">
-			<q-space />
+			<div v-if="$q.screen.lt.md" style="height: 10px"></div>
+			<q-space v-if="$q.screen.gt.sm" />
 			<div class="container">
 				<div v-if="$q.screen.lt.md" class="phone">
 					<img class="fit" src="/home-pics/mobile-app.png" />
@@ -17,7 +18,7 @@
 					{{ $t("Build A Mobile App?") }}
 				</div>
 			</div>
-			<q-space />
+			<q-space v-if="$q.screen.gt.sm" />
 			<a class="scroll-down-div" href="#laptop-section">
 				<div class="scroll-down">
 					<span color="accent" class="material-icons next-arrow"
@@ -25,6 +26,7 @@
 					>
 				</div>
 			</a>
+			<q-space v-if="$q.screen.lt.md" />
 		</section>
 
 		<!-- Spacer -->
@@ -32,7 +34,7 @@
 
 		<!-- Laptop Section -->
 		<section class="laptop-section" id="laptop-section">
-			<div class="container" style="display: flex; flex: 0.9">
+			<div class="container easy">
 				<div style="margin: auto">
 					<div v-if="$q.screen.lt.md" class="laptop">
 						<img class="fit" src="/home-pics/web-app.png" />
@@ -62,10 +64,7 @@
 			class="software-services-section"
 			id="software-services-section"
 		>
-			<div
-				class="container"
-				style="display: flex; flex: 0.9; justify-content: center"
-			>
+			<div class="container easy">
 				<div class="container-section">
 					<div class="picture-header">
 						{{ $t("Software's Our Specialty") }}
@@ -107,10 +106,7 @@
 
 		<!-- Design Services Section -->
 		<section class="design-services-section" id="design-services-section">
-			<div
-				class="container"
-				style="display: flex; flex: 0.9; justify-content: center"
-			>
+			<div class="container easy">
 				<div class="container-section">
 					<div class="picture-header">
 						{{ $t("We Design Systems & Products!") }}
@@ -326,12 +322,30 @@ export default {
 	methods: {
 		async copyEmail() {
 			const email = "sebastiangadzinskiwork@gmail.com";
-			await navigator.clipboard.writeText(email);
-			this.$q.notify({
-				message: "Email copied to clipboard!",
-				color: "positive",
-				icon: "content_copy",
-			});
+
+			try {
+				// Attempt to copy using Clipboard API
+				await navigator.clipboard.writeText(email);
+				this.$q.notify({
+					message: "Email copied to clipboard!",
+					color: "positive",
+					icon: "content_copy",
+				});
+			} catch (error) {
+				// Fallback for Safari (iOS)
+				const tempTextArea = document.createElement("textarea");
+				tempTextArea.value = email;
+				document.body.appendChild(tempTextArea);
+				tempTextArea.select();
+				document.execCommand("copy");
+				this.$q.notify({
+					message: "Email copied to clipboard!",
+					color: "positive",
+					icon: "content_copy",
+				});
+
+				document.body.removeChild(tempTextArea);
+			}
 		},
 	},
 };
@@ -381,7 +395,7 @@ section {
 	text-align: center;
 }
 .phone {
-	height: 60vh;
+	height: 50vh;
 	border-radius: 30px;
 	position: relative;
 	overflow: hidden;
@@ -523,8 +537,18 @@ section {
 	margin: auto;
 	width: 95vw;
 }
-
+.container.easy {
+	display: flex;
+	flex: 0.6;
+}
 @media (min-width: 601px) {
+	.container.easy {
+		display: flex;
+		flex: 0.9;
+	}
+	.phone {
+		height: 60vh;
+	}
 	.container-section {
 		margin: auto;
 		width: 80vw;
