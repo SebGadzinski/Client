@@ -11,19 +11,14 @@
 				<div class="phones" v-else>
 					<img class="phones-img" src="/home-pics/mobile-apps.png" />
 				</div>
-				<div
-					class="picture-header"
-					href="/software/mobile-app-development"
-				>
+				<div class="picture-header" href="/software/mobile-app-development">
 					{{ $t("Build A Mobile App?") }}
 				</div>
 			</div>
 			<q-space v-if="$q.screen.gt.sm" />
 			<a class="scroll-down-div" href="#laptop-section">
 				<div class="scroll-down">
-					<span color="accent" class="material-icons next-arrow"
-						>arrow_downward</span
-					>
+					<span color="accent" class="material-icons next-arrow">arrow_downward</span>
 				</div>
 			</a>
 			<q-space v-if="$q.screen.lt.md" />
@@ -42,28 +37,20 @@
 					<div class="phones" v-else>
 						<img class="phones-img" src="/home-pics/web-apps.png" />
 					</div>
-					<div
-						class="picture-header"
-						href="/software/web-development"
-					>
+					<div class="picture-header" href="/software/web-development">
 						{{ $t("Web Application?") }}
 					</div>
 				</div>
 			</div>
 			<a class="scroll-down-div" href="#software-services-section">
 				<div class="scroll-down">
-					<span color="accent" class="material-icons next-arrow"
-						>arrow_downward</span
-					>
+					<span color="accent" class="material-icons next-arrow">arrow_downward</span>
 				</div>
 			</a>
 		</section>
 
 		<!-- Software Services Section -->
-		<section
-			class="software-services-section"
-			id="software-services-section"
-		>
+		<section class="software-services-section" id="software-services-section">
 			<div class="container easy">
 				<div class="container-section">
 					<div class="picture-header">
@@ -73,13 +60,9 @@
 						{{ $t("software-info") }}
 					</div>
 					<div class="fade-in-fast">
-						<a
-							v-for="(service, key) in $q.screen.gt.sm
-								? software
-								: softwareMobile"
-							:key="key"
-							:href="`/software/${service.slug}`"
-						>
+						<a v-for="(service, key) in $q.screen.gt.sm
+							? software
+							: softwareMobile" :key="key" :href="`/software/${service.slug}`">
 							<button class="service-btn sectional">
 								{{ $t(service.name) }}
 							</button>
@@ -97,9 +80,7 @@
 			<div class="text-body1 q-py-sm">{{ $t("We also do design!") }}</div>
 			<a class="scroll-down-div" href="#design-services-section">
 				<div class="scroll-down">
-					<span color="accent" class="material-icons next-arrow"
-						>arrow_downward</span
-					>
+					<span color="accent" class="material-icons next-arrow">arrow_downward</span>
 				</div>
 			</a>
 		</section>
@@ -115,11 +96,7 @@
 						{{ $t("design-info") }}
 					</div>
 					<div class="fade-in-fast">
-						<a
-							v-for="(service, key) in design"
-							:key="key"
-							:href="`/design/${service.slug}`"
-						>
+						<a v-for="(service, key) in design" :key="key" :href="`/design/${service.slug}`">
 							<button class="service-btn sectional">
 								{{ $t(service.name) }}
 							</button>
@@ -370,10 +347,12 @@ export default {
 	transform: translateY(-2px);
 	box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
+
 .service-btn:focus {
 	outline: none;
 	box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.5);
 }
+
 .home-page {
 	margin: 0;
 	padding: 0;
@@ -381,6 +360,7 @@ export default {
 	font-family: Arial, sans-serif;
 	scroll-behavior: smooth;
 }
+
 section {
 	height: 100vh;
 	display: flex;
@@ -388,12 +368,15 @@ section {
 	align-items: center;
 	flex-direction: column;
 }
+
 .phone-section {
 	height: calc(100vh - 120px);
 }
+
 .container {
 	text-align: center;
 }
+
 .phone {
 	height: 50vh;
 	border-radius: 30px;
@@ -403,48 +386,58 @@ section {
 	opacity: 0;
 	transform: translateY(50px);
 }
+
 .phone.animate {
 	animation: phoneAppear 1s forwards;
 }
+
 .phones {
 	width: 100%;
 	height: fit-content;
 	position: relative;
 	transform: translateY(50px);
 }
+
 .phones.animate {
 	animation: phoneAppear 1s forwards;
 }
+
 .phones-img {
 	height: calc((100vh - 100px) * 0.6);
 	margin: auto;
 }
+
 @keyframes phoneAppear {
 	to {
 		opacity: 1;
 		transform: translateY(0);
 	}
 }
+
 .scroll-down-div:link {
 	color: var(--q-background);
 	background-color: var(--q-primary);
 	text-decoration: none;
 }
+
 .scroll-down-div:visited {
 	color: var(--q-background);
 	background-color: var(--q-primary);
 	text-decoration: none;
 }
+
 .scroll-down-div:hover {
 	color: var(--q-background);
 	background-color: var(--q-primary);
 	text-decoration: underline;
 }
+
 .scroll-down-div:active {
 	color: var(--q-background);
 	background-color: var(--q-primary);
 	text-decoration: underline;
 }
+
 .scroll-down {
 	color: var(--q-background);
 }
@@ -459,15 +452,18 @@ section {
 	transform: perspective(1000px) rotateX(90deg);
 	opacity: 0;
 }
+
 .laptop.animate {
 	animation: laptopOpen 1s forwards;
 }
+
 @keyframes laptopOpen {
 	to {
 		transform: perspective(1000px) rotateX(10deg);
 		opacity: 1;
 	}
 }
+
 .laptop-keyboard {
 	width: 320px;
 	height: 20px;
@@ -483,35 +479,50 @@ section {
 	font-size: x-large;
 	font-weight: 500;
 }
+
 .picture-header {
 	/* color: #333; */
 	margin-top: 20px;
 	opacity: 0;
 }
+
 .picture-header.animate {
 	animation: fadeIn 1s forwards;
 }
+
 .fade-in-fast {
 	opacity: 0;
 }
+
 .fade-in-fast.animate {
 	animation: fadeIn 1s forwards;
 }
+
 @keyframes fadeIn {
 	to {
 		opacity: 1;
 	}
 }
+
 .scroll-down-div {
 	background: linear-gradient(to right, var(--q-primary), var(--q-secondary));
 	padding: 0px 50px;
 	border-radius: 10px;
 }
+
+.scroll-down-div:hover {
+	background: linear-gradient(to left, var(--q-accent), var(--q-secondary));
+	transform: translateY(-2px);
+	box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
 .next-arrow {
 	font-size: 50px;
 	animation: bounce 2s infinite;
 }
+
 @keyframes bounce {
+
 	0%,
 	20%,
 	50%,
@@ -519,67 +530,85 @@ section {
 	100% {
 		transform: translateY(0) translateX(0);
 	}
+
 	40% {
 		transform: translateY(-10px) translateX(0);
 	}
+
 	60% {
 		transform: translateY(-5px) translateX(0);
 	}
 }
+
 .service-btn.sectional.view-all {
 	background: var(--q-primary);
 }
+
 .service-btn.sectional {
 	font-size: small;
 	margin: 5px;
 }
+
 .container-section {
 	margin: auto;
 	width: 95vw;
 }
+
 .container.easy {
 	display: flex;
 	flex: 0.6;
 }
+
 @media (min-width: 601px) {
 	.container.easy {
 		display: flex;
 		flex: 0.9;
 	}
+
 	.phone {
 		height: 60vh;
 	}
+
 	.container-section {
 		margin: auto;
 		width: 80vw;
 	}
+
 	.service-btn.sectional {
 		margin: 10px;
 		font-size: large;
 	}
+
 	.picture-header {
 		font-size: 3rem;
 	}
+
 	.next-arrow {
 		font-size: 50px;
 	}
 }
+
 @media (min-width: 901px) {
 	.container-section {
 		margin: auto;
 		width: 75vw;
 	}
+
 	.service-btn.sectional {
 		margin: 10px;
 		font-size: larger;
 	}
+
 	.picture-header {
 		font-size: 4rem;
 	}
+
 	.next-arrow {
 		font-size: 60px;
 	}
+
 	@keyframes bounce {
+
 		0%,
 		20%,
 		50%,
@@ -587,9 +616,11 @@ section {
 		100% {
 			transform: translateY(0) translateX(0);
 		}
+
 		40% {
 			transform: translateY(-30px) translateX(0);
 		}
+
 		60% {
 			transform: translateY(-15px) translateX(0);
 		}
