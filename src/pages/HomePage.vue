@@ -1,4 +1,5 @@
 <template>
+	<div style="height: 30px;" />
 	<div class="home-page">
 		<!-- Phone Section -->
 		<section class="phone-section" id="phone-section">
@@ -16,6 +17,7 @@
 				</div>
 			</div>
 			<q-space v-if="$q.screen.gt.sm" />
+			<div v-if="$q.screen.lt.md" style="height: 30px;" />
 			<a class="scroll-down-div" href="#laptop-section">
 				<div class="scroll-down">
 					<span color="accent" class="material-icons next-arrow">arrow_downward</span>
@@ -478,9 +480,6 @@ section {
 .picture-header {
 	font-size: x-large;
 	font-weight: 500;
-}
-
-.picture-header {
 	/* color: #333; */
 	margin-top: 20px;
 	opacity: 0;
